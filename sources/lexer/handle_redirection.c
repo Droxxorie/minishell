@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 19:32:58 by eraad             #+#    #+#             */
-/*   Updated: 2025/06/10 19:33:00 by eraad            ###   ########.fr       */
+/*   Updated: 2025/06/11 16:53:46 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,5 @@ const char *handle_reddirection(const char *input, t_token **head, t_token **tai
 		append_token(head, tail, TOKEN_REDIRECT_OUT, ">");
 		return (input + 1);
 	}
+	return (NULL);
 }

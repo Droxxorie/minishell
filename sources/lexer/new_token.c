@@ -6,12 +6,11 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:49:55 by eraad             #+#    #+#             */
-/*   Updated: 2025/06/10 16:15:40 by eraad            ###   ########.fr       */
+/*   Updated: 2025/06/11 16:56:40 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-#include "../../libft/libft.h"
 
 /**
  * @brief Creates a new token with the specified type and value.
@@ -23,7 +22,7 @@
  */
 t_token *new_token(t_token_type type, const char *value)
 {
-	t_token = token;
+	t_token *token;
 
 	token = malloc(sizeof(t_token));
 	if (!token)

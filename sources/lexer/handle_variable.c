@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 19:10:34 by eraad             #+#    #+#             */
-/*   Updated: 2025/06/10 19:32:46 by eraad            ###   ########.fr       */
+/*   Updated: 2025/06/11 16:53:44 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static char *extract_variable(const char **input)
 	(*input)++;
 	if (**input == '?')
 	{
-		result = ft_strdup('?');
+		result = ft_strdup("?");
 		(*input)++;
 	}
 	else

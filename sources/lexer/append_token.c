@@ -6,12 +6,11 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:59:44 by eraad             #+#    #+#             */
-/*   Updated: 2025/06/10 16:03:50 by eraad            ###   ########.fr       */
+/*   Updated: 2025/06/11 16:44:50 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-#include "../../libft/libft.h"
 
 /**
  * @brief Appends a new token to the end of the linked list of tokens.

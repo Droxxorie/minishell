@@ -1,30 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strndup.c                                       :+:      :+:    :+:   */
+/*   parse_argv.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/10 18:14:15 by eraad             #+#    #+#             */
-/*   Updated: 2025/06/11 16:44:54 by eraad            ###   ########.fr       */
+/*   Created: 2025/06/11 17:29:32 by eraad             #+#    #+#             */
+/*   Updated: 2025/06/11 17:29:34 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-char	*ft_strndup(const char *s, size_t n)
+char **parse_argv(t_token **tokens)
 {
-	size_t	len;
-	char	*dup;
+	char **argv;
+	int argc;
 
-	if (!s)
-		return (NULL);
-	len = ft_strlen(s);
-	if (n < len)
-		len = n;
-	dup = malloc(sizeof(char) * (len + 1));
-	if (!dup)
-		return (NULL);
-	ft_strlcpy(dup, s, len + 1);
-	return (dup);
+	argv = malloc(sizeof(char *) * 1024); //TODO: defnir dynamiquement
+	argc = 0;
+	while (*tokens && (*tokens)->type == TOKEN_WORD || (*tokens)->type == TOKEN_ENV_VAR)
+	{
+		argv[argc++] = ft_strdup((*tokens)->value);
+		*tokens = (*tokens)->next;
+	}
+	argv[argc] = NULL;
+	return (argv);
 }

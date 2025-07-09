@@ -6,15 +6,15 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:29:10 by eraad             #+#    #+#             */
-/*   Updated: 2025/06/10 19:38:34 by eraad            ###   ########.fr       */
+/*   Updated: 2025/06/11 17:21:09 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static char *lexer_next_token(const char *input, t_token **head, t_token **tail)
+static const char *lexer_next_token(const char *input, t_token **head, t_token **tail)
 {
-	if (ft_iswhitespace(*input)) //TODO: space ore whitespace ??
+	if (ft_iswhitespace(*input)) //TODO: space or whitespace ??
 		return (input + 1);
 	if (*input == '|')
 		return (handle_pipe(input, head, tail));
