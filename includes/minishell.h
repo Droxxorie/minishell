@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 15:24:16 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/15 16:24:41 by eraad            ###   ########.fr       */
+/*   Updated: 2025/09/22 16:42:29 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,18 +28,22 @@
 # include <sys/stat.h>          //* for struct stat, stat, fstat
 # include <sys/wait.h>          //* for wait, waitpid
 # include <unistd.h>            //* for fork, execve, pipe, dup2, chdir, getcwd,
-close, write, read,
-	access
+//* close, write, read, access
 
 //* ----------------- Macros ----------------------- *
 # define SUPPORTED_SYMBOLS "<>|" //* opérateurs unitaires supportés
-# define FD_STATE_NONE -1 //* aucun FD particulier à laisser ouvert
-# define FD_STATE_RO 0 //* seule l'extrémité pipe READ reste ouverte
-# define FD_STATE_WO 1 //* seule l'extrémité pipe WRITE reste ouverte
-# define FD_STATE_RW 2 //* les deux extrémités pipe restent ouvertes
+# define FD_STATE_NONE -1        //* aucun FD particulier à laisser ouvert
+# define FD_STATE_RO 0           //* seule l'extrémité pipe READ reste ouverte
+# define FD_STATE_WO 1           //* seule l'extrémité pipe WRITE reste ouverte
+# define FD_STATE_RW 2           //* les deux extrémités pipe restent ouvertes
 
-	//* ----------------- Globals ----------------------- *
-	extern int g_waiting;
+//* ----------------- Globals ----------------------- *
+# ifndef GLOBALS_H
+#  define GLOBALS_H
+
+extern int				g_waiting;
+
+# endif
 //* indique si le shell attend la fin d'un processus enfant
 
 //* ----------------- Enums ----------------------- *
@@ -47,7 +51,7 @@ typedef enum e_quote
 {
 	NO_QUOTE,
 	SINGLE_QUOTE,
-	DOUBLE_QUOTE
+	DOUBLE_QUOTE,
 }						t_quote;
 
 typedef enum e_type
@@ -122,17 +126,16 @@ typedef struct s_pipes
 typedef struct s_data
 {
 	//* etat parsing/lexing
-	char				which_quote_error;
+	char				which_quote;
 	//* indique le type de quote manquante en cas d'erreur de parsing/lexing
 	char				**env;
 	//* environnement initial (copie de l'env passé en paramètre à main)
-	char **parsed_env;  //* environnement modifié pour execve
-	char *expanded_str; //? potentiellement mauvaise place,
-						//* écrasement mémoire(sert a stocker $user etc)
+	char **parsed_env; //* environnement modifié pour execve
+	char *expanded_str; //* écrasement mémoire(sert a stocker $user etc)
 
 	//* PATH resolution
-	char				**parsed_path; //* tableau des chemins complets (PATH+ / + command)
-	char				*path; //* tableau des chemins extraits de la variable PATH
+	char **parsed_path; //* tableau des chemins complets (PATH+ / + command)
+	char *path;         //* tableau des chemins extraits de la variable PATH
 
 	//* ligne et statuts
 	char *line;      //* ligne lue par readline
@@ -156,11 +159,19 @@ typedef struct s_data
 //* ----------------- Functions ----------------------- *
 
 //* UTILS
-long long	ft_atoll(const char *str);
-
+int	ft_isspace(char c);
+long long ft_atoll(const char *str);
+void	free_char_array(char **array);
 //* INIT
-t_env	*env_last_var(t_env *env);
-int		add_var(t_data *data, t_env **env, char *key, char *value);
-int		init_env(t_data *data, char **envp);
+t_env					*env_last_var(t_env *env);
+int						add_var(t_data *data, t_env **env, char *key,
+							char *value);
+int						init_env(t_data *data, char **envp);
+
+//* SIGNALS
+void					signals_handler(void);
+
+//* ERRORS
+int						syntax_error_handler(t_data *data);
 
 #endif

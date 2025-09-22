@@ -6,11 +6,16 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:49:21 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/15 15:50:31 by eraad            ###   ########.fr       */
+/*   Updated: 2025/09/22 16:42:10 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+int	ft_isspace(char c)
+{
+	return (c == ' ' || (c >= '\t' && c <= '\r'));
+}
 
 long long	ft_atoll(const char *str)
 {
@@ -39,4 +44,22 @@ long long	ft_atoll(const char *str)
 		i++;
 	}
 	return (result * n);
+}
+
+void	free_char_array(char **array)
+{
+	int i;
+	if (!array)
+		return ;
+	i = 0;
+	while (array[i])
+	{
+		if (array[i])
+			free(array[i]);
+		array[i] = NULL;
+		i++;
+	}
+	if (array)
+		free(array);
+	array = NULL;
 }
