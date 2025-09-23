@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 14:42:52 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/22 17:22:20 by eraad            ###   ########.fr       */
+/*   Updated: 2025/09/23 16:50:25 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static int	empty_line_handler(t_data *data)
 	i = 0;
 	if (!data->line[0])
 		return (free(data->line), 1);
-	while (ft_isspace(data->line[i]))
+	while (ft_iswhitespace(data->line[i]))
 		i++;
 	if (!data->line[i])
 		return (free(data->line), 1);
@@ -52,15 +52,15 @@ static void	launch_minishell(t_data *data)
 		if (g_waiting == 1 || g_waiting == 3)
 			data->exit_status = 130;
 		if (data->line == NULL)
-			exit_minishell(data, EXIT_SUCCESS);	// TODO ou exit_status ?
+			exit_minishell(data, EXIT_SUCCESS); // TODO ou exit_status ?
 		if (empty_line_handler(data))
 			continue ;
 		if (syntax_error_handler(data))
-			continue ;							//TODO besoin de free ?
+			continue ; // TODO besoin de free ?
 		if (ft_strlen(data->line))
 			add_history(data->line);
-		if (expander(data) == 1 || lexer(data, 1) == 1
-			|| parser(data) == 1 || executer(data) == 1)
+		if (lexer(data, 1) == EXIT_FAILURE || parser(data) == EXIT_FAILURE
+			|| expander(data) == EXIT_FAILURE || executer(data) == EXIT_FAILURE)
 		{
 			reset_command_context(data);
 			continue ;

@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 15:24:16 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/22 16:42:29 by eraad            ###   ########.fr       */
+/*   Updated: 2025/09/23 17:28:41 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,14 +56,15 @@ typedef enum e_quote
 
 typedef enum e_type
 {
-	WORD,
+	ARG,
+	CMD,
+	FLAG,
 	PIPE,         //* |
 	REDIR_IN,     //* <
 	REDIR_OUT,    //* >
 	REDIR_APPEND, //* >>
 	HEREDOC,      //* <<
 	LIMITER,      //* limiter for heredoc
-					//* FLAG_TOKEN a voir
 }						t_type;
 
 //* ----------------- Structs ----------------------- *
@@ -159,9 +160,10 @@ typedef struct s_data
 //* ----------------- Functions ----------------------- *
 
 //* UTILS
-int	ft_isspace(char c);
 long long ft_atoll(const char *str);
 void	free_char_array(char **array);
+char	*ft_append_char(char *str, char c);
+
 //* INIT
 t_env					*env_last_var(t_env *env);
 int						add_var(t_data *data, t_env **env, char *key,
@@ -174,4 +176,12 @@ void					signals_handler(void);
 //* ERRORS
 int						syntax_error_handler(t_data *data);
 
+//* LEXING
+int 					lexer(t_data *data);
+int						handle_no_quote(t_data *data, t_quote *quote_state,
+							char **token_buffer, int *command_boundary);
+int						handle_single_quoted(t_data *data, t_quote *quote_state,
+							char **token_buffer);
+int						handle_double_quoted(t_data *data, t_quote *quote_state,
+							char **token_buffer);
 #endif
