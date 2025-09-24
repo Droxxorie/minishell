@@ -6,15 +6,15 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 12:20:13 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/22 15:56:55 by eraad            ###   ########.fr       */
+/*   Updated: 2025/09/24 20:45:25 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static void	print_syntax_error(char error, int code)
+void	print_syntax_error(char error, int code)
 {
-	if (code == 1 || code == 2)
+	if (code < 4)
 	{
 		ft_putstr_fd("minishell: operation '", 2);
 		if (code == 1)
@@ -25,12 +25,16 @@ static void	print_syntax_error(char error, int code)
 			ft_putstr_fd("&&", 2);
 		ft_putstr_fd("' not supported\n", 2);
 	}
-	else if (code == 3)
+	else if (code == 4 || code == 5)
 	{
 		ft_putstr_fd("minishell: syntax error near unexpected token '", 2);
 		ft_putstr_fd(error, 2);
 		ft_putstr_fd("'\n", 2);
+		if (code == 5)
+			ft_putstr_fd("invalid heredoc delimiter\n", 2);
 	}
+	else if (code == 6)
+		ft_putstr_fd("minishell: syntax error: unclosed quote\n", 2);
 }
 
 static int	scan_line(char *line, int opened_quote, int index, t_data *data)
@@ -58,7 +62,7 @@ static int	scan_line(char *line, int opened_quote, int index, t_data *data)
 		index++;
 	}
 	if (opened_quote)
-		return (print_syntax_error(data->which_quote, 3), 3);
+		return (print_syntax_error(data->which_quote, 4), 4);
 	return (0);
 }
 

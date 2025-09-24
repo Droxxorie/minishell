@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 16:47:43 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/23 17:34:12 by eraad            ###   ########.fr       */
+/*   Updated: 2025/09/24 16:35:53 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,26 +15,24 @@
 static int	process_unquoted_char(t_data *data, char **token_buffer,
 		int *command_boundary)
 {
-	if (ft_iswhitespace(*data->line)) //? cast unsigned char ? (unisgned char)
+	if (ft_iswhitespace(*data->line))
 	{
 		if (*token_buffer && **token_buffer)
 		{
 			if (add_classified_token(data, *token_buffer, command_boundary))
-				// TODO
 				return (EXIT_FAILURE);
 			*token_buffer = NULL;
 		}
 	}
-	else if (ft_strchr(SUPPORTED_SYMBOLS, *data->line))
+	else if (ft_strchr(SUPPORTED_OPERATORS, *data->line))
 	{
 		if (*token_buffer && **token_buffer)
 		{
 			if (add_classified_token(data, *token_buffer, command_boundary))
-				// TODO
 				return (EXIT_FAILURE);
 			*token_buffer = NULL;
 		}
-		if (add_operator_token(data, data->line, command_boundary)) // TODO
+		if (add_operator_token(data, data->line, command_boundary))
 			return (EXIT_FAILURE);
 	}
 	else
@@ -51,7 +49,7 @@ int	handle_no_quote(t_data *data, t_quote *quote_state, char **token_buffer,
 		*quote_state = DOUBLE_QUOTE;
 	else
 	{
-		if (process_unquoted_char(data, token_buffer, command_boundary)) // TODO
+		if (process_unquoted_char(data, token_buffer, command_boundary))
 			return (EXIT_FAILURE);
 	}
 	return (EXIT_SUCCESS);

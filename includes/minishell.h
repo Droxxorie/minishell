@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 15:24:16 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/23 17:28:41 by eraad            ###   ########.fr       */
+/*   Updated: 2025/09/24 20:52:13 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 //* close, write, read, access
 
 //* ----------------- Macros ----------------------- *
-# define SUPPORTED_SYMBOLS "<>|" //* opérateurs unitaires supportés
+# define SUPPORTED_OPERATORS "<>|" //* opérateurs unitaires supportés
 # define FD_STATE_NONE -1        //* aucun FD particulier à laisser ouvert
 # define FD_STATE_RO 0           //* seule l'extrémité pipe READ reste ouverte
 # define FD_STATE_WO 1           //* seule l'extrémité pipe WRITE reste ouverte
@@ -65,6 +65,7 @@ typedef enum e_type
 	REDIR_APPEND, //* >>
 	HEREDOC,      //* <<
 	LIMITER,      //* limiter for heredoc
+	FILE_NAME,   //* filename for redirections
 }						t_type;
 
 //* ----------------- Structs ----------------------- *
@@ -160,28 +161,37 @@ typedef struct s_data
 //* ----------------- Functions ----------------------- *
 
 //* UTILS
-long long ft_atoll(const char *str);
-void	free_char_array(char **array);
-char	*ft_append_char(char *str, char c);
+long long	ft_atoll(const char *str);
+void		free_char_array(char **array);
+char		*ft_append_char(char *str, char c);
 
 //* INIT
-t_env					*env_last_var(t_env *env);
-int						add_var(t_data *data, t_env **env, char *key,
-							char *value);
-int						init_env(t_data *data, char **envp);
+t_env	*env_last_var(t_env *env);
+int		add_var(t_data *data, t_env **env, char *key, char *value);
+int		init_env(t_data *data, char **envp);
 
 //* SIGNALS
-void					signals_handler(void);
+void	signals_handler(void);
 
 //* ERRORS
-int						syntax_error_handler(t_data *data);
+int		syntax_error_handler(t_data *data);
+void	print_syntax_error(char error, int code);
+
+//* FREE
+void	free_tokens(t_data *data);
 
 //* LEXING
-int 					lexer(t_data *data);
-int						handle_no_quote(t_data *data, t_quote *quote_state,
-							char **token_buffer, int *command_boundary);
-int						handle_single_quoted(t_data *data, t_quote *quote_state,
-							char **token_buffer);
-int						handle_double_quoted(t_data *data, t_quote *quote_state,
-							char **token_buffer);
+int 	lexer(t_data *data);
+int		handle_no_quote(t_data *data, t_quote *quote_state, char **token_buffer, int *command_boundary);
+int		handle_single_quoted(t_data *data, t_quote *quote_state, char **token_buffer);
+int		handle_double_quoted(t_data *data, t_quote *quote_state, char **token_buffer);
+t_token	*create_token(char *start, char *end, t_type type, t_quote quote);
+t_token	*add_classified_token(t_data *data, char *token_buffer, int *command_boundary);
+t_token	*add_back_token(t_data *data, t_token *new_token);
+t_token	*classify_heredoc_delimiters(t_token *tokens);
+t_token	*classify_input_redirections(t_token *tokens);
+t_token	*normalize_exit_echo_args(t_token *tokens);
+t_token	*normalize_redirection_args(t_token *tokens);
+int		validate_pipe_syntax(t_data *data);
+
 #endif
