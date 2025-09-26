@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 16:47:43 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/24 16:35:53 by eraad            ###   ########.fr       */
+/*   Updated: 2025/09/25 19:23:32 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	handle_no_quote(t_data *data, t_quote *quote_state, char **token_buffer,
 		*quote_state = DOUBLE_QUOTE;
 	else
 	{
-		if (process_unquoted_char(data, token_buffer, command_boundary))
+		if (process_unquoted_char(data, token_buffer, command_boundary) == EXIT_FAILURE)
 			return (EXIT_FAILURE);
 	}
 	return (EXIT_SUCCESS);

@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 14:42:52 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/23 16:50:25 by eraad            ###   ########.fr       */
+/*   Updated: 2025/09/26 18:23:01 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static void	check_child_process(void)
 {
 	if (!isatty(STDIN_FILENO))
 	{
-		ft_putstr_fd("minishell: No child process allowed\n", 2);
+		ft_putstr_fd("minishell: no child process allowed\n", 2);
 		exit(EXIT_FAILURE);
 	}
 }
@@ -59,8 +59,8 @@ static void	launch_minishell(t_data *data)
 			continue ; // TODO besoin de free ?
 		if (ft_strlen(data->line))
 			add_history(data->line);
-		if (lexer(data, 1) == EXIT_FAILURE || parser(data) == EXIT_FAILURE
-			|| expander(data) == EXIT_FAILURE || executer(data) == EXIT_FAILURE)
+		if (lexer(data) == EXIT_FAILURE || parser(data) == EXIT_FAILURE
+			|| expander(data) == EXIT_FAILURE || executer(data) == EXIT_FAILURE) //TODO TODO
 		{
 			reset_command_context(data);
 			continue ;

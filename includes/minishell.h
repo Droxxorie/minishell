@@ -6,12 +6,14 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 15:24:16 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/24 20:52:13 by eraad            ###   ########.fr       */
+/*   Updated: 2025/09/26 18:18:01 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+
+# define _POSIX_C_SOURCE 200809L
 
 //* ----------------- Libraries ----------------------- *
 # include "../libft/include/libft.h"
@@ -32,10 +34,11 @@
 
 //* ----------------- Macros ----------------------- *
 # define SUPPORTED_OPERATORS "<>|" //* opérateurs unitaires supportés
-# define FD_STATE_NONE -1        //* aucun FD particulier à laisser ouvert
-# define FD_STATE_RO 0           //* seule l'extrémité pipe READ reste ouverte
-# define FD_STATE_WO 1           //* seule l'extrémité pipe WRITE reste ouverte
-# define FD_STATE_RW 2           //* les deux extrémités pipe restent ouvertes
+# define FD_STATE_NONE -1          //* aucun FD particulier à laisser ouvert
+# define FD_STATE_RO 0             //* seule l'extrémité pipe READ reste ouverte
+# define FD_STATE_WO 1            
+	//* seule l'extrémité pipe WRITE reste ouverte
+# define FD_STATE_RW 2             //* les deux extrémités pipe restent ouvertes
 
 //* ----------------- Globals ----------------------- *
 # ifndef GLOBALS_H
@@ -65,7 +68,7 @@ typedef enum e_type
 	REDIR_APPEND, //* >>
 	HEREDOC,      //* <<
 	LIMITER,      //* limiter for heredoc
-	FILE_NAME,   //* filename for redirections
+	FILE_NAME,    //* filename for redirections
 }						t_type;
 
 //* ----------------- Structs ----------------------- *
@@ -91,7 +94,7 @@ typedef struct s_token
 typedef struct s_command
 {
 	char *command;      //* nom brut de la commande avant path resolution
-	char **final_group; //* tableau final des arguments (command + args)
+	char **argv; //* tableau final des arguments (command + args)
 	t_list *args;       //* liste chaînée des arguments
 	t_list *flags;      //* liste chaînée des flags
 	t_quote quote;      //* type de quote si command est entre quotes
@@ -132,7 +135,7 @@ typedef struct s_data
 	//* indique le type de quote manquante en cas d'erreur de parsing/lexing
 	char				**env;
 	//* environnement initial (copie de l'env passé en paramètre à main)
-	char **parsed_env; //* environnement modifié pour execve
+	char **parsed_env;  //* environnement modifié pour execve
 	char *expanded_str; //* écrasement mémoire(sert a stocker $user etc)
 
 	//* PATH resolution
@@ -161,37 +164,58 @@ typedef struct s_data
 //* ----------------- Functions ----------------------- *
 
 //* UTILS
-long long	ft_atoll(const char *str);
-void		free_char_array(char **array);
-char		*ft_append_char(char *str, char c);
+long long				ft_atoll(const char *str);
+void					free_char_array(char **array);
+char					*ft_append_char(char *str, char c);
 
 //* INIT
-t_env	*env_last_var(t_env *env);
-int		add_var(t_data *data, t_env **env, char *key, char *value);
-int		init_env(t_data *data, char **envp);
+t_env					*env_last_var(t_env *env);
+int						add_var(t_data *data, t_env **env, char *key,
+							char *value);
+int						init_env(t_data *data, char **envp);
 
 //* SIGNALS
-void	signals_handler(void);
+void					signals_handler(void);
+void					setup_heredoc_signals(void);
 
 //* ERRORS
-int		syntax_error_handler(t_data *data);
-void	print_syntax_error(char error, int code);
+int						syntax_error_handler(t_data *data);
+void					print_syntax_error(char error, int code);
 
 //* FREE
-void	free_tokens(t_data *data);
+void					free_tokens(t_data *data);
 
 //* LEXING
-int 	lexer(t_data *data);
-int		handle_no_quote(t_data *data, t_quote *quote_state, char **token_buffer, int *command_boundary);
-int		handle_single_quoted(t_data *data, t_quote *quote_state, char **token_buffer);
-int		handle_double_quoted(t_data *data, t_quote *quote_state, char **token_buffer);
-t_token	*create_token(char *start, char *end, t_type type, t_quote quote);
-t_token	*add_classified_token(t_data *data, char *token_buffer, int *command_boundary);
-t_token	*add_back_token(t_data *data, t_token *new_token);
-t_token	*classify_heredoc_delimiters(t_token *tokens);
-t_token	*classify_input_redirections(t_token *tokens);
-t_token	*normalize_exit_echo_args(t_token *tokens);
-t_token	*normalize_redirection_args(t_token *tokens);
-int		validate_pipe_syntax(t_data *data);
+int						lexer(t_data *data);
+int						handle_no_quote(t_data *data, t_quote *quote_state,
+							char **token_buffer, int *command_boundary);
+int						handle_single_quoted(t_data *data, t_quote *quote_state,
+							char **token_buffer);
+int						handle_double_quoted(t_data *data, t_quote *quote_state,
+							char **token_buffer);
+t_token					*create_token(char *start, char *end, t_type type,
+							t_quote quote);
+t_token					*add_classified_token(t_data *data, char *token_buffer,
+							int *command_boundary);
+t_token					*add_back_token(t_data *data, t_token *new_token);
+t_token					*classify_heredoc_delimiters(t_token *tokens);
+t_token					*classify_input_redirections(t_token *tokens);
+t_token					*normalize_exit_echo_args(t_token *tokens);
+t_token					*normalize_redirection_args(t_token *tokens);
+int						validate_pipe_syntax(t_data *data);
+
+//* PARSING
+int			parser(t_data *data);
+t_command	*append_command_node(t_data *data);
+int			set_command_name(t_command *current_command, t_token *current_token);
+int			add_command_flag(t_command *current_command, t_token *current_token);
+int			add_command_arg(t_command *current_command, t_token *current_token);
+int			is_redirection_value(t_data *data, t_token *current_token);
+int			setup_heredoc(t_data *data, char *limiter);
+int			handle_redirection_fd(t_redirection *redir, t_token *token, int flags);
+int			append_command_to_argv(t_command *current, size_t *i);
+int			append_args_to_argv(t_command *current, size_t *i);
+int			append_flags_to_argv(t_command *current, size_t *i);
+size_t		count_command_elements(t_command *command);
 
 #endif

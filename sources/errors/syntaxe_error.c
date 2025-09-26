@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 12:20:13 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/24 20:45:25 by eraad            ###   ########.fr       */
+/*   Updated: 2025/09/26 02:00:18 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ void	print_syntax_error(char error, int code)
 	}
 	else if (code == 6)
 		ft_putstr_fd("minishell: syntax error: unclosed quote\n", 2);
+	else if (code == 7)
+		ft_putstr_fd("minishell: syntax error near unexpected token\n", 2);
 }
 
 static int	scan_line(char *line, int opened_quote, int index, t_data *data)

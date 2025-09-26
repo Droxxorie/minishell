@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 15:29:46 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/24 20:50:11 by eraad            ###   ########.fr       */
+/*   Updated: 2025/09/25 19:22:39 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,17 +47,17 @@ static int	scan_line(t_data *data, t_quote *quote_state, char **token_buffer,
 		if (quote_state == NO_QUOTE)
 		{
 			if (handle_unquoted(data, quote_state, token_buffer,
-					&command_boundary))
+					&command_boundary) == EXIT_FAILURE)
 				return (EXIT_FAILURE);
 		}
 		else if (quote_state == SINGLE_QUOTE)
 		{
-			if (handle_single_quoted(data, quote_state, token_buffer))
+			if (handle_single_quoted(data, quote_state, token_buffer) == EXIT_FAILURE)
 				return (EXIT_FAILURE);
 		}
 		else if (quote_state == DOUBLE_QUOTE)
 		{
-			if (handle_double_quoted(data, quote_state, token_buffer))
+			if (handle_double_quoted(data, quote_state, token_buffer) == EXIT_FAILURE)
 				return (EXIT_FAILURE);
 		}
 		data->line++;
@@ -75,7 +75,7 @@ int	lexer(t_data *data)
 	quote_state = NO_QUOTE;
 	token_buffer = NULL;
 	command_boundary = 1;
-	if (scan_line(data, &quote_state, &token_buffer, &command_boundary))
+	if (scan_line(data, &quote_state, &token_buffer, &command_boundary) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 	return (lexer_postprocess(data, quote_state, &token_buffer,
 								command_boundary));
