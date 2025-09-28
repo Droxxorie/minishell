@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 16:03:56 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/22 16:42:34 by eraad            ###   ########.fr       */
+/*   Updated: 2025/09/28 16:50:35 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ static void	reset_commands(t_data *data)
 			free_list(&temp->flags);
 		if (temp->args)
 			free_list(&temp->args);
-		if (temp->final_group)
-			free_char_array(temp->final_group);
+		if (temp->argv)
+			free_char_array(temp->argv);
 		free(temp);
 		temp = NULL;
 	}
@@ -94,11 +94,6 @@ static void reset_redirections(t_data *data)
 
 void	reset_command_context(t_data *data)
 {
-	if (data->expanded_str)
-	{
-		free(data->expanded_str);
-		data->expanded_str = NULL;
-	}
 	reset_commands(data);
 	reset_tokens(data);
 	reset_redirections(data);

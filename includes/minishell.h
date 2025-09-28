@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 15:24:16 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/26 18:18:01 by eraad            ###   ########.fr       */
+/*   Updated: 2025/09/28 18:57:57 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,12 @@ extern int				g_waiting;
 //* ----------------- Enums ----------------------- *
 typedef enum e_quote
 {
-	NO_QUOTE,
-	SINGLE_QUOTE,
-	DOUBLE_QUOTE,
+	NQ,
+	NO_QUOTE = NQ,
+	SQ,
+	SINGLE_QUOTE = SQ,
+	DQ,
+	DOUBLE_QUOTE = DQ,
 }						t_quote;
 
 typedef enum e_type
@@ -136,7 +139,6 @@ typedef struct s_data
 	char				**env;
 	//* environnement initial (copie de l'env passé en paramètre à main)
 	char **parsed_env;  //* environnement modifié pour execve
-	char *expanded_str; //* écrasement mémoire(sert a stocker $user etc)
 
 	//* PATH resolution
 	char **parsed_path; //* tableau des chemins complets (PATH+ / + command)
@@ -181,9 +183,17 @@ void					setup_heredoc_signals(void);
 //* ERRORS
 int						syntax_error_handler(t_data *data);
 void					print_syntax_error(char error, int code);
+void					report_error(t_data *data, const char *message,
+							int exit_code);
 
 //* FREE
 void					free_tokens(t_data *data);
+
+//* EXPANDING
+int						expander(t_data *data);
+t_quote				quote_state(char *line, size_t index);
+t_bool				need_expansion(char *str);
+t_bool				env_var_exists(t_data *data, char *variable);
 
 //* LEXING
 int						lexer(t_data *data);

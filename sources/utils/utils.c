@@ -6,13 +6,11 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:49:21 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/26 01:36:27 by eraad            ###   ########.fr       */
+/*   Updated: 2025/09/28 16:51:56 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-
 
 long long	ft_atoll(const char *str)
 {
