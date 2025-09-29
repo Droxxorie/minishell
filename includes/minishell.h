@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 15:24:16 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/28 18:57:57 by eraad            ###   ########.fr       */
+/*   Updated: 2025/09/29 16:04:17 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,6 +194,8 @@ int						expander(t_data *data);
 t_quote				quote_state(char *line, size_t index);
 t_bool				need_expansion(char *str);
 t_bool				env_var_exists(t_data *data, char *variable);
+char					*get_env_value(t_data *data, char *variable);
+char					*extract_var_name(char *str, size_t *i);
 
 //* LEXING
 int						lexer(t_data *data);

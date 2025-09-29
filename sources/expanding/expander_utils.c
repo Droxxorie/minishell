@@ -6,11 +6,60 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 17:45:18 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/28 18:57:53 by eraad            ###   ########.fr       */
+/*   Updated: 2025/09/29 16:49:43 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+char *extract_var_name(char *str, size_t *i)
+{
+	char *variable;
+	size_t variable_len;
+
+	if (!str || !*str)
+		return (NULL);
+	if (str[0] == '$' && str[1] == '$')
+	{
+		*i += 2;
+		return (ft_strdup("$$"));
+	}
+	if (str[0] == '?' && (*i)++)
+		return (ft_strdup("?"));
+	variable_len = 0;
+	while (str[variable_len] && (ft_isalnum(str[variable_len])
+			|| str[variable_len] == '_'))
+		variable_len++;
+	if (variable_len == 0)
+		return (NULL);
+	variable = ft_substr(str, 1, variable_len);
+	if (!variable)
+		return (NULL);
+	*i += variable_len;
+	return (variable);
+}
+
+char *get_env_value(t_data *data, char *variable)
+{
+	char *expanded_value;
+	t_env *temp;
+
+	expanded_value = NULL;
+	temp = data->env_copy;
+	while (temp)
+	{
+		// if (ft_strcmp(temp->value, variable) == 0) //? wich one
+		if (ft_strcmp(temp->key, variable) == 0)
+		{
+			expanded_value = ft_strdup(temp->value);
+			if (!expanded_value)
+				return (report_error(data, "strdup", 1), NULL);
+			return (expanded_value);
+		}
+		temp = temp->next;
+	}
+	return (NULL);
+}
 
 t_bool env_var_exists(t_data *data, char *variable)
 {
@@ -53,7 +102,7 @@ t_quote	quote_state(char *line, size_t index)
 	state = NO_QUOTE;
 	i = 0;
 	if (!line)
-		return (NULL);
+		return (NO_QUOTE);
 	while (line[i] && i < index)
 	{
 		if (line[i] == '"' && state != SINGLE_QUOTE && state != DOUBLE_QUOTE)

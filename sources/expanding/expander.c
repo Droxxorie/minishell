@@ -6,16 +6,55 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 16:44:06 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/28 18:58:12 by eraad            ###   ########.fr       */
+/*   Updated: 2025/09/29 16:52:07 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
+// static char *append_current_char(t_data *data, char *line, size_t *i, char *accumulated_line)
+// {
+// 	char *temp;
+
+// 	temp = ft_strdup(accumulated_line);
+// 	if (!temp)
+// 		return (report_error(data, "strdup", 1), NULL);
+// 	free(accumulated_line);
+// 	accumulated_line = ft_strjoin(temp, &line[*i]);
+// 	free(temp);
+// 	if (!accumulated_line)
+// 		return (report_error(data, "strjoin", 1), NULL);
+// 	(*i)++;
+// 	return (accumulated_line);
+// }
+
+static char	*append_current_char(t_data *data, char *line, size_t *i, char *accumulated_line)
+{
+	size_t	len;
+	char	*temp;
+
+	if (!accumulated_line)
+		len = 0;
+	else
+		len = ft_strlen(accumulated_line);
+	temp = malloc(sizeof(char) * (len + 2));
+	if (!temp)
+		return (report_error(data, "malloc", 1), NULL);
+	if (accumulated_line)
+	{
+		ft_memcpy(temp, accumulated_line, len);
+		free(accumulated_line);
+	}
+	temp[len] = line[*i];
+	temp[len + 1] = '\0';
+	(*i)++;
+	return (temp);
+}
+
 static char *expand_variable(t_data *data, char *variable, size_t *i, char *accumulated_line)
 {
-	char *current_line;
-	char *expanded_value;
+	char	*current_line;
+	char	*expanded_value;
 
 	current_line = ft_strdup(accumulated_line);
 	if (!current_line)
@@ -26,16 +65,17 @@ static char *expand_variable(t_data *data, char *variable, size_t *i, char *accu
 		(*i) += 2;
 	}
 	else if (env_var_exists(data, variable))
-		expanded_value = give_me_inside_var(variable, data); // TODO
+		expanded_value = get_env_value(data, variable);
 	else
-		expanded_value = ft_strdup("");
+		// expanded_value = ft_strdup(""); //? which one
+		expanded_value = ft_calloc(1, 1);
 	free(variable);
 	free(accumulated_line);
-	accumulated_line = ft_concatenate(current_line, expanded_value); // TODO
+	accumulated_line = ft_strjoin(current_line, expanded_value);
 	free(current_line);
 	free(expanded_value);
 	if (!accumulated_line)
-		return (report_error(data, "strdup", 1), NULL);
+		return (report_error(data, "strjoin", 1), NULL);
 	return (accumulated_line);
 }
 
@@ -48,16 +88,16 @@ static char	*expand_segment(t_data *data, char *line, size_t *i, char *accumulat
 		variable = ft_strdup("$?");
 		if (!variable)
 			return (report_error(data, "strdup", 1), NULL);
-		return (expand_var_or_exit(data, variable, i, accumulated_line)); // TODO
+		return (expand_variable(data, variable, i, accumulated_line));
 	}
 	if (line[*i] == '$' && quote_state(line, *i) != SQ)
 	{
-		variable = extract_var(line + *i, i); // TODO
+		variable = extract_var_name(line + *i, i);
 		if (!variable)
-			return (report_error(data, "Failed to extract variable", 1), NULL);
-		return (expand_var_or_exit(data, variable, i)); // TODO
+			return (report_error(data, "strdup", 1), NULL);
+		return (expand_variable(data, variable, i, accumulated_line));
 	}
-	return (process_character(data, line, i)); // TODO
+	return (append_current_char(data, line, i, accumulated_line));
 }
 
 static char	*expand_env_variables(t_data *data)
@@ -74,14 +114,13 @@ static char	*expand_env_variables(t_data *data)
 		return (report_error(data, "strdup", 1), NULL);
 	while (data->line[i])
 	{
-		temp = expand_segment(data, data->line, &i, accumulated_line); // TODO
+		temp = expand_segment(data, data->line, &i, accumulated_line);
 		if (!temp)
 		{
 			free(accumulated_line);
 			return (NULL);
 		}
 		accumulated_line = temp;
-		//? free temp ?
 	}
 	return (accumulated_line);
 }
@@ -95,7 +134,7 @@ int	expander(t_data *data)
 	expanded_line = NULL;
 	if (need_expansion(data->line) == TRUE)
 	{
-		expanded_line = expand_env_variables(data); // TODO
+		expanded_line = expand_env_variables(data);
 		if (!expanded_line)
 			return (EXIT_FAILURE);
 		free(data->line);
