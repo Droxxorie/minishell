@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 13:28:04 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/02 17:53:42 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/03 22:49:43 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static void	exit_numeric_error(t_data *data, char *arg)
 {
 	safe_putstr_fd("exit\n", STDERR_FILENO);
 	report_error3("minishell: exit: ", arg, ": numeric argument required\n");
-	exit_minishell(data, 2); // TODO
+	exit_minishell(data, 2);
 }
 
 static int	exit_too_many_args(t_data *data)
@@ -97,7 +97,7 @@ int	execute_builtin_exit(t_data *data, char **argv)
 		if (!in_pipeline)
 		{
 			safe_putstr_fd("exit\n", STDERR_FILENO);
-			exit_minishell(data, EXIT_SUCCESS); // TODO
+			exit_minishell(data, EXIT_SUCCESS);
 		}
 		return (EXIT_SUCCESS);
 	}

@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 17:02:05 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/02 20:24:43 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/03 11:41:22 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ t_bool	is_builtin_command(t_command *node)
 	return (FALSE);
 }
 
-int	handle_builtin_execution(t_data *data, int *fds, int index, t_command *node)
+int	handle_builtin_command(t_data *data, int *fds, int index, t_command *node)
 {
 	int	builtin_status;
 	int	saved_stdio[2];

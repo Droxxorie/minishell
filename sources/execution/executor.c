@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 20:37:23 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/02 18:42:55 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/03 20:45:41 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,10 @@ int	executor(t_data *data)
 	if (!data->pipes->fds && number_of_commands > 0)
 		return (free(data->pipes), data->pipes = NULL, EXIT_FAILURE);
 	setup_child_signals();
-	execute_pipeline(data); // TODO
+	execute_pipeline(data);
 	free(data->pipes->fds);
-	data->pipes->fds = NULL;
+	// data->pipes->fds = NULL; Pour evité double free on verra
 	free(data->pipes->pids);
-	data->pipes->pids = NULL;
+	// data->pipes->pids = NULL;
 	return (EXIT_SUCCESS);
 }

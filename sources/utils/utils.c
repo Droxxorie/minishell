@@ -6,11 +6,25 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:49:21 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/01 13:12:28 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/03 21:32:36 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+void	close_fds_from(int start_fd)
+{
+	int	fd;
+	int	max_fd;
+
+	max_fd = 1024;
+	fd = start_fd;
+	while (fd < max_fd)
+	{
+		close(fd);
+		fd++;
+	}
+}
 
 int	ft_strcmp(const char *s1, const char *s2)
 {
@@ -49,25 +63,6 @@ long long	ft_atoll(const char *str)
 		i++;
 	}
 	return (result * n);
-}
-
-void	free_char_array(char **array)
-{
-	int	i;
-
-	if (!array)
-		return ;
-	i = 0;
-	while (array[i])
-	{
-		if (array[i])
-			free(array[i]);
-		array[i] = NULL;
-		i++;
-	}
-	if (array)
-		free(array);
-	array = NULL;
 }
 
 char	*ft_append_char(char *str, char c)

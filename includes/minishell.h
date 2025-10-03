@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 15:24:16 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/02 19:57:09 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/03 22:46:21 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,15 +138,15 @@ typedef struct s_data
 	//* indique le type de quote manquante en cas d'erreur de parsing/lexing
 	char				**env;
 	//* environnement initial (copie de l'env passé en paramètre à main)
-	char **parsed_env; //* environnement modifié pour execve
-
-	//* PATH resolution
-	char **parsed_path; //* tableau des chemins complets (PATH+ / + command)
-	char *path;         //* tableau des chemins extraits de la variable PATH
+	// char **parsed_env; //* environnement modifié pour execve
 
 	//* ligne et statuts
 	char *line;      //* ligne lue par readline
 	int exit_status; //* statut de sortie de la dernière commande exécutée
+
+	//* PATH resolution
+	// char	**parsed_path; //* tableau des chemins complets (PATH+ / + command)
+	char *path; //* tableau des chemins extraits de la variable PATH
 
 	//* heredoc
 	int heredoc_fds[256]; //* tableau des FDs des heredocs
@@ -168,11 +168,11 @@ typedef struct s_data
 //* UTILS *//
 int						ft_strcmp(const char *s1, const char *s2);
 long long				ft_atoll(const char *str);
-void					free_char_array(char **array);
 char					*ft_append_char(char *str, char c);
 int						safe_putstr_fd(char *s, int fd);
 int						safe_putchar_fd(char c, int fd);
 void					swap_env_fields(t_env *a, t_env *b);
+void					close_fds_from(int start_fd);
 
 //* INIT *//
 t_env					*env_last_var(t_env *env);
@@ -198,6 +198,10 @@ void					report_error3(const char *message_1,
 
 //* FREE *//
 void					free_tokens(t_data *data);
+void					free_env_list(t_env **env);
+void					free_commands(t_data *data);
+void					free_char_array(char **array);
+void					free_redirections(t_data *data);
 
 //* EXPANDING *//
 int						expander(t_data *data);
@@ -250,41 +254,57 @@ int						executor(t_data *data);
 int						launch_pipeline(t_data *data);
 
 //* BUILTINS
-int		is_builtin_command(t_command *node);
-int		handle_builtin_execution(t_data *data, int *fds, int index, t_command *node);
-int		close_pipe_fds(int *fds, int count);
-int		safe_close_fd(int *fd);
-int		restore_saved_stdio(int *saved_stdio);
-int		save_stdio(int *saved_stdio);
-const char	*find_env_value(t_data *data, const char *key);
-t_bool	key_is_valid(const char *key);
+int						is_builtin_command(t_command *node);
+int						handle_builtin_command(t_data *data, int *fds,
+							int index, t_command *node);
+int						close_pipe_fds(int *fds, int count);
+int						safe_close_fd(int *fd);
+int						restore_saved_stdio(int *saved_stdio);
+int						save_stdio(int *saved_stdio);
+const char				*find_env_value(t_data *data, const char *key);
+t_bool					key_is_valid(const char *key);
 
 //* ECHO
-int		execute_builtin_echo(char **argv);
+int						execute_builtin_echo(char **argv);
 
 //* CD
-int		execute_builtin_cd(t_data *data, t_command *node);
+int						execute_builtin_cd(t_data *data, t_command *node);
 
 //* ENV
-int		execute_builtin_pwd(t_data *data, t_command *node);
+int						execute_builtin_pwd(t_data *data, t_command *node);
 
 //* EXPORT
-char	*extract_env_key(char *arg);
-void	init_export_list(t_data *data);
-int		env_index_of_key(t_env *env, char *key);
-int		execute_builtin_export(t_data *data, char **argv, int fd);
-void	env_update_value(t_data *data, const char *arg, int key_index);
-void	env_add_from_arg(t_data *data, t_env *env, char *key, char *arg);
-void	handle_export_arg(t_data *data, char *key, char *arg, int key_index);
-t_env	*sort_export_list(t_env *head, int (*cmp)(const char *, const char *));
+char					*extract_env_key(char *arg);
+void					init_export_list(t_data *data);
+int						env_index_of_key(t_env *env, char *key);
+int						execute_builtin_export(t_data *data, char **argv,
+							int fd);
+void					env_update_value(t_data *data, const char *arg,
+							int key_index);
+void					env_add_from_arg(t_data *data, t_env *env, char *key,
+							char *arg);
+void					handle_export_arg(t_data *data, char *key, char *arg,
+							int key_index);
+t_env					*sort_export_list(t_env *head, int (*cmp)(const char *,
+								const char *));
 
 //* UNSET
-int		execute_builtin_unset(t_data *data, char **argv);
+int						execute_builtin_unset(t_data *data, char **argv);
 
 //* ENV
-int		execute_builtin_env(t_data *data, char **argv, int fd_out);
+int						execute_builtin_env(t_data *data, char **argv,
+							int fd_out);
 
 //* EXIT
-int		execute_builtin_exit(t_data *data, char **argv);
+int						execute_builtin_exit(t_data *data, char **argv);
+
+//* EXTERNALS *//
+void					handle_external_command(t_data *data, int *fds,
+							int index, pid_t *pid);
+t_bool					command_path_is_valid(t_data *data, t_command *node,
+							const char **command_path);
+char					**build_exec_search_paths(t_data *data,
+							const t_env *env);
+char					**env_list_to_array(const t_env *env);
 
 #endif
