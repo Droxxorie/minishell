@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 15:24:16 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/29 16:04:17 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/02 19:57:09 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@
 # define SUPPORTED_OPERATORS "<>|" //* opérateurs unitaires supportés
 # define FD_STATE_NONE -1          //* aucun FD particulier à laisser ouvert
 # define FD_STATE_RO 0             //* seule l'extrémité pipe READ reste ouverte
-# define FD_STATE_WO 1            
-	//* seule l'extrémité pipe WRITE reste ouverte
-# define FD_STATE_RW 2             //* les deux extrémités pipe restent ouvertes
+# define FD_STATE_WO 1
+//* seule l'extrémité pipe WRITE reste ouverte
+# define FD_STATE_RW 2 //* les deux extrémités pipe restent ouvertes
 
 //* ----------------- Globals ----------------------- *
 # ifndef GLOBALS_H
@@ -96,11 +96,11 @@ typedef struct s_token
 //* Nœud de commande agrégée par le parser
 typedef struct s_command
 {
-	char *command;      //* nom brut de la commande avant path resolution
-	char **argv; //* tableau final des arguments (command + args)
-	t_list *args;       //* liste chaînée des arguments
-	t_list *flags;      //* liste chaînée des flags
-	t_quote quote;      //* type de quote si command est entre quotes
+	char *command; //* nom brut de la commande avant path resolution
+	char **argv;   //* tableau final des arguments (command + args)
+	t_list *args;  //* liste chaînée des arguments
+	t_list *flags; //* liste chaînée des flags
+	t_quote quote; //* type de quote si command est entre quotes
 	struct s_command	*next;
 }						t_command;
 
@@ -125,10 +125,10 @@ typedef struct s_env
 //* Regroupe la topologie des pipes / PIDs d’un pipeline
 typedef struct s_pipes
 {
-	int nb;           //* nombre de pipes dans le pipeline
-	int **fds;        //* tableau des FDs des pipes
-	pid_t *pids;      //* tableau des PIDs des processus enfants
-	int first_fds[2]; //* sauvegarde des FDs originaux stdin et stdout
+	int nb;             //* nombre de pipes dans le pipeline
+	int **fds;          //* tableau des FDs des pipes
+	pid_t *pids;        //* tableau des PIDs des processus enfants
+	int saved_stdio[2]; //* sauvegarde des FDs originaux stdin et stdout
 }						t_pipes;
 
 typedef struct s_data
@@ -138,7 +138,7 @@ typedef struct s_data
 	//* indique le type de quote manquante en cas d'erreur de parsing/lexing
 	char				**env;
 	//* environnement initial (copie de l'env passé en paramètre à main)
-	char **parsed_env;  //* environnement modifié pour execve
+	char **parsed_env; //* environnement modifié pour execve
 
 	//* PATH resolution
 	char **parsed_path; //* tableau des chemins complets (PATH+ / + command)
@@ -165,39 +165,49 @@ typedef struct s_data
 
 //* ----------------- Functions ----------------------- *
 
-//* UTILS
+//* UTILS *//
+int						ft_strcmp(const char *s1, const char *s2);
 long long				ft_atoll(const char *str);
 void					free_char_array(char **array);
 char					*ft_append_char(char *str, char c);
+int						safe_putstr_fd(char *s, int fd);
+int						safe_putchar_fd(char c, int fd);
+void					swap_env_fields(t_env *a, t_env *b);
 
-//* INIT
+//* INIT *//
 t_env					*env_last_var(t_env *env);
 int						add_var(t_data *data, t_env **env, char *key,
 							char *value);
 int						init_env(t_data *data, char **envp);
 
-//* SIGNALS
+//* SIGNALS *//
 void					signals_handler(void);
 void					setup_heredoc_signals(void);
+int						sig_event(void);
+void					setup_child_signals(void);
 
-//* ERRORS
+//* ERRORS *//
 int						syntax_error_handler(t_data *data);
 void					print_syntax_error(char error, int code);
 void					report_error(t_data *data, const char *message,
 							int exit_code);
+void					report_error2(const char *message_1,
+							const char *message_2);
+void					report_error3(const char *message_1,
+							const char *message_2, const char *message_3);
 
-//* FREE
+//* FREE *//
 void					free_tokens(t_data *data);
 
-//* EXPANDING
+//* EXPANDING *//
 int						expander(t_data *data);
-t_quote				quote_state(char *line, size_t index);
-t_bool				need_expansion(char *str);
-t_bool				env_var_exists(t_data *data, char *variable);
+t_quote					quote_state(char *line, size_t index);
+t_bool					need_expansion(char *str);
+t_bool					env_var_exists(t_data *data, char *variable);
 char					*get_env_value(t_data *data, char *variable);
 char					*extract_var_name(char *str, size_t *i);
 
-//* LEXING
+//* LEXING *//
 int						lexer(t_data *data);
 int						handle_no_quote(t_data *data, t_quote *quote_state,
 							char **token_buffer, int *command_boundary);
@@ -216,18 +226,65 @@ t_token					*normalize_exit_echo_args(t_token *tokens);
 t_token					*normalize_redirection_args(t_token *tokens);
 int						validate_pipe_syntax(t_data *data);
 
-//* PARSING
-int			parser(t_data *data);
-t_command	*append_command_node(t_data *data);
-int			set_command_name(t_command *current_command, t_token *current_token);
-int			add_command_flag(t_command *current_command, t_token *current_token);
-int			add_command_arg(t_command *current_command, t_token *current_token);
-int			is_redirection_value(t_data *data, t_token *current_token);
-int			setup_heredoc(t_data *data, char *limiter);
-int			handle_redirection_fd(t_redirection *redir, t_token *token, int flags);
-int			append_command_to_argv(t_command *current, size_t *i);
-int			append_args_to_argv(t_command *current, size_t *i);
-int			append_flags_to_argv(t_command *current, size_t *i);
-size_t		count_command_elements(t_command *command);
+//* PARSING *//
+int						parser(t_data *data);
+t_command				*append_command_node(t_data *data);
+int						set_command_name(t_command *current_command,
+							t_token *current_token);
+int						add_command_flag(t_command *current_command,
+							t_token *current_token);
+int						add_command_arg(t_command *current_command,
+							t_token *current_token);
+int						is_redirection_value(t_data *data,
+							t_token *current_token);
+int						setup_heredoc(t_data *data, char *limiter);
+int						handle_redirection_fd(t_redirection *redir,
+							t_token *token, int flags);
+int						append_command_to_argv(t_command *current, size_t *i);
+int						append_args_to_argv(t_command *current, size_t *i);
+int						append_flags_to_argv(t_command *current, size_t *i);
+size_t					count_command_elements(t_command *command);
+
+//* EXECUTING *//
+int						executor(t_data *data);
+int						launch_pipeline(t_data *data);
+
+//* BUILTINS
+int		is_builtin_command(t_command *node);
+int		handle_builtin_execution(t_data *data, int *fds, int index, t_command *node);
+int		close_pipe_fds(int *fds, int count);
+int		safe_close_fd(int *fd);
+int		restore_saved_stdio(int *saved_stdio);
+int		save_stdio(int *saved_stdio);
+const char	*find_env_value(t_data *data, const char *key);
+t_bool	key_is_valid(const char *key);
+
+//* ECHO
+int		execute_builtin_echo(char **argv);
+
+//* CD
+int		execute_builtin_cd(t_data *data, t_command *node);
+
+//* ENV
+int		execute_builtin_pwd(t_data *data, t_command *node);
+
+//* EXPORT
+char	*extract_env_key(char *arg);
+void	init_export_list(t_data *data);
+int		env_index_of_key(t_env *env, char *key);
+int		execute_builtin_export(t_data *data, char **argv, int fd);
+void	env_update_value(t_data *data, const char *arg, int key_index);
+void	env_add_from_arg(t_data *data, t_env *env, char *key, char *arg);
+void	handle_export_arg(t_data *data, char *key, char *arg, int key_index);
+t_env	*sort_export_list(t_env *head, int (*cmp)(const char *, const char *));
+
+//* UNSET
+int		execute_builtin_unset(t_data *data, char **argv);
+
+//* ENV
+int		execute_builtin_env(t_data *data, char **argv, int fd_out);
+
+//* EXIT
+int		execute_builtin_exit(t_data *data, char **argv);
 
 #endif

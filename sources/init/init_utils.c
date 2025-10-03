@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 17:44:48 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/28 17:44:50 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/02 10:30:20 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,19 +26,22 @@ int	add_var(t_data *data, t_env **env, char *key, char *value)
 	t_env *new_var;
 	t_env *temp;
 
-	if (!key || !value)
+	if (!key)
 		return (EXIT_FAILURE);
 	new_var = malloc(sizeof(t_env));
 	if (!new_var)
-		return (EXIT_FAILURE);
+		return (report_error(data, "malloc", -1), EXIT_FAILURE);
 	new_var->key = key;
-	new_var->equal = '=';
+	if (value)
+		new_var->equal = '=';
+	else
+		new_var->equal = '\0';
 	new_var->value = value;
 	new_var->next = NULL;
 	if (!*env)
 	{
 		*env = new_var;
-		if (data != NULL)
+		if (data && env == &data->env_copy)
 			data->env_copy = *env;
 		return (EXIT_SUCCESS);
 	}

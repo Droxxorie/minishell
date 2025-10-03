@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:36:19 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/15 16:47:14 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/02 00:03:15 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,16 @@ static int	add_shlvl(t_data *data)
 
 static int	add_default_vars(t_data *data, t_env **env_copy)
 {
-	if (add_var(data, env_copy, ft_strdup("PWD"), getcwd(NULL, 0)) == EXIT_FAILURE)
+	char *pwd;
+
+	pwd = getcwd(NULL, 0);
+	if (!pwd)
+		return (report_error(data, "getcwd", -1), EXIT_FAILURE);
+	if (add_var(data, env_copy, ft_strdup("PWD"), pwd) == EXIT_FAILURE)
+	{
+		free(pwd);
 		return (EXIT_FAILURE);
+	}
 	if (add_var(data, env_copy, ft_strdup("SHLVL"), ft_strdup("1")) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 	if (add_var(data, env_copy, ft_strdup("_"), ft_strdup("/usr/bin/env")) == EXIT_FAILURE)

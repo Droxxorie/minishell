@@ -6,11 +6,21 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:49:21 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/28 16:51:56 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/01 13:12:28 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+int	ft_strcmp(const char *s1, const char *s2)
+{
+	int	i;
+
+	i = 0;
+	while (s1[i] && s2[i] && (s1[i] == s2[i]))
+		i++;
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+}
 
 long long	ft_atoll(const char *str)
 {
@@ -43,7 +53,8 @@ long long	ft_atoll(const char *str)
 
 void	free_char_array(char **array)
 {
-	int i;
+	int	i;
+
 	if (!array)
 		return ;
 	i = 0;
@@ -61,8 +72,8 @@ void	free_char_array(char **array)
 
 char	*ft_append_char(char *str, char c)
 {
-	int len;
-	char *new_str;
+	int		len;
+	char	*new_str;
 
 	len = 0;
 	if (str)

@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 14:42:52 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/26 18:23:01 by eraad            ###   ########.fr       */
+/*   Updated: 2025/09/29 20:37:30 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,9 @@ static void	launch_minishell(t_data *data)
 			continue ; // TODO besoin de free ?
 		if (ft_strlen(data->line))
 			add_history(data->line);
-		if (lexer(data) == EXIT_FAILURE || parser(data) == EXIT_FAILURE
-			|| expander(data) == EXIT_FAILURE || executer(data) == EXIT_FAILURE) //TODO TODO
+		if (expander(data) == EXIT_FAILURE || lexer(data) == EXIT_FAILURE
+			|| parser(data) == EXIT_FAILURE || executor(data) == EXIT_FAILURE)
+			// TODO
 		{
 			reset_command_context(data);
 			continue ;
