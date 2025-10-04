@@ -6,13 +6,13 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 14:48:05 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/03 15:13:17 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/04 19:40:13 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
-static	check_direct_executable(t_data *data, char *command)
+static	char *check_direct_executable(t_data *data, char *command)
 {
 	char	*full_path;
 
@@ -80,7 +80,7 @@ static char	*resolve_command_path(t_data *data, t_command *node)
 }
 
 t_bool	command_path_is_valid(t_data *data, t_command *node,
-		const char **command_path)
+		char **command_path)
 {
 	*command_path = resolve_command_path(data, node);
 	if (!*command_path)

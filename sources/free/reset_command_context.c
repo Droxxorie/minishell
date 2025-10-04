@@ -6,15 +6,15 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 16:03:56 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/28 16:50:35 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/04 19:08:37 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
-static void	free_list(t_list *list)
+static void	free_list(t_minilist *list)
 {
-	t_list	*temp;
+	t_minilist	*temp;
 
 	while (list != NULL)
 	{
@@ -26,6 +26,7 @@ static void	free_list(t_list *list)
 			free(temp->content);
 			temp->content = NULL;
 		}
+		temp->quote = NO_QUOTE;
 		free(temp);
 		temp = NULL;
 	}

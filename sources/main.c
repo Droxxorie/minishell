@@ -6,12 +6,20 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 14:42:52 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/03 22:54:07 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/04 19:29:04 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+/** 
+ * @brief Libère et réinitialise l’état global du shell entre deux exécutions.
+ * Cette fonction nettoie toutes les ressources dynamiques allouées
+ * (environnement, tokens, commandes, redirections, pipes, etc.)
+ * et ferme les descripteurs de fichiers ouverts.
+ *
+ * @param data Pointeur vers la structure principale contenant l’état du shell.
+*/
 void	cleanup_shell_state(t_data *data)
 {
 	int	i;
@@ -20,8 +28,8 @@ void	cleanup_shell_state(t_data *data)
 		return ;
 	free_env_list(&data->env_copy);
 	free_env_list(&data->export);
-	free_tokens(&data->tokens);
-	free_commands(&data->commands);
+	free_tokens(data);
+	free_commands(data);
 	free_redirections(data);
 	free(data->line);
 	data->line = NULL;
@@ -41,6 +49,15 @@ void	cleanup_shell_state(t_data *data)
 	data->pipes = NULL;
 }
 
+/**
+ * @brief Gère les lignes vides ou non significatives saisies par l’utilisateur
+ * Vérifie si la ligne est vide, ne contient que des espaces, ou correspond à
+ * certaines entrées spéciales (":" ou "!"), puis la libère si nécessaire.
+ *
+ * @param data Pointeur vers la structure principale contenant la ligne lue.
+ *
+ * @return 1 si la ligne doit être ignorée (et libérée), 0 sinon.
+*/
 static int	empty_line_handler(t_data *data)
 {
 	int	i;
@@ -62,7 +79,13 @@ static int	empty_line_handler(t_data *data)
 	return (0);
 }
 
-static void	exit_minishell(t_data *data, int exit_status)
+/// @brief Termine proprement l’exécution du minishell.
+/// Ferme les descripteurs de fichiers ouverts, libère les ressources
+/// associées aux pipes et à l’état global, puis quitte le programme.
+///
+/// @param data Pointeur vers la structure principale contenant l’état du shell.
+/// @param exit_status Code de sortie à retourner au système.
+void	exit_minishell(t_data *data, int exit_status)
 {
 	close_fds_from(3);
 	if (data->pipes->fds)
@@ -113,6 +136,16 @@ static void	launch_minishell(t_data *data)
 	}
 }
 
+/// @brief Point d’entrée principal du programme minishell.
+/// Initialise la structure principale, vérifie l’environnement
+/// et lance la boucle d’exécution du shell.
+///
+/// @param argc Nombre d’arguments passés au programme.
+/// @param argv Tableau des arguments passés au programme.
+/// @param envp Tableau de chaînes représentant l’environnement système.
+///
+/// @return EXIT_SUCCESS en cas de succès,
+/// ou EXIT_FAILURE en cas d’erreur critique.
 int	main(int argc, char **argv, char **envp)
 {
 	t_data	data;
@@ -127,7 +160,7 @@ int	main(int argc, char **argv, char **envp)
 	}
 	ft_memset(&data, 0, sizeof(t_data));
 	if (init(&data, envp) == EXIT_FAILURE)
-		exit_minishell(&data, EXIT_FAILURE); // TODO
+		exit_minishell(&data, EXIT_FAILURE);
 	launch_minishell(&data);
 	return (EXIT_SUCCESS);
 }

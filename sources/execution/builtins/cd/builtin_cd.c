@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 18:48:49 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/01 17:37:04 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/04 19:28:23 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ int	execute_builtin_cd(t_data *data, t_command *node)
 		return (report_error(data, "chdir", -1), free(path), EXIT_FAILURE);
 	if (!getcwd(new_pwd, sizeof(new_pwd)))
 		return (report_error(data, "getcwd", -1), free(path), EXIT_FAILURE);
-	if (cd_update_vars(data, old_pwd, new_pwd) == EXIT_FAILURE)
+	if (update_cd_env(data, old_pwd, new_pwd) == EXIT_FAILURE)
 		return (free(path), EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }

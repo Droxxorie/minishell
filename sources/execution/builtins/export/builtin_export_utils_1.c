@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 17:38:03 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/02 12:35:30 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/04 19:30:22 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	env_add_from_arg(t_data *data, t_env *env, char *key, char *arg)
 		free(value);
 		return (report_error(data, "strdup", -1));
 	}
-	add_var(data, env, dup_key, value);
+	add_var(data, &env, dup_key, value);
 }
 
 void	env_update_value(t_data *data, const char *arg, int key_index)

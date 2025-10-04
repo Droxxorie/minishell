@@ -6,13 +6,13 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 17:40:16 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/02 20:10:37 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/04 19:26:18 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
-const char *find_env_value(t_data *data, const char *key)
+char *find_env_value(t_data *data, const char *key)
 {
 	const t_env	*temp;
 
@@ -79,7 +79,7 @@ void	close_pipe_fds(int *fds, int count)
 		fds[i] = -1;
 		i++;
 	}
-	return (EXIT_SUCCESS);
+	return ;
 }
 
 int	save_stdio(int *saved_stdio)

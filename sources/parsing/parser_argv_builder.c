@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 18:07:22 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/26 18:16:55 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/04 19:03:09 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 size_t	count_command_elements(t_command *command)
 {
 	size_t	count;
-	t_list	*args;
-	t_list	*flags;
+	t_minilist	*args;
+	t_minilist	*flags;
 
 	count = 1;
 	args = command->args;
@@ -36,7 +36,7 @@ size_t	count_command_elements(t_command *command)
 
 int	append_args_to_argv(t_command *current, size_t *i)
 {
-	t_list	*args;
+	t_minilist	*args;
 
 	args = current->args;
 	while (args)
@@ -55,7 +55,7 @@ int	append_args_to_argv(t_command *current, size_t *i)
 
 int	append_flags_to_argv(t_command *current, size_t *i)
 {
-	t_list	*flags;
+	t_minilist	*flags;
 
 	flags = current->flags;
 	while (flags)

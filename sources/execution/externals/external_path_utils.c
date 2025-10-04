@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 14:49:44 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/03 14:50:44 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/04 19:35:03 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ char	**build_exec_search_paths(t_data *data, const t_env *env)
 	path_split = ft_split(env->value, ':');
 	if (!path_split)
 		return (report_error(data, "split", -1), NULL);
-	paths = build_exec_search_paths_helper(data, (const char **)path_split);
+	paths = normalize_path_split(data, (const char **)path_split);
 	free_char_array(path_split);
 	return (paths);
 }

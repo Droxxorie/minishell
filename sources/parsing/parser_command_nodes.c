@@ -6,23 +6,23 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 01:31:31 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/26 18:19:04 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/04 19:03:44 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static int	append_list_node(t_list **list, t_token *token)
+static int	append_list_node(t_minilist **list, t_token *token)
 {
-	t_list	*new_node;
+	t_minilist	*new_node;
 
-	new_node = malloc(sizeof(t_list));
+	new_node = malloc(sizeof(t_minilist));
 	if (!new_node)
 	{
 		perror("minishell: malloc");
 		return (EXIT_FAILURE);
 	}
-	ft_memeset(new_node, 0, sizeof(t_list));
+	ft_memset(new_node, 0, sizeof(t_minilist));
 	new_node->content = ft_strdup(token->value);
 	if (!new_node->content)
 	{
