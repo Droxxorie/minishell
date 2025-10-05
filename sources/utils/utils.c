@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 15:49:21 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/03 21:32:36 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/05 19:06:34 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ long long	ft_atoll(const char *str)
 
 char	*ft_append_char(char *str, char c)
 {
-	int		len;
+	size_t	len;
 	char	*new_str;
 
 	len = 0;
@@ -75,13 +75,14 @@ char	*ft_append_char(char *str, char c)
 		len = ft_strlen(str);
 	new_str = malloc(len + 2);
 	if (!new_str)
-		return (NULL);
-	if (str)
 	{
-		ft_memcpy(new_str, str, len);
-		free(str);
+		report_error(NULL, "malloc", -1);
+		return (NULL);
 	}
+	if (str)
+		ft_memcpy(new_str, str, len);
 	new_str[len] = c;
 	new_str[len + 1] = '\0';
+	free(str);
 	return (new_str);
 }

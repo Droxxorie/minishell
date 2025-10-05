@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 15:24:16 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/05 12:15:16 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/05 20:53:23 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@
 # ifndef GLOBALS_H
 #  define GLOBALS_H
 
-extern int				g_waiting;
+// extern int				g_waiting;
+extern volatile sig_atomic_t	g_waiting;
 
 # endif
 
@@ -70,7 +71,7 @@ typedef enum e_quote
 	SINGLE_QUOTE = SQ,
 	DQ,
 	DOUBLE_QUOTE = DQ,
-}	t_quote;
+}								t_quote;
 
 /*
  * Énumération représentant les différents types de tokens
@@ -100,7 +101,7 @@ typedef enum e_type
 	HEREDOC,
 	LIMITER,
 	FILE_NAME,
-}	t_type;
+}								t_type;
 
 //* ----------------- Structs ----------------------- *
 
@@ -115,10 +116,10 @@ typedef enum e_type
  */
 typedef struct s_minilist
 {
-	char				*content;
-	t_quote				quote;
-	struct s_minilist	*next;
-}						t_minilist;
+	char						*content;
+	t_quote						quote;
+	struct s_minilist			*next;
+}								t_minilist;
 
 /*
  * Structure représentant une liste doublement chaînée de tokens.
@@ -133,12 +134,12 @@ typedef struct s_minilist
  */
 typedef struct s_token
 {
-	char			*value;
-	t_type			type;
-	t_quote			quote;
-	struct s_token	*next;
-	struct s_token	*prev;
-}					t_token;
+	char						*value;
+	t_type						type;
+	t_quote						quote;
+	struct s_token				*next;
+	struct s_token				*prev;
+}								t_token;
 
 /*
  * Structure représentant une commande unique du shell.
@@ -154,13 +155,13 @@ typedef struct s_token
  */
 typedef struct s_command
 {
-	char				*command;
-	char				**argv;
-	t_minilist			*args;
-	t_minilist			*flags;
-	t_quote				quote;
-	struct s_command	*next;
-}						t_command;
+	char						*command;
+	char						**argv;
+	t_minilist					*args;
+	t_minilist					*flags;
+	t_quote						quote;
+	struct s_command			*next;
+}								t_command;
 
 /*
  * Structure représentant une redirection de flux dans une commande.
@@ -173,11 +174,11 @@ typedef struct s_command
  */
 typedef struct s_redirection
 {
-	int					fd;
-	char				*value;
-	t_type				type;
-	t_quote				quote;
-}						t_redirection;
+	int							fd;
+	char						*value;
+	t_type						type;
+	t_quote						quote;
+}								t_redirection;
 
 /*
  * Structure représentant une variable d’environnement.
@@ -190,11 +191,11 @@ typedef struct s_redirection
  */
 typedef struct s_env
 {
-	char				*key;
-	char				equal;
-	char				*value;
-	struct s_env		*next;
-}						t_env;
+	char						*key;
+	char						equal;
+	char						*value;
+	struct s_env				*next;
+}								t_env;
 
 /*
  * Structure représentant la gestion des pipes dans un pipeline de commandes.
@@ -208,12 +209,12 @@ typedef struct s_env
  */
 typedef struct s_pipes
 {
-	int					nb;
+	int							nb;
 	// int					**fds;
-	int					*fds;
-	pid_t				*pids;
-	int					saved_stdio[2];
-}						t_pipes;
+	int							*fds;
+	pid_t						*pids;
+	int							saved_stdio[2];
+}								t_pipes;
 
 /*
  * Structure principale du shell contenant l’ensemble de l’état global.
@@ -236,172 +237,187 @@ typedef struct s_pipes
  */
 typedef struct s_data
 {
-	char				which_quote;
-	char				**env;
-	char				*line;
-	int					exit_status;
+	char						which_quote;
+	char						**env;
+	char						*line;
+	int							exit_status;
 	// char			**parsed_path;
-	char				*path;
-	int					heredoc_fds[256];
-	t_env				*env_copy;
-	t_env				*export;
-	t_command			*commands;
-	t_token				*tokens;
-	t_redirection		input;
-	t_redirection		output;
-	t_pipes				*pipes;
-}						t_data;
+	char						*path;
+	int							heredoc_fds[256];
+	t_env						*env_copy;
+	t_env						*export;
+	t_command					*commands;
+	t_token						*tokens;
+	t_redirection				input;
+	t_redirection				output;
+	t_pipes						*pipes;
+}								t_data;
 
 //* ----------------- Functions ----------------------- *
 
 //* UTILS *//
-long long	ft_atoll(const char *str);
-void		close_fds_from(int start_fd);
-int			safe_putstr_fd(char *s, int fd);
-int			safe_putchar_fd(char c, int fd);
-char		*ft_append_char(char *str, char c);
-void		swap_env_fields(t_env *a, t_env *b);
-int			ft_strcmp(const char *s1, const char *s2);
+long long						ft_atoll(const char *str);
+void							close_fds_from(int start_fd);
+int								safe_putstr_fd(char *s, int fd);
+int								safe_putchar_fd(char c, int fd);
+t_minilist						*minilist_last(t_minilist *list);
+char							*ft_append_char(char *str, char c);
+void							swap_env_fields(t_env *a, t_env *b);
+int								ft_strcmp(const char *s1, const char *s2);
+void							minilist_add_back(t_minilist **list,
+									t_minilist *new_node);
 
 //* INIT *//
-t_env		*env_last_var(t_env *env);
-int			init(t_data *data, char **envp);
-int			init_env(t_data *data, char **envp);
-int			add_var(t_data *data, t_env **env, char *key,
-				char *value);
+
+t_env							*env_last_var(t_env *env);
+int								init(t_data *data, char **envp);
+int								init_env(t_data *data, char **envp);
+int								update_shlvl(t_data *data, int shlvl);
+int								create_shlvl(t_data *data, int shlvl);
+int								add_var(t_data *data, t_env **env, char *key,
+									char *value);
+int								extract_key_value(const char *entry, char **key,
+									char **value, int length);
 
 //* SIGNALS *//
-int			sig_event(void);
-void		signals_handler(void);
-void		setup_child_signals(void);
-void		setup_heredoc_signals(void);
+int								sig_event(void);
+void							signals_handler(void);
+void							setup_child_signals(void);
+void							setup_heredoc_signals(void);
 
 //* ERRORS *//
-int			syntax_error_handler(t_data *data);
-void		print_syntax_error(char error, int code);
-void		report_error(t_data *data, const char *message,
-				int exit_code);
-void		report_error2(const char *message_1,
-				const char *message_2);
-void		report_error3(const char *message_1,
-				const char *message_2, const char *message_3);
+int								syntax_error_handler(t_data *data);
+void							print_syntax_error(char error, int code);
+void							report_error(t_data *data, const char *message,
+									int exit_code);
+void							report_error2(const char *message_1,
+									const char *message_2);
+void							report_error3(const char *message_1,
+									const char *message_2,
+									const char *message_3);
 
 //* FREE *//
-void		free_tokens(t_data *data);
-void		free_env_list(t_env **env);
-void		free_commands(t_data *data);
-void		free_char_array(char **array);
-void		free_redirections(t_data *data);
-void		minilist_clear(t_minilist **list);
-void		reset_command_context(t_data *data);
-
+void							free_tokens(t_data *data);
+void							free_env_list(t_env **env);
+void							free_commands(t_data *data);
+void							free_char_array(char **array);
+void							free_redirections(t_data *data);
+void							minilist_clear(t_minilist **list);
+void							reset_command_context(t_data *data);
 
 //* EXPANDING *//
-int			expander(t_data *data);
-t_bool		need_expansion(char *str);
-t_quote		quote_state(char *line, size_t index);
-char		*extract_var_name(char *str, size_t *i);
-t_bool		env_var_exists(t_data *data, char *variable);
-char		*get_env_value(t_data *data, char *variable);
+int								expander(t_data *data);
+t_bool							need_expansion(char *str);
+t_quote							quote_state(char *line, size_t index);
+char							*extract_var_name(char *str, size_t *i);
+t_bool							env_var_exists(t_data *data, char *variable);
+char							*get_env_value(t_data *data, char *variable);
 
 //* LEXING *//
-int			add_operator_token(t_data *data, char operator,
-				int *command_boundary);
-int			lexer(t_data *data);
-int			validate_pipe_syntax(t_data *data);
-t_token		*normalize_exit_echo_args(t_token *tokens);
-t_token		*normalize_redirection_args(t_token *tokens);
-t_token		*classify_input_redirections(t_token *tokens);
-t_token		*classify_heredoc_delimiters(t_token *tokens);
-t_token		*add_back_token(t_data *data, t_token *new_token);
-t_token		*create_token(char *start, char *end, t_type type,
-				t_quote quote);
-int			handle_single_quoted(t_data *data, t_quote *quote_state,
-				char **token_buffer);
-int			handle_double_quoted(t_data *data, t_quote *quote_state,
-				char **token_buffer);
-t_token		*add_classified_token(t_data *data, char *token_buffer,
-				int *command_boundary);
-int			handle_no_quote(t_data *data, t_quote *quote_state,
-				char **token_buffer, int *command_boundary);
+int								add_operator_token(t_data *data, char operator,
+									int * command_boundary);
+int								lexer(t_data *data);
+int								validate_pipe_syntax(t_data *data);
+t_token							*normalize_exit_echo_args(t_token *tokens);
+t_token							*normalize_redirection_args(t_token *tokens);
+t_token							*classify_input_redirections(t_token *tokens);
+t_token							*classify_heredoc_delimiters(t_token *tokens);
+void							add_back_token(t_data *data,
+									t_token *new_token);
+t_token							*create_token(char *start, char *end,
+									t_type type, t_quote quote);
+int								handle_single_quoted(t_data *data,
+									t_quote *quote_state, char **token_buffer);
+int								handle_double_quoted(t_data *data,
+									t_quote *quote_state, char **token_buffer);
+t_token							*add_classified_token(t_data *data,
+									char *token_buffer, int *command_boundary);
+int								handle_no_quote(t_data *data,
+									t_quote *quote_state, char **token_buffer,
+									int *command_boundary);
 
 //* PARSING *//
-int			parser(t_data *data);
-t_command	*append_command_node(t_data *data);
-int			setup_heredoc(t_data *data, char *limiter);
-size_t		count_command_elements(t_command *command);
-int			append_args_to_argv(t_command *current, size_t *i);
-int			append_flags_to_argv(t_command *current, size_t *i);
-int			append_command_to_argv(t_command *current, size_t *i);
-int			is_redirection_value(t_data *data,
-				t_token *current_token);
-int			add_command_arg(t_command *current_command,
-				t_token *current_token);
-int			set_command_name(t_command *current_command,
-				t_token *current_token);
-int			add_command_flag(t_command *current_command,
-				t_token *current_token);
-int			handle_redirection_fd(t_redirection *redir,
-				t_token *token, int flags);
+int								parser(t_data *data);
+t_command						*append_command_node(t_data *data);
+int								setup_heredoc(t_data *data, char *limiter);
+size_t							count_command_elements(t_command *command);
+int								append_args_to_argv(t_command *current,
+									size_t *i);
+int								append_flags_to_argv(t_command *current,
+									size_t *i);
+int								append_command_to_argv(t_command *current,
+									size_t *i);
+int								is_redirection_value(t_data *data,
+									t_token *current_token);
+int								add_command_arg(t_command *current_command,
+									t_token *current_token);
+int								set_command_name(t_command *current_command,
+									t_token *current_token);
+int								add_command_flag(t_command *current_command,
+									t_token *current_token);
+int								handle_redirection_fd(t_redirection *redir,
+									t_token *token, int flags);
 
 //* EXECUTING *//
-int			executor(t_data *data);
-int			launch_pipeline(t_data *data);
+int								executor(t_data *data);
+int								launch_pipeline(t_data *data);
 
 //* BUILTINS
-
-int			safe_close_fd(int *fd);
-int			save_stdio(int *saved_stdio);
-t_bool		key_is_valid(const char *key);
-int			is_builtin_command(t_command *node);
-void		close_pipe_fds(int *fds, int count);
-int			restore_saved_stdio(int *saved_stdio);
-char		*find_env_value(t_data *data, const char *key);
-int			handle_builtin_command(t_data *data, int *fds,
-				int index, t_command *node);
+int								safe_close_fd(int *fd);
+int								save_stdio(int *saved_stdio);
+t_bool							key_is_valid(const char *key);
+int								is_builtin_command(t_command *node);
+void							close_pipe_fds(int *fds, int count);
+int								restore_saved_stdio(int *saved_stdio);
+char							*find_env_value(t_data *data, const char *key);
+int								handle_builtin_command(t_data *data, int *fds,
+									int index, t_command *node);
 
 //* ECHO
-int			execute_builtin_echo(char **argv);
+int								execute_builtin_echo(char **argv);
 
 //* CD
-int			execute_builtin_cd(t_data *data, t_command *node);
+int								execute_builtin_cd(t_data *data,
+									t_command *node);
 
 //* ENV
-int			execute_builtin_pwd(t_data *data, t_command *node);
+int								execute_builtin_pwd(t_data *data,
+									t_command *node);
 
 //* EXPORT
-char		*extract_env_key(char *arg);
-void		init_export_list(t_data *data);
-int			env_index_of_key(t_env *env, char *key);
-int			execute_builtin_export(t_data *data, char **argv,
-				int fd);
-void		env_update_value(t_data *data, const char *arg,
-				int key_index);
-void		env_add_from_arg(t_data *data, t_env *env, char *key,
-				char *arg);
-void		handle_export_arg(t_data *data, char *key, char *arg,
-				int key_index);
-t_env		*sort_export_list(t_env *head, int (*cmp)(const char *,
-					const char *));
+char							*extract_env_key(char *arg);
+void							init_export_list(t_data *data);
+int								env_index_of_key(t_env *env, char *key);
+int								execute_builtin_export(t_data *data,
+									char **argv, int fd);
+void							env_update_value(t_data *data, const char *arg,
+									int key_index);
+void							env_add_from_arg(t_data *data, t_env *env,
+									char *key, char *arg);
+void							handle_export_arg(t_data *data, char *key,
+									char *arg, int key_index);
+t_env							*sort_export_list(t_env *head,
+									int (*cmp)(const char *, const char *));
 
 //* UNSET
-int			execute_builtin_unset(t_data *data, char **argv);
+int								execute_builtin_unset(t_data *data,
+									char **argv);
 
 //* ENV
-int			execute_builtin_env(t_data *data, char **argv,
-				int fd_out);
+int								execute_builtin_env(t_data *data, char **argv,
+									int fd_out);
 
 //* EXIT
-void		exit_minishell(t_data *data, int exit_status);
-int			execute_builtin_exit(t_data *data, char **argv);
+void							exit_minishell(t_data *data, int exit_status);
+int								execute_builtin_exit(t_data *data, char **argv);
 
 //* EXTERNALS *//
-char		**env_list_to_array(const t_env *env);
-char		**build_exec_search_paths(t_data *data,
-				const t_env *env);
-void		handle_external_command(t_data *data, int *fds,
-				int index, pid_t *pid);
-t_bool		command_path_is_valid(t_data *data, t_command *node,
-				char **command_path);
+char							**env_list_to_array(const t_env *env);
+char							**build_exec_search_paths(t_data *data,
+									const t_env *env);
+void							handle_external_command(t_data *data, int *fds,
+									int index, pid_t *pid);
+t_bool							command_path_is_valid(t_data *data,
+									t_command *node, char **command_path);
 
 #endif

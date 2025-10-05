@@ -6,20 +6,22 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 14:42:52 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/04 19:29:04 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/05 19:40:56 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-/** 
+volatile sig_atomic_t	g_waiting = 0;
+
+/**
  * @brief Libère et réinitialise l’état global du shell entre deux exécutions.
  * Cette fonction nettoie toutes les ressources dynamiques allouées
  * (environnement, tokens, commandes, redirections, pipes, etc.)
  * et ferme les descripteurs de fichiers ouverts.
  *
  * @param data Pointeur vers la structure principale contenant l’état du shell.
-*/
+ */
 void	cleanup_shell_state(t_data *data)
 {
 	int	i;
@@ -45,8 +47,8 @@ void	cleanup_shell_state(t_data *data)
 		free(data->pipes->fds);
 		free(data->pipes->pids);
 		free(data->pipes);
+		data->pipes = NULL;
 	}
-	data->pipes = NULL;
 }
 
 /**
@@ -57,7 +59,7 @@ void	cleanup_shell_state(t_data *data)
  * @param data Pointeur vers la structure principale contenant la ligne lue.
  *
  * @return 1 si la ligne doit être ignorée (et libérée), 0 sinon.
-*/
+ */
 static int	empty_line_handler(t_data *data)
 {
 	int	i;
@@ -78,30 +80,25 @@ static int	empty_line_handler(t_data *data)
 	}
 	return (0);
 }
-
-/// @brief Termine proprement l’exécution du minishell.
-/// Ferme les descripteurs de fichiers ouverts, libère les ressources
-/// associées aux pipes et à l’état global, puis quitte le programme.
-///
-/// @param data Pointeur vers la structure principale contenant l’état du shell.
-/// @param exit_status Code de sortie à retourner au système.
+/**
+ * @brief Termine proprement l’exécution du minishell.
+ * Ferme les descripteurs de fichiers ouverts, libère les ressources
+ * associées aux pipes et à l’état global, puis quitte le programme.
+ *
+ * @param data Pointeur vers la structure principale contenant l’état du shell.
+ * @param exit_status Code de sortie à retourner au système.
+ */
 void	exit_minishell(t_data *data, int exit_status)
 {
+	int	status;
+
+	status = exit_status;
+	write(STDOUT_FILENO, "exit\n", 5);
 	close_fds_from(3);
-	if (data->pipes->fds)
-	{
-		free(data->pipes->fds);
-		data->pipes->fds = NULL;
-	}
-	if (data->pipes->pids)
-	{
-		free(data->pipes->pids);
-		data->pipes->pids = NULL;
-	}
-	printf("exit\n");
-	cleanup_shell_state(data);
-	clear_history();
-	exit(exit_status);
+	if (data)
+		cleanup_shell_state(data);
+	rl_clear_history(); //? ou clear_history() ?
+	exit(status);
 }
 
 static void	launch_minishell(t_data *data)
@@ -162,5 +159,8 @@ int	main(int argc, char **argv, char **envp)
 	if (init(&data, envp) == EXIT_FAILURE)
 		exit_minishell(&data, EXIT_FAILURE);
 	launch_minishell(&data);
+	if (data.exit_status)
+		exit_minishell(&data, data.exit_status);
+	exit_minishell(&data, EXIT_SUCCESS);
 	return (EXIT_SUCCESS);
 }

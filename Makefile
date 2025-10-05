@@ -6,7 +6,7 @@
 #    By: eraad <eraad@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/04 18:58:38 by eraad             #+#    #+#              #
-#    Updated: 2025/10/05 11:57:46 by eraad            ###   ########.fr        #
+#    Updated: 2025/10/05 19:21:23 by eraad            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -92,9 +92,6 @@ OBJS := $(SRCS:%=$(OBJ_DIR)/%.o)
 # ---- Runtime args for convenience targets -----------------------------------
 ARGS ?=
 
-# ---- Phony -------------------------------------------------------------------
-.PHONY: all clean fclean re libft run gdb valgrind debug asan
-
 # ---- Default build (règles 42, sans sanitizers) ------------------------------
 all: $(NAME)
 
@@ -153,3 +150,6 @@ fclean: clean
 	@$(MAKE) -C $(LIBFT_DIR) fclean
 
 re: fclean all
+
+# ---- Phony -------------------------------------------------------------------
+.PHONY: all clean fclean re libft run gdb valgrind debug asan

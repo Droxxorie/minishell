@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 16:47:43 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/05 12:30:20 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/05 19:07:15 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,9 @@ static int	process_unquoted_char(t_data *data, char **token_buffer,
 			return (EXIT_FAILURE);
 	}
 	else
-		*token_buffer = ft_append_char(token_buffer, *data->line);
+		*token_buffer = ft_append_char(*token_buffer, *data->line);
+	if (!*token_buffer)
+		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
 
@@ -62,7 +64,7 @@ int	handle_single_quoted(t_data *data, t_quote *quote_state,
 		*quote_state = NO_QUOTE;
 	else
 	{
-		*token_buffer = ft_append_char(token_buffer, *data->line);
+		*token_buffer = ft_append_char(*token_buffer, *data->line);
 		if (!*token_buffer)
 			return (EXIT_FAILURE);
 	}
@@ -76,7 +78,7 @@ int	handle_double_quoted(t_data *data, t_quote *quote_state,
 		*quote_state = NO_QUOTE;
 	else
 	{
-		*token_buffer = ft_append_char(token_buffer, *data->line);
+		*token_buffer = ft_append_char(*token_buffer, *data->line);
 		if (!*token_buffer)
 			return (EXIT_FAILURE);
 	}

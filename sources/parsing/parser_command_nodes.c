@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 01:31:31 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/04 19:03:44 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/05 19:15:09 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int	append_list_node(t_minilist **list, t_token *token)
 	if (!*list)
 		*list = new_node;
 	else
-		ft_lstadd_back(list, new_node);
+		minilist_add_back(list, new_node);
 	return (EXIT_SUCCESS);
 }
 

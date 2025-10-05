@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 19:08:35 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/26 18:16:50 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/05 19:10:51 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,9 +107,11 @@ int	parser(t_data *data)
 			command_boundary = 1;
 		else if (current_token->type == CMD || current_token->type == ARG
 			|| current_token->type == FLAG)
+		{
 			if (dispatch_command_tokens(data, current_token,
 					&command_boundary) == EXIT_FAILURE)
 				return (EXIT_FAILURE);
+		}
 		else if (handle_redirection_token(data, current_token) == EXIT_FAILURE)
 			return (EXIT_FAILURE);
 		current_token = current_token->next;

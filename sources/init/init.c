@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 14:53:56 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/15 16:19:59 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/05 20:37:46 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,13 @@ static char *init_path(char **envp)
 
 	i = 0;
 	path = NULL;
-	while (envp[i])
+	while (envp && envp[i])
 	{
-		if (ft_strnstr(envp[i], "PATH=", 5))
+		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
 		{
 			path = ft_strdup(envp[i] + 5);
 			if (!path)
-				return (NULL);
+				return (report_error(NULL, "strdup", -1), NULL);
 			return (path);
 		}
 		i++;

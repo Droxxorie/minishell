@@ -6,13 +6,37 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 16:10:00 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/02 12:25:19 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/05 19:14:39 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void swap_env_fields(t_env *a, t_env *b)
+t_minilist	*minilist_last(t_minilist *list)
+{
+	if (!list)
+		return (NULL);
+	while (list->next)
+		list = list->next;
+	return (list);
+}
+
+void	minilist_add_back(t_minilist **list, t_minilist *new_node)
+{
+	t_minilist	*last;
+
+	if (!list || !new_node)
+		return ;
+	if (!*list)
+	{
+		*list = new_node;
+		return ;
+	}
+	last = minilist_last(*list);
+	last->next = new_node;
+}
+
+void	swap_env_fields(t_env *a, t_env *b)
 {
 	char	*temp_key;
 	char	*temp_value;
@@ -31,7 +55,7 @@ void swap_env_fields(t_env *a, t_env *b)
 	b->equal = temp_equal;
 }
 
-int safe_putstr_fd(char *s, int fd)
+int	safe_putstr_fd(char *s, int fd)
 {
 	if (!s)
 		return (EXIT_FAILURE);
@@ -43,7 +67,7 @@ int safe_putstr_fd(char *s, int fd)
 	return (EXIT_SUCCESS);
 }
 
-int safe_putchar_fd(char c, int fd)
+int	safe_putchar_fd(char c, int fd)
 {
 	if (fd > -1)
 	{
