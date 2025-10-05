@@ -6,31 +6,11 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 16:03:56 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/04 19:08:37 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/05 12:04:04 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-static void	free_list(t_minilist *list)
-{
-	t_minilist	*temp;
-
-	while (list != NULL)
-	{
-		temp = list;
-		list = list->next;
-		temp->next = NULL;
-		if (temp->content)
-		{
-			free(temp->content);
-			temp->content = NULL;
-		}
-		temp->quote = NO_QUOTE;
-		free(temp);
-		temp = NULL;
-	}
-}
 
 static void	reset_commands(t_data *data)
 {
@@ -46,9 +26,9 @@ static void	reset_commands(t_data *data)
 			temp->command = NULL;
 		}
 		if (temp->flags)
-			free_list(&temp->flags);
+			minilist_clear(&temp->flags);
 		if (temp->args)
-			free_list(&temp->args);
+			minilist_clear(&temp->args);
 		if (temp->argv)
 			free_char_array(temp->argv);
 		free(temp);

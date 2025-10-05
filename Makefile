@@ -6,7 +6,7 @@
 #    By: eraad <eraad@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/04 18:58:38 by eraad             #+#    #+#              #
-#    Updated: 2025/10/04 19:09:51 by eraad            ###   ########.fr        #
+#    Updated: 2025/10/05 11:57:46 by eraad            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,6 +66,7 @@ SRCS := \
 	$(SRC_DIR)/expanding/expander.c \
 	$(SRC_DIR)/expanding/expander_utils.c \
 	$(SRC_DIR)/free/free.c \
+	$(SRC_DIR)/free/free_utils.c \
 	$(SRC_DIR)/free/reset_command_context.c \
 	$(SRC_DIR)/init/init.c \
 	$(SRC_DIR)/init/init_env.c \

@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 15:29:46 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/25 19:22:39 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/05 12:14:03 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,22 +40,22 @@ static int	lexer_postprocess(t_data *data, t_quote quote_state,
 }
 
 static int	scan_line(t_data *data, t_quote *quote_state, char **token_buffer,
-		int command_boundary)
+		int *command_boundary)
 {
 	while (*data->line)
 	{
 		if (quote_state == NO_QUOTE)
 		{
-			if (handle_unquoted(data, quote_state, token_buffer,
-					&command_boundary) == EXIT_FAILURE)
+			if (handle_no_quote(data, quote_state, token_buffer,
+					command_boundary) == EXIT_FAILURE)
 				return (EXIT_FAILURE);
 		}
-		else if (quote_state == SINGLE_QUOTE)
+		else if (*quote_state == SINGLE_QUOTE)
 		{
 			if (handle_single_quoted(data, quote_state, token_buffer) == EXIT_FAILURE)
 				return (EXIT_FAILURE);
 		}
-		else if (quote_state == DOUBLE_QUOTE)
+		else if (*quote_state == DOUBLE_QUOTE)
 		{
 			if (handle_double_quoted(data, quote_state, token_buffer) == EXIT_FAILURE)
 				return (EXIT_FAILURE);

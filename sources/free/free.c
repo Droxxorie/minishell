@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 22:29:40 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/03 22:46:07 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/05 11:59:25 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,9 @@ void	free_commands(t_data *data)
 		if (temp->argv)
 			free_char_array(temp->argv);
 		if (temp->args)
-			ft_lstclear(&temp->args, free);
+			minilist_clear(&temp->args);
 		if (temp->flags)
-			ft_lstclear(&temp->flags, free);
+			minilist_clear(&temp->flags);
 		free(temp);
 		temp = NULL;
 	}

@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 15:24:16 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/04 19:40:35 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/05 12:15:16 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ typedef enum e_quote
 	SINGLE_QUOTE = SQ,
 	DQ,
 	DOUBLE_QUOTE = DQ,
-}						t_quote;
+}	t_quote;
 
 /*
  * Énumération représentant les différents types de tokens
@@ -100,7 +100,7 @@ typedef enum e_type
 	HEREDOC,
 	LIMITER,
 	FILE_NAME,
-}						t_type;
+}	t_type;
 
 //* ----------------- Structs ----------------------- *
 
@@ -117,7 +117,7 @@ typedef struct s_minilist
 {
 	char				*content;
 	t_quote				quote;
-	struct s_minilist		*next;
+	struct s_minilist	*next;
 }						t_minilist;
 
 /*
@@ -133,12 +133,12 @@ typedef struct s_minilist
  */
 typedef struct s_token
 {
-	char				*value;
-	t_type				type;
-	t_quote				quote;
-	struct s_token		*next;
-	struct s_token		*prev;
-}						t_token;
+	char			*value;
+	t_type			type;
+	t_quote			quote;
+	struct s_token	*next;
+	struct s_token	*prev;
+}					t_token;
 
 /*
  * Structure représentant une commande unique du shell.
@@ -292,7 +292,9 @@ void		free_env_list(t_env **env);
 void		free_commands(t_data *data);
 void		free_char_array(char **array);
 void		free_redirections(t_data *data);
+void		minilist_clear(t_minilist **list);
 void		reset_command_context(t_data *data);
+
 
 //* EXPANDING *//
 int			expander(t_data *data);
@@ -303,6 +305,8 @@ t_bool		env_var_exists(t_data *data, char *variable);
 char		*get_env_value(t_data *data, char *variable);
 
 //* LEXING *//
+int			add_operator_token(t_data *data, char operator,
+				int *command_boundary);
 int			lexer(t_data *data);
 int			validate_pipe_syntax(t_data *data);
 t_token		*normalize_exit_echo_args(t_token *tokens);

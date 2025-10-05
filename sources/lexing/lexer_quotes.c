@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 16:47:43 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/25 19:23:32 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/05 12:30:20 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static int	process_unquoted_char(t_data *data, char **token_buffer,
 				return (EXIT_FAILURE);
 			*token_buffer = NULL;
 		}
-		if (add_operator_token(data, data->line, command_boundary))
+		if (add_operator_token(data, *data->line, command_boundary))
 			return (EXIT_FAILURE);
 	}
 	else
