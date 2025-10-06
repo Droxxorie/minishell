@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 14:48:05 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/04 19:40:13 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/05 21:41:25 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,26 @@ static	char *check_direct_executable(t_data *data, char *command)
 	return (NULL);
 }
 
+static char	*join_dir_command(const char *dir, const char *command)
+{
+	char *temp;
+	char *full_path;
+
+	if (!dir || !command)
+		return (NULL);
+	temp = ft_strdup(dir);
+	if (!temp)
+	{
+		report_error(NULL, "strdup", -1);
+		return (NULL);
+	}
+	full_path = ft_strjoin(temp, command);
+	free(temp);
+	if (!full_path)
+		report_error(NULL, "strjoin", -1);
+	return (full_path);
+}
+
 static char	*find_executable_in_paths(char **paths, char *command)
 {
 	int		i;
@@ -38,12 +58,11 @@ static char	*find_executable_in_paths(char **paths, char *command)
 	if (!paths || !command)
 		return (NULL);
 	i = 0;
-	while (paths && paths[i])
+	while (paths[i])
 	{
-		full_path = ft_strjoin(paths[i], command);
+		full_path = join_dir_command(paths[i], command);
 		if (!full_path)
 		{
-			report_error(NULL, "strjoin", -1);
 			free_char_array(paths);
 			return (NULL);
 		}
@@ -52,6 +71,7 @@ static char	*find_executable_in_paths(char **paths, char *command)
 			free_char_array(paths);
 			return (full_path);
 		}
+		free(full_path);
 		i++;
 	}
 	free_char_array(paths);

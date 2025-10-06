@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 18:57:36 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/24 20:46:42 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/06 00:46:16 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ int	validate_pipe_syntax(t_data *data)
 				|| current_token->next->type == HEREDOC)
 			{
 				data->exit_status = 2;
-				free_tokens(data);
 				print_syntax_error('|', 4);
 				return (EXIT_FAILURE);
 			}

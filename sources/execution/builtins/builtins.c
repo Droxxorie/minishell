@@ -6,16 +6,19 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 17:02:05 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/04 19:20:27 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/06 02:41:20 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
-static int	dispatch_builtin(t_data *data, t_command *node)
+int	dispatch_builtin(t_data *data, t_command *node)
 {
 	int	status;
 
+	status = EXIT_SUCCESS;
+	if (!node || !node->command)
+		return (EXIT_FAILURE);
 	if (ft_strcmp(node->command, "cd") == 0)
 		status = execute_builtin_cd(data, node);
 	else if (ft_strcmp(node->command, "echo") == 0)
@@ -30,7 +33,10 @@ static int	dispatch_builtin(t_data *data, t_command *node)
 		status = execute_builtin_unset(data, node->argv);
 	else if (ft_strcmp(node->command, "exit") == 0)
 		status = execute_builtin_exit(data, node->argv);
-	return (status);
+	else
+		return (EXIT_FAILURE);
+	data->exit_status = status;
+	return (EXIT_SUCCESS);
 }
 
 static int	setup_redirections(t_data *data, int *fds, int index,

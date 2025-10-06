@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 17:28:55 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/04 19:14:35 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/06 01:00:38 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,10 @@ void	report_error2(const char *message_1, const char *message_2)
 	if (message_1 && *message_1)
 		ft_putstr_fd((char *)message_1, 2);
 	if (message_2 && *message_2)
+	{
+		ft_putstr_fd(" ", 2);
 		ft_putstr_fd((char *)message_2, 2);
+	}
 	ft_putstr_fd("\n", 2);
 }
 
@@ -68,8 +71,14 @@ void	report_error3(const char *message_1, const char *message_2,
 	if (message_1 && *message_1)
 		ft_putstr_fd((char *)message_1, 2);
 	if (message_2 && *message_2)
+	{
+		ft_putstr_fd(" ", 2);
 		ft_putstr_fd((char *)message_2, 2);
+	}
 	if (message_3 && *message_3)
+	{
+		ft_putstr_fd(" ", 2);
 		ft_putstr_fd((char *)message_3, 2);
+	}
 	ft_putstr_fd("\n", 2);
 }

@@ -6,7 +6,7 @@
 #    By: eraad <eraad@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/04 18:58:38 by eraad             #+#    #+#              #
-#    Updated: 2025/10/05 19:21:23 by eraad            ###   ########.fr        #
+#    Updated: 2025/10/06 02:49:57 by eraad            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,11 +58,13 @@ SRCS := \
 	$(SRC_DIR)/execution/builtins/pwd/builtin_pwd.c \
 	$(SRC_DIR)/execution/builtins/unset/builtin_unset.c \
 	$(SRC_DIR)/execution/executor.c \
+	$(SRC_DIR)/execution/executor_utils.c \
 	$(SRC_DIR)/execution/externals/external_path.c \
 	$(SRC_DIR)/execution/externals/external_path_utils.c \
 	$(SRC_DIR)/execution/externals/externals.c \
 	$(SRC_DIR)/execution/externals/externals_utils.c \
 	$(SRC_DIR)/execution/pipeline.c \
+	$(SRC_DIR)/execution/pipeline_utils.c \
 	$(SRC_DIR)/expanding/expander.c \
 	$(SRC_DIR)/expanding/expander_utils.c \
 	$(SRC_DIR)/free/free.c \

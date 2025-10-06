@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 14:42:52 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/05 19:40:56 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/06 03:15:47 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,7 @@ void	cleanup_shell_state(t_data *data)
 			close(data->heredoc_fds[i]);
 		data->heredoc_fds[i++] = -1;
 	}
-	if (data->pipes)
-	{
-		free(data->pipes->fds);
-		free(data->pipes->pids);
-		free(data->pipes);
-		data->pipes = NULL;
-	}
+	free_pipes_all(data);
 }
 
 /**

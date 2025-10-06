@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 15:29:46 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/05 12:14:03 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/06 00:46:06 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ static int	lexer_postprocess(t_data *data, t_quote quote_state,
 			return (EXIT_FAILURE);
 		*token_buffer = NULL;
 	}
-	if (classify_heredoc_delimiters(data->tokens)
-		|| classify_input_redirections(data->tokens))
+	if (!classify_heredoc_delimiters(data->tokens)
+		|| !classify_input_redirections(data->tokens))
 		return (free(*token_buffer), free_tokens(data), EXIT_FAILURE);
 	normalize_exit_echo_args(data->tokens);
 	normalize_redirection_args(data->tokens);
@@ -44,10 +44,10 @@ static int	scan_line(t_data *data, t_quote *quote_state, char **token_buffer,
 {
 	while (*data->line)
 	{
-		if (quote_state == NO_QUOTE)
+		if (*quote_state == NO_QUOTE)
 		{
 			if (handle_no_quote(data, quote_state, token_buffer,
-					command_boundary) == EXIT_FAILURE)
+				command_boundary) == EXIT_FAILURE)
 				return (EXIT_FAILURE);
 		}
 		else if (*quote_state == SINGLE_QUOTE)
@@ -69,7 +69,6 @@ int	lexer(t_data *data)
 {
 	t_quote	quote_state;
 	char	*token_buffer;
-	int		errno;
 	int		command_boundary;
 
 	quote_state = NO_QUOTE;

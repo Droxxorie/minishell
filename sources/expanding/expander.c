@@ -6,27 +6,11 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 16:44:06 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/29 16:52:07 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/06 00:57:25 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-// static char *append_current_char(t_data *data, char *line, size_t *i, char *accumulated_line)
-// {
-// 	char *temp;
-
-// 	temp = ft_strdup(accumulated_line);
-// 	if (!temp)
-// 		return (report_error(data, "strdup", 1), NULL);
-// 	free(accumulated_line);
-// 	accumulated_line = ft_strjoin(temp, &line[*i]);
-// 	free(temp);
-// 	if (!accumulated_line)
-// 		return (report_error(data, "strjoin", 1), NULL);
-// 	(*i)++;
-// 	return (accumulated_line);
-// }
 
 static char	*append_current_char(t_data *data, char *line, size_t *i, char *accumulated_line)
 {

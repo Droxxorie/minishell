@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 14:49:44 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/04 19:35:03 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/05 23:01:37 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,18 @@ static char	*normalize_path_dir(const char *dir)
 		out = ft_strdup("./");
 		if (!out)
 			report_error(NULL, "strdup", -1);
+		return (out);
 	}
-	else if (dir[len - 1] != '/')
+	if (dir[len - 1] == '/')
 	{
 		out = ft_strdup(dir);
 		if (!out)
 			report_error(NULL, "strdup", -1);
+		return (out);
 	}
-	else
-		out = ft_strjoin(dir, "/");
+	out = ft_strjoin(dir, "/");
+	if (!out)
+		report_error(NULL, "strjoin", -1);
 	return (out);
 }
 

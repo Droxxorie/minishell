@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 11:55:49 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/03 16:53:31 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/06 03:09:06 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,29 +15,29 @@
 static int	exec_command(t_data *data, t_command *node, char *command_path)
 {
 	char	**envp;
+	int		err;
 
 	if (!data || !node || !command_path)
-		return (EXIT_FAILURE);
+		_exit(126);
 	envp = env_list_to_array(data->env_copy);
-	if (command_path)
-		data->exit_status = execve(command_path, node->argv, envp);
-	free(envp);
+	if (!envp)
+		_exit(126);
+	execve(command_path, node->argv, envp);
+	err = errno;
+	free_char_array(envp);
 	free(command_path);
-	exit(data->exit_status);
-}
-
-static void	setup_and_exec_child(t_data *data, t_command *node, int *fds,
-		int index, char *command_path)
-{
-	if (dup2(fds[index - 2], STDIN_FILENO) == -1 || dup2(fds[index + 1],
-			STDOUT_FILENO) == -1)
+	if (err == ENOENT)
 	{
-		report_error(data, "dup2", 1);
-		free(command_path);
-		exit(EXIT_FAILURE);
+		report_error2(node->argv[0], ": command not found\n");
+		_exit(127);
 	}
-	close_pipe_fds(fds, data->pipes->nb * 2);
-	exec_command(data, node, command_path);
+	if (err == EACCES)
+	{
+		report_error2(node->argv[0], ": Permission denied\n");
+		_exit(126);
+	}
+	report_error2(node->argv[0], ": execve error\n");
+	_exit(126);
 }
 
 static int	fetch_command_at_index(t_data *data, t_command **node, int index)
@@ -60,25 +60,29 @@ static int	fetch_command_at_index(t_data *data, t_command **node, int index)
 
 void	handle_external_command(t_data *data, int *fds, int index, pid_t *pid)
 {
+	int			n_cmds;
 	t_command	*node;
 	char		*cmd_path;
 
 	if (fetch_command_at_index(data, &node, index) == EXIT_FAILURE)
 		return ;
-	if (command_path_is_valid(data, node, &cmd_path) == FALSE)
-		return ;
+	n_cmds = compute_n_cmds(data);
 	*pid = fork();
 	if (*pid < 0)
-	{
-		report_error(data, "fork", 1);
-		return ;
-	}
+		return (report_error(data, "fork", 1));
 	if (*pid == 0)
-		setup_and_exec_child(data, node, fds, index, cmd_path);
-	if (fds[index - 2] != -1)
-		close(fds[index - 2]);
-	if (fds[index + 1] != -1)
-		close(fds[index + 1]);
-	free(cmd_path);
+	{
+		if (command_path_is_valid(data, node, &cmd_path) == FALSE)
+		{
+			report_error2(node->argv[0], ": command not found\n");
+			_exit(127);
+		}
+		if (child_dup_fds(data, fds, index, n_cmds) == EXIT_FAILURE)
+			_exit(1);
+		if (n_cmds > 1)
+			close_pipe_fds(fds, (n_cmds - 1) * 2);
+		exec_command(data, node, cmd_path);
+	}
+	parent_close_after_fork(fds, index, n_cmds);
 	return ;
 }

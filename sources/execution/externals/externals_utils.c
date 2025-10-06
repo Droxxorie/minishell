@@ -6,11 +6,31 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 11:55:37 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/03 16:52:53 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/05 23:03:50 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
+
+void	parent_close_after_fork(int *fds, int index, int n_cmds)
+{
+	int max_index;
+	
+	if (!fds || n_cmds <= 1)
+		return ;
+	max_index = (n_cmds - 1) * 2;
+	if (index - 2 >= 0 && fds[index - 2] != -1)
+		close(fds[index - 2]);
+	if (index + 1 < max_index && fds[index + 1] != -1)
+		close(fds[index + 1]);
+}
+
+int	compute_n_cmds(t_data *data)
+{
+	if (data && data->pipes)
+		return (data->pipes->nb + 1);
+	return (1);
+}
 
 static int	env_list_size(const t_env *env)
 {

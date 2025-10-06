@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 15:24:16 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/05 20:53:23 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/06 03:14:20 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,6 +248,7 @@ typedef struct s_data
 	t_env						*export;
 	t_command					*commands;
 	t_token						*tokens;
+	t_quote						current_quote;
 	t_redirection				input;
 	t_redirection				output;
 	t_pipes						*pipes;
@@ -261,7 +262,7 @@ void							close_fds_from(int start_fd);
 int								safe_putstr_fd(char *s, int fd);
 int								safe_putchar_fd(char c, int fd);
 t_minilist						*minilist_last(t_minilist *list);
-char							*ft_append_char(char *str, char c);
+int								ft_append_char(char **str, char c);
 void							swap_env_fields(t_env *a, t_env *b);
 int								ft_strcmp(const char *s1, const char *s2);
 void							minilist_add_back(t_minilist **list,
@@ -300,6 +301,7 @@ void							report_error3(const char *message_1,
 void							free_tokens(t_data *data);
 void							free_env_list(t_env **env);
 void							free_commands(t_data *data);
+void							free_pipes_all(t_data *data);
 void							free_char_array(char **array);
 void							free_redirections(t_data *data);
 void							minilist_clear(t_minilist **list);
@@ -359,10 +361,16 @@ int								handle_redirection_fd(t_redirection *redir,
 									t_token *token, int flags);
 
 //* EXECUTING *//
+int								wait_and_cleanup_pipeline(t_data *data, pid_t *pids, int count,
+		int *fds);
+int								child_dup_fds(t_data *data, int *fds, int index,
+									int number_of_commands);
 int								executor(t_data *data);
 int								launch_pipeline(t_data *data);
+int								prepare_pipes(t_data *data, int number_of_commands);
 
 //* BUILTINS
+int								dispatch_builtin(t_data *data, t_command *node);
 int								safe_close_fd(int *fd);
 int								save_stdio(int *saved_stdio);
 t_bool							key_is_valid(const char *key);
@@ -412,6 +420,9 @@ void							exit_minishell(t_data *data, int exit_status);
 int								execute_builtin_exit(t_data *data, char **argv);
 
 //* EXTERNALS *//
+void							parent_close_after_fork(int *fds, int index,
+									int n_cmds);
+int								compute_n_cmds(t_data *data);
 char							**env_list_to_array(const t_env *env);
 char							**build_exec_search_paths(t_data *data,
 									const t_env *env);

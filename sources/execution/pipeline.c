@@ -6,80 +6,93 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 14:08:30 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/03 20:43:34 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/06 03:10:40 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static void	update_last_status(t_data *data, int status)
+static pid_t	launch_builtin_child(t_data *data, t_command *node, int *fds, int index)
 {
-	int	sig;
+	pid_t	pid;
+	int		number_of_commands;
 
-	if (WIFEXITED(status))
+	number_of_commands = data->pipes->nb + 1;
+	pid = fork();
+	if (pid == -1)
+		return (report_error(data, "fork", -1), (pid_t)-1);
+	if (pid == 0)
 	{
-		data->exit_status = WEXITSTATUS(status);
-		return ;
+		setup_child_signals();
+		if (child_dup_fds(data, fds, index, number_of_commands) == EXIT_FAILURE)
+			exit_minishell(data, 1);
+		if (number_of_commands > 1)
+			close_pipe_fds(fds, (number_of_commands - 1) * 2);
+		if (dispatch_builtin(data, node) == EXIT_FAILURE)
+			exit_minishell(data, 1);
+		exit_minishell(data, data->exit_status);
 	}
-	if (WIFSIGNALED(status))
-	{
-		sig = WTERMSIG(status);
-		if (sig == SIGINT)
-			ft_putchar_fd('\n', STDERR_FILENO);
-		else if (sig == SIGQUIT)
-			ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
-		data->exit_status = 128 + sig;
-	}
+	parent_close_after_fork(fds, index, number_of_commands);
+	return (pid);
 }
 
-static int	wait_and_cleanup_pipeline(t_data *data, pid_t *pids, int count, int *fds)
+static int	exec_if_single_builtin(t_data *data)
 {
-	int		i;
-	int		status;
-	int		nb_fds;
-	pid_t	wait;
+	t_command	*node;
+	
+	if (!data || !data->commands || data->commands->next)
+		return (0);
+	node = data->commands;
+	if (!is_builtin_command(node))
+		return (0);
+	if (handle_builtin_command(data, NULL, 0, node) == EXIT_FAILURE)
+		return (-1);
+	return (1);
+}
 
-	if (!data || !pids || count <= 0 || !fds)
-		return (EXIT_FAILURE);
-	nb_fds = 2 * (count - 1);
-	if (nb_fds > 0)
-		close_pipe_fds(fds, nb_fds);
+static int	pipeline_loop(t_data *data, t_pipes *pipes, t_command *current,
+		int *count)
+{
+	int	i;
+
 	i = 0;
-	while (i < count)
+	while (current)
 	{
-		wait = waitpid(pids[i], &status, 0);
-		while (wait == -1 && errno == EINTR)
-			wait = waitpid(pids[i], &status, 0);
-		if (wait > 0 && i == count - 1)
-			update_last_status(data, status);
+		if (g_waiting == 3)
+			break ;
+		if (is_builtin_command(current) && pipes->nb + 1 > 1)
+			pipes->pids[i] = launch_builtin_child(data, current, pipes->fds, 2 * i);
+		else if (is_builtin_command(current))
+			handle_builtin_command(data, pipes->fds, 2 * i, current);
+		else
+			handle_external_command(data, pipes->fds, 2 * i, &pipes->pids[i]);
 		i++;
+		current = current->next;
 	}
+	*count = i;
 	return (EXIT_SUCCESS);
 }
 
 int	launch_pipeline(t_data *data)
 {
-	int			i;
+	int			status;
+	int			count;
+	t_command	*current;
 	t_pipes		*pipes;
-	t_command	*current_command;
 
-	if (!data->commands || !data->pipes)
+	if (!data || !data->commands || !data->pipes)
 		return (EXIT_FAILURE);
-	i = 0;
+	current = data->commands;
+	status = exec_if_single_builtin(data);
+	if (status == 1)
+		return (EXIT_SUCCESS);
+	else if (status == -1)
+		return (EXIT_FAILURE);
 	pipes = data->pipes;
-	current_command = data->commands;
-	while (current_command)
-	{
-		if (g_waiting == 3)
-			break ;
-		if (is_builtin_command(current_command) == TRUE)
-			handle_builtin_command(data, pipes->fds, i * 2, current_command);
-		else
-			handle_external_command(data, pipes->fds, i * 2, &(pipes->pids[i]));
-		i++;
-		current_command = current_command->next;
-	}
-	if (wait_and_cleanup_pipeline(data, pipes->pids, i, pipes->fds) == EXIT_FAILURE)
+	if (pipeline_loop(data, pipes, current, &count) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
+	if (wait_and_cleanup_pipeline(data, pipes->pids, count,
+			pipes->fds) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
