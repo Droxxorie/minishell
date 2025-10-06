@@ -6,7 +6,7 @@
 #    By: eraad <eraad@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/04 18:58:38 by eraad             #+#    #+#              #
-#    Updated: 2025/10/06 02:49:57 by eraad            ###   ########.fr        #
+#    Updated: 2025/10/06 15:00:16 by eraad            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -105,12 +105,12 @@ $(NAME): $(LIBFT_A) $(OBJS)
 # ---- Objects (création arborescente) ----------------------------------------
 $(OBJ_DIR)/%.c.o: %.c
 	@mkdir -p $(dir $@)
-	@echo "$(Y)[CC ]$<$(DEF)"
+	@echo "$(Y)[CC]$<$(DEF)"
 	@$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
 
 # ---- Libft -------------------------------------------------------------------
 libft:
-	@$(MAKE) -C $(LIBFT_DIR)
+	@$(MAKE) --no-print-directory -C $(LIBFT_DIR)
 
 $(LIBFT_A): libft
 	@true
@@ -135,21 +135,22 @@ gdb: debug
 	@gdb --args ./$(NAME_DEBUG) $(ARGS)
 
 valgrind: debug
-	@echo "$(G)[VG ] $(NAME_DEBUG) $(ARGS)$(DEF)"
+	@echo "$(G)[VG] $(NAME_DEBUG) $(ARGS)$(DEF)"
 	@valgrind --leak-check=full --show-leak-kinds=all \
 		--track-origins=yes --errors-for-leak-kinds=all \
+		--suppressions=valgrind_readline.supp --run-libc-freeres=yes \
 		--num-callers=25 ./$(NAME_DEBUG) $(ARGS)
 
 # ---- Cleanup -----------------------------------------------------------------
 clean:
 	@echo "$(ORANGE)[RM ] objects$(DEF)"
 	@rm -rf $(OBJ_DIR)
-	@$(MAKE) -C $(LIBFT_DIR) clean
+	@$(MAKE) --no-print-directory -C $(LIBFT_DIR) clean
 
 fclean: clean
-	@echo "$(R)[RM ] $(NAME) $(NAME_DEBUG) $(NAME_ASAN) and libft.a$(DEF)"
+	@echo "$(R)[RM] $(NAME) $(NAME_DEBUG) $(NAME_ASAN) and libft.a$(DEF)"
 	@rm -f $(NAME) $(NAME_DEBUG) $(NAME_ASAN)
-	@$(MAKE) -C $(LIBFT_DIR) fclean
+	@$(MAKE) --no-print-directory -C $(LIBFT_DIR) fclean
 
 re: fclean all
 

@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 20:37:23 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/06 03:15:20 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/06 14:53:57 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ int executor(t_data *data)
 		return (EXIT_FAILURE);
 	if (prepare_pipes(data, number_of_commands) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
-	// setup_child_signals();
 	if (launch_pipeline(data) == EXIT_FAILURE)
 	{
 		free_pipes_all(data);

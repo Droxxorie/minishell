@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 14:48:05 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/05 21:41:25 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/06 16:23:00 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ static	char *check_direct_executable(t_data *data, char *command)
 	if (access(full_path, X_OK | F_OK) == 0)
 		return (full_path);
 	data->exit_status = 127;
-	report_error2(command, "command not found");
 	free(full_path);
 	return (NULL);
 }
@@ -89,7 +88,7 @@ static char	*resolve_command_path(t_data *data, t_command *node)
 	if (stat(node->argv[0], &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
 	{
 		data->exit_status = 126;
-		report_error2(node->argv[0], "is a directory");
+		report_error2(node->argv[0], " is a directory");
 		return (NULL);
 	}
 	paths = build_exec_search_paths(data, data->env_copy);

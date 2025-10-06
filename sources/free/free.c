@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 22:29:40 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/05 11:59:25 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/06 15:47:43 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,8 @@ void	free_env_list(t_env **env)
 	while (current)
 	{
 		next = current->next;
-		if (current->key)
-			free(current->key);
-		if (current->value)
-			free(current->value);
+		free(current->key);
+		free(current->value);
 		free(current);
 		current = next;
 	}

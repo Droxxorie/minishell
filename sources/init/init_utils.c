@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 17:44:48 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/05 20:54:06 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/06 15:43:55 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,10 @@ int	update_shlvl(t_data *data, int shlvl)
 			if (!new_value)
 				return (EXIT_FAILURE);
 			free(temp->value);
-			temp->value = new_value;
+			temp->value = ft_strdup(new_value);
+			free(new_value);
+			if (!temp->value)
+				return (EXIT_FAILURE);
 			temp->equal = '=';
 			return (EXIT_SUCCESS);
 		}

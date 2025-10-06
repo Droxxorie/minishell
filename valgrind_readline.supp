@@ -1,0 +1,24 @@
+{
+  readline_reachable
+  Memcheck:Leak
+  match-leak-kinds: reachable
+  ...
+  obj:/usr/lib/x86_64-linux-gnu/libreadline.so.*
+}
+
+{
+  readline_definite_minor
+  Memcheck:Leak
+  match-leak-kinds: definite
+  ...
+  fun:readline_internal_teardown
+  obj:/usr/lib/x86_64-linux-gnu/libreadline.so.*
+}
+
+{
+  tinfo_reachable
+  Memcheck:Leak
+  match-leak-kinds: reachable
+  ...
+  obj:/usr/lib/x86_64-linux-gnu/libtinfo.so.*
+}

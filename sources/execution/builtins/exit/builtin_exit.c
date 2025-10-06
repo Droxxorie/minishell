@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 13:28:04 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/03 22:49:43 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/06 15:17:18 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,16 @@
 
 static void	exit_numeric_error(t_data *data, char *arg)
 {
-	safe_putstr_fd("exit\n", STDERR_FILENO);
-	report_error3("minishell: exit: ", arg, ": numeric argument required\n");
+	safe_putstr_fd("minishell: ", STDERR_FILENO);
+	safe_putstr_fd("exit: ", STDERR_FILENO);
+	safe_putstr_fd(arg, STDERR_FILENO);
+	safe_putstr_fd(": numeric argument required\n", STDERR_FILENO);
 	exit_minishell(data, 2);
 }
 
 static int	exit_too_many_args(t_data *data)
 {
-	safe_putstr_fd("exit\n", STDERR_FILENO);
-	report_error(data, "minishell: exit: too many arguments\n", 1);
+	report_error(data, "exit: too many arguments", 1);
 	return (EXIT_FAILURE);
 }
 
@@ -73,10 +74,7 @@ static int	execute_builtin_exit_helper(t_data *data, char **argv,
 	}
 	status = (unsigned char)(ft_atoll(argv[1]));
 	if (!in_pipeline)
-	{
-		safe_putstr_fd("exit\n", STDERR_FILENO);
 		exit_minishell(data, status);
-	}
 	data->exit_status = status;
 	return (EXIT_SUCCESS);
 }
@@ -95,10 +93,7 @@ int	execute_builtin_exit(t_data *data, char **argv)
 	if (argc == 1)
 	{
 		if (!in_pipeline)
-		{
-			safe_putstr_fd("exit\n", STDERR_FILENO);
 			exit_minishell(data, EXIT_SUCCESS);
-		}
 		return (EXIT_SUCCESS);
 	}
 	if (execute_builtin_exit_helper(data, argv, in_pipeline) == EXIT_FAILURE)

@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 14:42:52 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/06 03:15:47 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/06 15:49:09 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ void	cleanup_shell_state(t_data *data)
 	free_tokens(data);
 	free_commands(data);
 	free_redirections(data);
-	free(data->line);
 	data->line = NULL;
 	i = 0;
 	while (i < 256)
@@ -42,6 +41,8 @@ void	cleanup_shell_state(t_data *data)
 			close(data->heredoc_fds[i]);
 		data->heredoc_fds[i++] = -1;
 	}
+	free(data->path);
+	data->path = NULL;
 	free_pipes_all(data);
 }
 
@@ -91,7 +92,8 @@ void	exit_minishell(t_data *data, int exit_status)
 	close_fds_from(3);
 	if (data)
 		cleanup_shell_state(data);
-	rl_clear_history(); //? ou clear_history() ?
+	// rl_clear_history(); //? ou clear_history() ?
+	clear_history();
 	exit(status);
 }
 

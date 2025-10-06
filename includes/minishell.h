@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 15:24:16 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/06 03:14:20 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/06 15:50:00 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -298,6 +298,7 @@ void							report_error3(const char *message_1,
 									const char *message_3);
 
 //* FREE *//
+void							cleanup_shell_state(t_data *data);
 void							free_tokens(t_data *data);
 void							free_env_list(t_env **env);
 void							free_commands(t_data *data);
