@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 18:48:49 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/04 19:28:23 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/07 17:46:55 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,9 @@ static char	*get_cd_target_path(t_data *data, t_command *node)
 			report_error(data, "cd: HOME not set", -1);
 			return (NULL);
 		}
+		return (ft_strdup(path));
 	}
-	else if (ft_strcmp(node->args->content, "-") == 0)
+	if (ft_strcmp(node->args->content, "-") == 0)
 	{
 		path = find_env_value(data, "OLDPWD");
 		if (!path)
@@ -73,22 +74,21 @@ static char	*get_cd_target_path(t_data *data, t_command *node)
 			return (NULL);
 		}
 		ft_putendl_fd(path, 1);
+		return (ft_strdup(path));
 	}
-	else
-		path = node->args->content;
-	return (path);
+	return ft_strdup(node->args->content);
 }
 
 static t_bool	is_valid_cd_args(t_data *data, t_command *node)
 {
 	if (node->flags)
 	{
-		report_error(data, "cd: options are not supported", -1);
+		report_error(data, "cd: Options are not supported", -1);
 		return (FALSE);
 	}
 	if (node->args && node->args->next)
 	{
-		report_error(data, "cd: too many arguments", -1);
+		report_error(data, "cd: Too many arguments", -1);
 		return (FALSE);
 	}
 	return (TRUE);
@@ -108,7 +108,7 @@ int	execute_builtin_cd(t_data *data, t_command *node)
 	if (!path)
 		return (EXIT_FAILURE);
 	if (chdir(path) == -1)
-		return (report_error(data, "chdir", -1), free(path), EXIT_FAILURE);
+		return (report_error2("cd: No such file or directory: ", node->args->content), free(path), EXIT_FAILURE);
 	if (!getcwd(new_pwd, sizeof(new_pwd)))
 		return (report_error(data, "getcwd", -1), free(path), EXIT_FAILURE);
 	if (update_cd_env(data, old_pwd, new_pwd) == EXIT_FAILURE)

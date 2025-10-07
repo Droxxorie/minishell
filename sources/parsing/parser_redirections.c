@@ -6,49 +6,61 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 17:08:19 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/26 17:55:14 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/07 20:05:46 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static int setup_redirection(t_redirection *redir, t_token *token, int flags)
+static int setup_redirection(t_data *data, t_redirection *redir, t_token *token, int flags)
 {
+	(void)flags;
 	redir->type = token->type;
 	redir->quote = token->quote;
 	if (redir->value)
 		free(redir->value);
+	if (!token->next)
+		return (print_syntax_error(token->value[0], 7), EXIT_FAILURE);
 	redir->value = ft_strdup(token->next->value);
 	if (!redir->value)
-		return (perror("minishell: strdup"), EXIT_FAILURE);
-	if (redir->type != HEREDOC)
-	{
-		redir->fd = open(redir->value, flags, 0644);
-		if (redir->fd == -1)
-			return (perror("no such file or directory"), EXIT_FAILURE);
+		return (report_error(NULL, "strdup", -1), EXIT_FAILURE);
+	// if (redir->type != HEREDOC)
+	// {
+	// 	redir->fd = open(redir->value, flags, 0644);
+	// 	if (redir->fd == -1)
+	// 		return (perror("no such file or directory"), EXIT_FAILURE);
 
-	}
-	else
-	{
-		g_waiting = 2;
-		redir->fd = open("heredoc.tmp", flags, 0644);
-		if (redir->fd == -1)
-			return (perror("minishell: heredoc.tmp"), EXIT_FAILURE);
-		setup_heredoc_signals();
-	}
+	// }
+	// else
+	// {
+	// 	g_waiting = 2;
+	// 	redir->fd = open("heredoc.tmp", flags, 0644);
+	// 	if (redir->fd == -1)
+	// 		return (perror("minishell: heredoc.tmp"), EXIT_FAILURE);
+	// 	setup_heredoc_signals();
+	// }
+	// return (EXIT_SUCCESS);
+	if (redir->type == HEREDOC)
+		return (setup_heredoc(data, redir->value));
+	redir->fd = -1;
 	return (EXIT_SUCCESS);
 }
 
-int handle_redirection_fd(t_redirection *redir, t_token *token, int flags)
+int handle_redirection_fd(t_data *data, t_redirection *redir, t_token *token, int flags)
 {
+	(void)flags;
 	if (redir->fd >= 3)
+	{
 		close(redir->fd);
+		redir->fd = -1;
+	}
 	if (!token->next)
 	{
 		print_syntax_error(token->value[0], 7);
 		return (EXIT_FAILURE);
 	}
-	return (setup_redirection(redir, token, flags));
+	// return (setup_redirection(redir, token, flags));
+	return (setup_redirection(data, redir, token, flags));
 }
 
 static int process_heredoc_line(char *line, char *limiter, int write_fd)
@@ -72,7 +84,7 @@ static int fill_heredoc(int write_fd, char *limiter)
 
 	if (!limiter || !*limiter)
 	{
-		perror("minishell: heredoc limiter is missing");
+		report_error2("heredoc:", "delimiter not found");
 		close(write_fd);
 		return (EXIT_FAILURE);
 	}
@@ -102,7 +114,7 @@ int setup_heredoc(t_data *data, char *limiter)
 
 	if (pipe(pipes_fd) == -1)
 	{
-		perror("minishell: pipe");
+		report_error2("heredoc:", "pipe failed");
 		return (EXIT_FAILURE);
 	}
 	data->input.fd = pipes_fd[0];

@@ -6,16 +6,16 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 17:45:18 by eraad             #+#    #+#             */
-/*   Updated: 2025/09/29 16:49:43 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/07 13:06:35 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-char *extract_var_name(char *str, size_t *i)
+char	*extract_var_name(char *str, size_t *i)
 {
-	char *variable;
-	size_t variable_len;
+	char	*variable;
+	size_t	len;
 
 	if (!str || !*str)
 		return (NULL);
@@ -24,25 +24,26 @@ char *extract_var_name(char *str, size_t *i)
 		*i += 2;
 		return (ft_strdup("$$"));
 	}
-	if (str[0] == '?' && (*i)++)
-		return (ft_strdup("?"));
-	variable_len = 0;
-	while (str[variable_len] && (ft_isalnum(str[variable_len])
-			|| str[variable_len] == '_'))
-		variable_len++;
-	if (variable_len == 0)
+	if (str[0] == '$' && str[1] == '?')
+		// return (ft_strdup("?"));
 		return (NULL);
-	variable = ft_substr(str, 1, variable_len);
+	len = 1;
+	while (str[len] && (ft_isalnum(str[len]) || str[len] == '_'))
+		len++;
+	len--;
+	if (len == 0)
+		return (NULL);
+	variable = ft_substr(str, 1, len);
 	if (!variable)
 		return (NULL);
-	*i += variable_len;
+	*i += len + 1;
 	return (variable);
 }
 
-char *get_env_value(t_data *data, char *variable)
+char	*get_env_value(t_data *data, char *variable)
 {
-	char *expanded_value;
-	t_env *temp;
+	char	*expanded_value;
+	t_env	*temp;
 
 	expanded_value = NULL;
 	temp = data->env_copy;
@@ -61,9 +62,9 @@ char *get_env_value(t_data *data, char *variable)
 	return (NULL);
 }
 
-t_bool env_var_exists(t_data *data, char *variable)
+t_bool	env_var_exists(t_data *data, char *variable)
 {
-	t_env *temp;
+	t_env	*temp;
 
 	temp = data->env_copy;
 	while (temp)

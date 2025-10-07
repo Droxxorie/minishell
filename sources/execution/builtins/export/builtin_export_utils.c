@@ -6,25 +6,17 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/01 12:25:30 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/02 12:51:49 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/07 16:39:06 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../../includes/minishell.h"
 
-//? A voir pour le arg[0] == '=' case
 char	*extract_env_key(char *arg)
 {
 	char	*key;
 	char	*equal_sign;
 
-	// if (arg[0] == '=')
-	// {
-	// 	key = ft_strdup(arg);
-	// 	if (!key)
-	// 		return (report_error(NULL, "strdup", -1), NULL);
-	// 	return (key);
-	// }
 	if (!arg || arg[0] == '\0' || arg[0] == '=')
 		return (NULL);
 	equal_sign = ft_strchr(arg, '=');
@@ -33,44 +25,15 @@ char	*extract_env_key(char *arg)
 		key = ft_strdup(arg);
 		if (!key)
 			return (report_error(NULL, "strdup", -1), NULL);
+		return (key);
 	}
-	else
-	{
-		key = ft_substr(arg, 0, equal_sign - arg);
-		if (!key)
-			return (report_error(NULL, "substr", -1), NULL);
-	}
+	key = ft_substr(arg, 0, equal_sign - arg);
+	if (!key)
+		return (report_error(NULL, "substr", -1), NULL);
 	return (key);
 }
 
-// static t_env	*sort_export_list(t_env *export, int (*cmp)(const char *,
-// 			const char *))
-// {
-// 	t_env	*sorted;
-// 	char	*temp_key;
-// 	char	*temp_value;
-
-// 	sorted = export;
-// 	while (sorted)
-// 	{
-// 		if (cmp(export->key, export->next->key) > 0)
-// 		{
-// 			temp_key = export->key;
-// 			temp_value = export->value;
-// 			export->key = export->next->key;
-// 			export->value = export->next->value;
-// 			export->next->key = temp_key;
-// 			export->next->value = temp_value;
-// 			export = sorted;
-// 		}
-// 		else
-// 			sorted = sorted->next;
-// 	}
-// 	return (sorted);
-// }
-
-t_env	*sort_export_list(t_env *head, int (*cmp)(const char *,
-			const char *))
+t_env	*sort_export_list(t_env *head, int (*cmp)(const char *, const char *))
 {
 	t_env	*end;
 	t_env	*current;
@@ -99,7 +62,6 @@ t_env	*sort_export_list(t_env *head, int (*cmp)(const char *,
 	return (head);
 }
 
-//? temp->value == NULL case
 static void	increment_shlvl(t_data *data)
 {
 	long long	lvl;
@@ -111,7 +73,7 @@ static void	increment_shlvl(t_data *data)
 	{
 		if (ft_strcmp(temp->key, "SHLVL") == 0)
 		{
-			lvl = ft_atoll(temp->value);
+			lvl = parse_shlvl(temp->value);
 			free(temp->value);
 			temp->value = ft_itoa((int)lvl + 1);
 		}
@@ -129,7 +91,8 @@ static void	increment_shlvl(t_data *data)
 	}
 }
 
-static void	add_to_export_list(t_data *data, char *key, char *value, t_env **export)
+static void	add_to_export_list(t_data *data, char *key, char *value,
+		t_env **export)
 {
 	t_env	*node;
 	t_env	*last;
@@ -155,15 +118,15 @@ static void	add_to_export_list(t_data *data, char *key, char *value, t_env **exp
 	last->next = node;
 }
 
-//? ft_strdup(temp->value) avec temp->value == NULL
 void	init_export_list(t_data *data)
 {
-	t_env	*temp;
+	t_env	*t;
 	t_env	*export;
+	char	*v;
 
-	temp = data->env_copy;
+	t = data->env_copy;
 	export = NULL;
-	if (!temp)
+	if (!t)
 	{
 		add_to_export_list(data, ft_strdup("OLDPWD"), NULL, &export);
 		add_to_export_list(data, ft_strdup("PWD"), getcwd(NULL, 0), &export);
@@ -171,12 +134,14 @@ void	init_export_list(t_data *data)
 		data->export = export;
 		return ;
 	}
-	while (temp)
+	while (t)
 	{
-		if (!(temp->key[0] == '_' && temp->key[1] == '\0'))
-			add_to_export_list(data, ft_strdup(temp->key),
-				ft_strdup(temp->value), &export);
-		temp = temp->next;
+		v = NULL;
+		if (t->value)
+			v = ft_strdup(t->value);
+		if (!(t->key[0] == '_' && t->key[1] == '\0'))
+			add_to_export_list(data, ft_strdup(t->key), v, &export);
+		t = t->next;
 	}
 	increment_shlvl(data);
 	data->export = sort_export_list(export, ft_strcmp);

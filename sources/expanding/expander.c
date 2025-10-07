@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 16:44:06 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/06 00:57:25 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/07 13:08:16 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ static char	*expand_segment(t_data *data, char *line, size_t *i, char *accumulat
 	{
 		variable = extract_var_name(line + *i, i);
 		if (!variable)
-			return (report_error(data, "strdup", 1), NULL);
+			return (append_current_char(data, line, i, accumulated_line));
 		return (expand_variable(data, variable, i, accumulated_line));
 	}
 	return (append_current_char(data, line, i, accumulated_line));

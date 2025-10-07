@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 15:24:16 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/06 15:50:00 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/07 20:07:06 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -358,14 +358,18 @@ int								set_command_name(t_command *current_command,
 									t_token *current_token);
 int								add_command_flag(t_command *current_command,
 									t_token *current_token);
-int								handle_redirection_fd(t_redirection *redir,
+int								handle_redirection_fd(t_data *data, t_redirection *redir,
 									t_token *token, int flags);
 
 //* EXECUTING *//
+// int								open_redirs(t_data *data, int *in_fd, int *out_fd);
+int								open_redirs_input(t_data *data, int *in_fd);
+int								open_redirs_output(t_data *data, int *out_fd);
 int								wait_and_cleanup_pipeline(t_data *data, pid_t *pids, int count,
 		int *fds);
-int								child_dup_fds(t_data *data, int *fds, int index,
-									int number_of_commands);
+// int								child_dup_fds(t_data *data, int *fds, int index,
+// 									int number_of_commands);
+int								apply_redirections_in_child(t_data *data);
 int								executor(t_data *data);
 int								launch_pipeline(t_data *data);
 int								prepare_pipes(t_data *data, int number_of_commands);
@@ -394,6 +398,9 @@ int								execute_builtin_pwd(t_data *data,
 									t_command *node);
 
 //* EXPORT
+long long						parse_shlvl(const char *value);
+int								process_export_args(t_data *data,
+									char *arg, t_bool do_mutate);
 char							*extract_env_key(char *arg);
 void							init_export_list(t_data *data);
 int								env_index_of_key(t_env *env, char *key);

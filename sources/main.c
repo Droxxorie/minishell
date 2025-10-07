@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 14:42:52 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/06 15:49:09 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/07 19:57:55 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ static void	launch_minishell(t_data *data)
 	{
 		signals_handler();
 		g_waiting = 0;
+		reset_command_context(data);
 		data->line = readline("minishell$ ");
 		if (g_waiting == 1)
 			data->exit_status = 130;
@@ -119,8 +120,8 @@ static void	launch_minishell(t_data *data)
 		}
 		if (ft_strlen(data->line))
 			add_history(data->line);
-		if (lexer(data) == EXIT_FAILURE || parser(data) == EXIT_FAILURE
-			|| expander(data) == EXIT_FAILURE || executor(data) == EXIT_FAILURE)
+		if (expander(data) == EXIT_FAILURE || lexer(data) == EXIT_FAILURE
+			|| parser(data) == EXIT_FAILURE || executor(data) == EXIT_FAILURE)
 		{
 			reset_command_context(data);
 			continue ;
@@ -146,11 +147,11 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	if (argc != 1)
 		return (1);
-	if (!isatty(STDIN_FILENO))
-	{
-		ft_putstr_fd("minishell: no child process allowed\n", 2);
-		exit(EXIT_FAILURE);
-	}
+	// if (!isatty(STDIN_FILENO))
+	// {
+	// 	ft_putstr_fd("minishell: no child process allowed\n", 2);
+	// 	exit(EXIT_FAILURE);
+	// }
 	ft_memset(&data, 0, sizeof(t_data));
 	if (init(&data, envp) == EXIT_FAILURE)
 		exit_minishell(&data, EXIT_FAILURE);

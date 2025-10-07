@@ -6,7 +6,7 @@
 #    By: eraad <eraad@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/04 18:58:38 by eraad             #+#    #+#              #
-#    Updated: 2025/10/06 15:00:16 by eraad            ###   ########.fr        #
+#    Updated: 2025/10/07 15:58:44 by eraad            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,6 +55,7 @@ SRCS := \
 	$(SRC_DIR)/execution/builtins/export/builtin_export.c \
 	$(SRC_DIR)/execution/builtins/export/builtin_export_utils.c \
 	$(SRC_DIR)/execution/builtins/export/builtin_export_utils_1.c \
+	$(SRC_DIR)/execution/builtins/export/builtin_export_utils_2.c \
 	$(SRC_DIR)/execution/builtins/pwd/builtin_pwd.c \
 	$(SRC_DIR)/execution/builtins/unset/builtin_unset.c \
 	$(SRC_DIR)/execution/executor.c \
@@ -143,7 +144,7 @@ valgrind: debug
 
 # ---- Cleanup -----------------------------------------------------------------
 clean:
-	@echo "$(ORANGE)[RM ] objects$(DEF)"
+	@echo "$(ORANGE)[RM] objects$(DEF)"
 	@rm -rf $(OBJ_DIR)
 	@$(MAKE) --no-print-directory -C $(LIBFT_DIR) clean
 

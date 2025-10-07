@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 19:08:35 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/05 19:10:51 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/07 20:14:03 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,17 +50,17 @@ static int handle_redirection_token(t_data *data, t_token *token)
 	}
 	else if (token->type == REDIR_IN)
 	{
-		if (handle_redirection_fd(&data->input, token, O_RDONLY))
+		if (handle_redirection_fd(data, &data->input, token, O_RDONLY))
 			return (EXIT_FAILURE);
 	}
 	else if (token->type == REDIR_OUT)
 	{
-		if (handle_redirection_fd(&data->output, token, O_WRONLY | O_TRUNC | O_CREAT))
+		if (handle_redirection_fd(data, &data->output, token, O_WRONLY | O_TRUNC | O_CREAT))
 			return (EXIT_FAILURE);
 	}
 	else if (token->type == REDIR_APPEND)
 	{
-		if (handle_redirection_fd(&data->output, token, O_WRONLY | O_APPEND | O_CREAT))
+		if (handle_redirection_fd(data, &data->output, token, O_WRONLY | O_APPEND | O_CREAT))
 			return (EXIT_FAILURE);
 	}
 	return (EXIT_SUCCESS);
@@ -87,7 +87,8 @@ static int	dispatch_command_tokens(t_data *data, t_token *current_token,
 	}
 	else if (current_token->type == ARG)
 	{
-		is_redirection_value(data, current_token);
+		if (is_redirection_value(data, current_token) == EXIT_SUCCESS)
+			return (EXIT_SUCCESS);
 		if (add_command_arg(current_command, current_token) == EXIT_FAILURE)
 			return (EXIT_FAILURE);
 	}

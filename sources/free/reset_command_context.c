@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 16:03:56 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/06 15:10:11 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/07 19:02:42 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,20 +57,22 @@ static void	reset_tokens(t_data *data)
 
 static void	reset_redirections(t_data *data)
 {
-	data->input.type = REDIR_IN;
+	data->input.type = ARG;
 	if (data->input.value)
 	{
 		free(data->input.value);
 		data->input.value = NULL;
 	}
-	data->input.fd = 0;
-	data->output.type = REDIR_OUT;
+	data->input.fd = -1;
+	data->output.type = ARG;
 	if (data->output.value)
 	{
 		free(data->output.value);
 		data->output.value = NULL;
 	}
-	data->output.fd = 1;
+	data->output.fd = -1;
+	data->input.quote = NO_QUOTE;
+	data->output.quote = NO_QUOTE;
 }
 
 void	reset_command_context(t_data *data)

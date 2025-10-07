@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 17:02:05 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/06 02:41:20 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/07 16:02:07 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ t_bool	is_builtin_command(t_command *node)
 
 int	handle_builtin_command(t_data *data, int *fds, int index, t_command *node)
 {
-	int	builtin_status;
 	int	saved_stdio[2];
 	int	N;
 	int	i;
@@ -93,14 +92,12 @@ int	handle_builtin_command(t_data *data, int *fds, int index, t_command *node)
 	i = index / 2;
 	if (setup_redirections(data, fds, index, saved_stdio) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
-	builtin_status = dispatch_builtin(data, node);
+	dispatch_builtin(data, node);
 	if (i > 0 && fds)
 		safe_close_fd(&fds[index - 2]);
 	if (i < N - 1 && fds)
 		safe_close_fd(&fds[index + 1]);
-	// close_pipe_fds(fds, index); //TODO a mettre dans l'enfant
 	if (restore_saved_stdio(saved_stdio) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
-	data->exit_status = builtin_status;
-	return (builtin_status); //? EXIT_SUCCESS?
+	return (EXIT_SUCCESS);
 }

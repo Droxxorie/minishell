@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 11:55:49 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/06 16:19:53 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/07 18:54:48 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ static int	exec_command(t_data *data, t_command *node, char *command_path)
 	if (err == EACCES)
 	{
 		report_error2(node->argv[0], ": Permission denied");
+		printf("exec\n");
 		exit(126);
 	}
 	report_error2(node->argv[0], ": execve error");
@@ -78,7 +79,8 @@ void	handle_external_command(t_data *data, int *fds, int index, pid_t *pid)
 			cleanup_shell_state(data);
 			exit(127);
 		}
-		if (child_dup_fds(data, fds, index, n_cmds) == EXIT_FAILURE)
+		// if (child_dup_fds(data, fds, index, n_cmds) == EXIT_FAILURE)
+		if (apply_redirections_in_child(data) == EXIT_FAILURE)
 			exit(1);
 		if (n_cmds > 1)
 			close_pipe_fds(fds, (n_cmds - 1) * 2);
