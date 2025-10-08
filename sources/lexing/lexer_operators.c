@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/24 15:11:22 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/05 12:30:36 by eraad            ###   ########.fr       */
+/*   Created: 2025/10/08 15:33:52 by eraad             #+#    #+#             */
+/*   Updated: 2025/10/08 15:34:12 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ static char	*build_operator_token(t_data *data, char operator, int
 	return (build_remaning_operator_token(data, type));
 }
 
-int	add_operator_token(t_data *data, char operator, int *command_boundary)
+int	add_operator_token(t_data *data, char operator, int * command_boundary)
 {
 	t_type	type;
 	char	*raw_operator;

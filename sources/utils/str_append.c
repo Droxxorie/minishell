@@ -1,46 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor.c                                         :+:      :+:    :+:   */
+/*   str_append.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/08 15:50:26 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/08 15:50:42 by eraad            ###   ########.fr       */
+/*   Created: 2025/10/08 16:08:47 by eraad             #+#    #+#             */
+/*   Updated: 2025/10/08 16:09:14 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static int	count_commands(t_command *commands)
+int	ft_append_char(char **str, char c)
 {
-	int			count;
-	t_command	*current;
+	size_t	len;
+	char	*new_str;
 
-	count = 0;
-	current = commands;
-	while (current)
-	{
-		count++;
-		current = current->next;
-	}
-	return (count);
-}
-
-int	executor(t_data *data)
-{
-	int	number_of_commands;
-
-	number_of_commands = count_commands(data->commands);
-	if (number_of_commands <= 0)
+	if (!str)
 		return (EXIT_FAILURE);
-	if (prepare_pipes(data, number_of_commands) == EXIT_FAILURE)
-		return (EXIT_FAILURE);
-	if (launch_pipeline(data) == EXIT_FAILURE)
+	len = 0;
+	if (*str)
+		len = ft_strlen(*str);
+	new_str = malloc(len + 2);
+	if (!new_str)
 	{
-		free_pipes_all(data);
+		report_error(NULL, "malloc", -1);
 		return (EXIT_FAILURE);
 	}
-	free_pipes_all(data);
+	if (*str)
+		ft_memcpy(new_str, *str, len);
+	new_str[len] = c;
+	new_str[len + 1] = '\0';
+	free(*str);
+	*str = new_str;
 	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 #    By: eraad <eraad@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/04 18:58:38 by eraad             #+#    #+#              #
-#    Updated: 2025/10/07 15:58:44 by eraad            ###   ########.fr        #
+#    Updated: 2025/10/08 16:55:09 by eraad            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,53 +41,101 @@ OBJ_DIR         := obj
 LIBFT_DIR       := libft
 LIBFT_A         := $(LIBFT_DIR)/libft.a
 
-# ---- Sources -----------------------------------------------------------------
+# ==============================================================================
+#                                   SOURCES
+# ==============================================================================
+
+# ---- Core --------------------------------------------------------------------
 SRCS := \
-	$(SRC_DIR)/main.c \
-	$(SRC_DIR)/errors/report_error.c \
-	$(SRC_DIR)/errors/syntaxe_error.c \
+	$(SRC_DIR)/core/loop/main.c \
+	$(SRC_DIR)/core/init/init.c \
+	$(SRC_DIR)/core/init/env_copy.c \
+	$(SRC_DIR)/core/init/env_list.c \
+	$(SRC_DIR)/core/init/env_vars.c \
+	$(SRC_DIR)/core/cleanup/reset.c \
+	$(SRC_DIR)/core/cleanup/free_env.c \
+	$(SRC_DIR)/core/cleanup/free_pipes.c \
+	$(SRC_DIR)/core/cleanup/free_tokens.c \
+	$(SRC_DIR)/core/cleanup/free_commands.c \
+
+# ---- Errors ------------------------------------------------------------------
+SRCS += \
+	$(SRC_DIR)/errors/error.c \
+	$(SRC_DIR)/errors/syntax.c \
+
+# ---- Execution / Builtins ----------------------------------------------------
+SRCS += \
 	$(SRC_DIR)/execution/builtins/builtins.c \
-	$(SRC_DIR)/execution/builtins/builtins_utils.c \
-	$(SRC_DIR)/execution/builtins/cd/builtin_cd.c \
-	$(SRC_DIR)/execution/builtins/echo/builtin_echo.c \
-	$(SRC_DIR)/execution/builtins/env/builtin_env.c \
-	$(SRC_DIR)/execution/builtins/exit/builtin_exit.c \
-	$(SRC_DIR)/execution/builtins/export/builtin_export.c \
-	$(SRC_DIR)/execution/builtins/export/builtin_export_utils.c \
-	$(SRC_DIR)/execution/builtins/export/builtin_export_utils_1.c \
-	$(SRC_DIR)/execution/builtins/export/builtin_export_utils_2.c \
-	$(SRC_DIR)/execution/builtins/pwd/builtin_pwd.c \
-	$(SRC_DIR)/execution/builtins/unset/builtin_unset.c \
+	$(SRC_DIR)/execution/builtins/cd.c \
+	$(SRC_DIR)/execution/builtins/echo.c \
+	$(SRC_DIR)/execution/builtins/env.c \
+	$(SRC_DIR)/execution/builtins/exit.c \
+	$(SRC_DIR)/execution/builtins/pwd.c \
+	$(SRC_DIR)/execution/builtins/unset.c \
+
+# ---- Execution / Builtins / Export -------------------------------------------
+SRCS += \
+	$(SRC_DIR)/execution/builtins/export/export.c \
+	$(SRC_DIR)/execution/builtins/export/export_list.c \
+	$(SRC_DIR)/execution/builtins/export/export_parse.c \
+	$(SRC_DIR)/execution/builtins/export/export_mutate.c \
+	$(SRC_DIR)/execution/builtins/export/export_errors.c \
+
+# ---- Execution / Pipeline & Executor -----------------------------------------
+SRCS += \
 	$(SRC_DIR)/execution/executor.c \
-	$(SRC_DIR)/execution/executor_utils.c \
-	$(SRC_DIR)/execution/externals/external_path.c \
-	$(SRC_DIR)/execution/externals/external_path_utils.c \
+	$(SRC_DIR)/execution/pipes.c \
+	$(SRC_DIR)/execution/pipeline.c \
+	$(SRC_DIR)/execution/pipeline_wait.c \
+
+# ---- Execution / Externals ---------------------------------------------------
+SRCS += \
 	$(SRC_DIR)/execution/externals/externals.c \
 	$(SRC_DIR)/execution/externals/externals_utils.c \
-	$(SRC_DIR)/execution/pipeline.c \
-	$(SRC_DIR)/execution/pipeline_utils.c \
+	$(SRC_DIR)/execution/externals/external_path.c \
+	$(SRC_DIR)/execution/externals/external_path_utils.c \
+
+# ---- Expanding ---------------------------------------------------------------
+SRCS += \
 	$(SRC_DIR)/expanding/expander.c \
 	$(SRC_DIR)/expanding/expander_utils.c \
-	$(SRC_DIR)/free/free.c \
-	$(SRC_DIR)/free/free_utils.c \
-	$(SRC_DIR)/free/reset_command_context.c \
-	$(SRC_DIR)/init/init.c \
-	$(SRC_DIR)/init/init_env.c \
-	$(SRC_DIR)/init/init_utils.c \
+
+# ---- Input (Signals) ---------------------------------------------------------
+SRCS += \
+	$(SRC_DIR)/input/signals.c \
+	$(SRC_DIR)/input/signals_child.c \
+
+# ---- Lexing ------------------------------------------------------------------
+SRCS += \
 	$(SRC_DIR)/lexing/lexer.c \
-	$(SRC_DIR)/lexing/lexer_operators.c \
-	$(SRC_DIR)/lexing/lexer_postprocess.c \
 	$(SRC_DIR)/lexing/lexer_quotes.c \
 	$(SRC_DIR)/lexing/lexer_tokens.c \
+	$(SRC_DIR)/lexing/lexer_operators.c \
+	$(SRC_DIR)/lexing/lexer_posprocess.c \
+
+# ---- Parsing -----------------------------------------------------------------
+SRCS += \
 	$(SRC_DIR)/parsing/parser.c \
-	$(SRC_DIR)/parsing/parser_argv_builder.c \
 	$(SRC_DIR)/parsing/parser_command_list.c \
 	$(SRC_DIR)/parsing/parser_command_nodes.c \
-	$(SRC_DIR)/parsing/parser_redirections.c \
-	$(SRC_DIR)/signals/signals.c \
-	$(SRC_DIR)/signals/signals_child.c \
-	$(SRC_DIR)/utils/utils.c \
-	$(SRC_DIR)/utils/utils_1.c
+	$(SRC_DIR)/parsing/parser_argv_builder.c \
+
+# ---- Redirections ------------------------------------------------------------
+SRCS += \
+	$(SRC_DIR)/redirections/heredoc.c \
+	$(SRC_DIR)/redirections/redirs.c \
+	$(SRC_DIR)/redirections/redirs_open.c \
+	$(SRC_DIR)/redirections/redirs_apply.c \
+
+# ---- Utils -------------------------------------------------------------------
+SRCS += \
+	$(SRC_DIR)/utils/io.c \
+	$(SRC_DIR)/utils/env.c \
+	$(SRC_DIR)/utils/fd.c \
+	$(SRC_DIR)/utils/list.c \
+	$(SRC_DIR)/utils/str.c \
+	$(SRC_DIR)/utils/fd_close.c \
+	$(SRC_DIR)/utils/str_append.c
 
 # ---- Objects -----------------------------------------------------------------
 OBJS := $(SRCS:%=$(OBJ_DIR)/%.o)

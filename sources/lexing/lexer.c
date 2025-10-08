@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/23 15:29:46 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/06 00:46:06 by eraad            ###   ########.fr       */
+/*   Created: 2025/10/08 15:30:59 by eraad             #+#    #+#             */
+/*   Updated: 2025/10/08 15:31:30 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,17 +47,19 @@ static int	scan_line(t_data *data, t_quote *quote_state, char **token_buffer,
 		if (*quote_state == NO_QUOTE)
 		{
 			if (handle_no_quote(data, quote_state, token_buffer,
-				command_boundary) == EXIT_FAILURE)
+					command_boundary) == EXIT_FAILURE)
 				return (EXIT_FAILURE);
 		}
 		else if (*quote_state == SINGLE_QUOTE)
 		{
-			if (handle_single_quoted(data, quote_state, token_buffer) == EXIT_FAILURE)
+			if (handle_single_quoted(data, quote_state,
+					token_buffer) == EXIT_FAILURE)
 				return (EXIT_FAILURE);
 		}
 		else if (*quote_state == DOUBLE_QUOTE)
 		{
-			if (handle_double_quoted(data, quote_state, token_buffer) == EXIT_FAILURE)
+			if (handle_double_quoted(data, quote_state,
+					token_buffer) == EXIT_FAILURE)
 				return (EXIT_FAILURE);
 		}
 		data->line++;
@@ -67,15 +69,16 @@ static int	scan_line(t_data *data, t_quote *quote_state, char **token_buffer,
 
 int	lexer(t_data *data)
 {
-	t_quote	quote_state;
-	char	*token_buffer;
-	int		command_boundary;
+	t_quote quote_state;
+	char *token_buffer;
+	int command_boundary;
 
 	quote_state = NO_QUOTE;
 	token_buffer = NULL;
 	command_boundary = 1;
-	if (scan_line(data, &quote_state, &token_buffer, &command_boundary) == EXIT_FAILURE)
+	if (scan_line(data, &quote_state, &token_buffer,
+			&command_boundary) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 	return (lexer_postprocess(data, quote_state, &token_buffer,
-								command_boundary));
+			command_boundary));
 }

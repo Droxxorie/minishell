@@ -5,12 +5,69 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/30 17:02:05 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/07 16:02:07 by eraad            ###   ########.fr       */
+/*   Created: 2025/10/08 15:53:56 by eraad             #+#    #+#             */
+/*   Updated: 2025/10/08 15:55:28 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
+
+pid_t	launch_builtin_child(t_data *data, t_command *node, int *fds, int index)
+{
+	pid_t	pid;
+	int		number_of_commands;
+
+	number_of_commands = data->pipes->nb + 1;
+	pid = fork();
+	if (pid < 0)
+		return (report_error(data, "fork", -1), (pid_t)-1);
+	if (pid == 0)
+	{
+		setup_child_signals();
+		if (child_setup_io(data, node, fds, index,
+				number_of_commands) == EXIT_FAILURE)
+			exit(1);
+		if (dispatch_builtin(data, node) == EXIT_FAILURE)
+			exit(1);
+		exit(data->exit_status);
+	}
+	parent_close_after_fork(fds, index, number_of_commands);
+	return (pid);
+}
+
+int	handle_builtin_command(t_data *data, t_command *node)
+{
+	int	saved[2];
+	int	n;
+	int	status;
+
+	n = 1;
+	if (data->pipes)
+		n = data->pipes->nb + 1;
+	if (n != 1)
+		return (EXIT_FAILURE);
+	if (apply_redirections_in_parent(data, node, saved) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
+	status = dispatch_builtin(data, node);
+	if (restore_saved_stdio(saved) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
+	if (status == EXIT_FAILURE)
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
+}
+
+t_bool	is_builtin_command(t_command *node)
+{
+	if (!node || !node->command)
+		return (FALSE);
+	if (ft_strcmp(node->command, "cd") == 0 || ft_strcmp(node->command,
+			"echo") == 0 || ft_strcmp(node->command, "env") == 0
+		|| ft_strcmp(node->command, "exit") == 0 || ft_strcmp(node->command,
+			"export") == 0 || ft_strcmp(node->command, "pwd") == 0
+		|| ft_strcmp(node->command, "unset") == 0)
+		return (TRUE);
+	return (FALSE);
+}
 
 int	dispatch_builtin(t_data *data, t_command *node)
 {
@@ -36,68 +93,5 @@ int	dispatch_builtin(t_data *data, t_command *node)
 	else
 		return (EXIT_FAILURE);
 	data->exit_status = status;
-	return (EXIT_SUCCESS);
-}
-
-static int	setup_redirections(t_data *data, int *fds, int index,
-		int *saved_stdio)
-{
-	if (save_stdio(saved_stdio) == EXIT_FAILURE)
-		return (EXIT_FAILURE);
-	if (data->input.type == HEREDOC)
-	{
-		if (dup2(data->input.fd, STDIN_FILENO) == -1)
-			return (close(saved_stdio[0]), close(saved_stdio[1]),
-				report_error(data, "dup2", -1), EXIT_FAILURE);
-		close(data->input.fd);
-	}
-	else if (index / 2 > 0 && fds)
-	{
-		if (index >= 2 && dup2(fds[index - 2], STDIN_FILENO) == -1)
-			return (close(saved_stdio[0]), close(saved_stdio[1]),
-				report_error(data, "dup2", -1), EXIT_FAILURE);
-	}
-	if (index / 2 < data->pipes->nb + 1 && fds)
-	{
-		if (fds && dup2(fds[index + 1], STDOUT_FILENO) == -1)
-			return (close(saved_stdio[0]), close(saved_stdio[1]),
-				report_error(data, "dup2", -1), EXIT_FAILURE);
-	}
-	return (EXIT_SUCCESS);
-}
-
-t_bool	is_builtin_command(t_command *node)
-{
-	if (!node || !node->command)
-		return (FALSE);
-	if (ft_strcmp(node->command, "cd") == 0 || ft_strcmp(node->command,
-			"echo") == 0 || ft_strcmp(node->command, "env") == 0
-		|| ft_strcmp(node->command, "exit") == 0 || ft_strcmp(node->command,
-			"export") == 0 || ft_strcmp(node->command, "pwd") == 0
-		|| ft_strcmp(node->command, "unset") == 0)
-		return (TRUE);
-	return (FALSE);
-}
-
-int	handle_builtin_command(t_data *data, int *fds, int index, t_command *node)
-{
-	int	saved_stdio[2];
-	int	N;
-	int	i;
-
-	if (data->pipes)
-		N = data->pipes->nb + 1;
-	else
-		N = 1;
-	i = index / 2;
-	if (setup_redirections(data, fds, index, saved_stdio) == EXIT_FAILURE)
-		return (EXIT_FAILURE);
-	dispatch_builtin(data, node);
-	if (i > 0 && fds)
-		safe_close_fd(&fds[index - 2]);
-	if (i < N - 1 && fds)
-		safe_close_fd(&fds[index + 1]);
-	if (restore_saved_stdio(saved_stdio) == EXIT_FAILURE)
-		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }

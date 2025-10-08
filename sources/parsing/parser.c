@@ -5,18 +5,84 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/25 19:08:35 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/07 20:14:03 by eraad            ###   ########.fr       */
+/*   Created: 2025/10/08 15:36:14 by eraad             #+#    #+#             */
+/*   Updated: 2025/10/08 18:13:47 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static int build_command_argv(t_data *data)
+// static int	dispatch_command_tokens(t_data *data, t_command **current,
+// 		t_token *token, int *command_boundary)
+// {
+// 	t_command	*command;
+
+// 	command = *current;
+// 	if (*command_boundary)
+// 	{
+// 		command = append_command_node(data);
+// 		if (!command)
+// 			return (EXIT_FAILURE);
+// 		*current = command;
+// 		*command_boundary = 0;
+// 		if (set_command_name(command, token) == EXIT_FAILURE)
+// 			return (EXIT_FAILURE);
+// 		return (EXIT_SUCCESS);
+// 	}
+// 	if (token->type == FLAG && token->value && token->value[0] == '-')
+// 		return (add_command_flag(command, token));
+// 	if (token->type == ARG)
+// 	{
+// 		// if (is_redir_value_for_command(command, token))
+// 		// 	return (EXIT_SUCCESS);
+// 		return (add_command_arg(command, token));
+// 	}
+// 	return (EXIT_SUCCESS);
+// }
+
+static int	dispatch_command_tokens(t_data *data, t_command **current,
+		t_token *token, int *command_boundary)
+{
+	t_command	*cmd;
+
+	cmd = *current;
+	if (*command_boundary)
+	{
+		if (!cmd)
+		{
+			cmd = append_command_node(data);
+			if (!cmd)
+				return (EXIT_FAILURE);
+			*current = cmd;
+		}
+		*command_boundary = 0;
+	}
+	if (cmd->command == NULL && (token->type == CMD || token->type == ARG))
+		return (set_command_name(cmd, token));
+	if (token->type == FLAG && token->value && token->value[0] == '-')
+		return (add_command_flag(cmd, token));
+	if (token->type == ARG)
+		return (add_command_arg(cmd, token));
+	return (EXIT_SUCCESS);
+}
+
+static int	handle_redirection_token(t_data *data, t_command **current,
+		t_token *token)
+{
+	if (!*current)
+	{
+		*current = append_command_node(data);
+		if (!*current)
+			return (EXIT_FAILURE);
+	}
+	return (push_redir(data, *current, token));
+}
+
+static int	build_command_argv(t_data *data)
 {
 	t_command	*current_command;
-	size_t			argc;
-	size_t			i;
+	size_t		argc;
+	size_t		i;
 
 	current_command = data->commands;
 	while (current_command)
@@ -39,86 +105,44 @@ static int build_command_argv(t_data *data)
 	return (EXIT_SUCCESS);
 }
 
-static int handle_redirection_token(t_data *data, t_token *token)
-{
-	if (token->type == HEREDOC)
-	{
-		if (!token->next || token->next->type != LIMITER)
-			return (print_syntax_error(token->value[0], 7), EXIT_FAILURE);
-		if (setup_heredoc(data, token->next->value) == EXIT_FAILURE)
-			return (EXIT_FAILURE);
-	}
-	else if (token->type == REDIR_IN)
-	{
-		if (handle_redirection_fd(data, &data->input, token, O_RDONLY))
-			return (EXIT_FAILURE);
-	}
-	else if (token->type == REDIR_OUT)
-	{
-		if (handle_redirection_fd(data, &data->output, token, O_WRONLY | O_TRUNC | O_CREAT))
-			return (EXIT_FAILURE);
-	}
-	else if (token->type == REDIR_APPEND)
-	{
-		if (handle_redirection_fd(data, &data->output, token, O_WRONLY | O_APPEND | O_CREAT))
-			return (EXIT_FAILURE);
-	}
-	return (EXIT_SUCCESS);
-}
-
-static int	dispatch_command_tokens(t_data *data, t_token *current_token,
-		int *command_boundary)
-{
-	static t_command	*current_command;
-
-	if (*command_boundary)
-	{
-		current_command = append_command_node(data);
-		*command_boundary = 0;
-		if (!current_command)
-			return (EXIT_FAILURE);
-		if (set_command_name(current_command, current_token) == EXIT_FAILURE)
-			return (EXIT_FAILURE);
-	}
-	else if (current_token->value[0] == '-' && current_token->type == FLAG)
-	{
-		if (add_command_flag(current_command, current_token) == EXIT_FAILURE)
-			return (EXIT_FAILURE);
-	}
-	else if (current_token->type == ARG)
-	{
-		if (is_redirection_value(data, current_token) == EXIT_SUCCESS)
-			return (EXIT_SUCCESS);
-		if (add_command_arg(current_command, current_token) == EXIT_FAILURE)
-			return (EXIT_FAILURE);
-	}
-	return (EXIT_SUCCESS);
-}
-
 int	parser(t_data *data)
 {
-	t_token	*current_token;
-	int		command_boundary;
+	t_token		*token;
+	int			command_boundary;
+	t_command	*current_command;
+	t_command	*before_command;
 
-	current_token = data->tokens;
+	token = data->tokens;
 	command_boundary = 1;
-	while (current_token)
+	current_command = NULL;
+	while (token)
 	{
-		if (current_token->type == PIPE)
-			command_boundary = 1;
-		else if (current_token->type == CMD || current_token->type == ARG
-			|| current_token->type == FLAG)
+		if (token->type == PIPE)
 		{
-			if (dispatch_command_tokens(data, current_token,
+			command_boundary = 1;
+			current_command = NULL;
+		}
+		else if (token->type == CMD || token->type == ARG
+			|| token->type == FLAG)
+		{
+			if (dispatch_command_tokens(data, &current_command, token,
 					&command_boundary) == EXIT_FAILURE)
 				return (EXIT_FAILURE);
 		}
-		else if (handle_redirection_token(data, current_token) == EXIT_FAILURE)
-			return (EXIT_FAILURE);
-		current_token = current_token->next;
+		else if (token->type == REDIR_IN || token->type == REDIR_OUT
+			|| token->type == REDIR_APPEND || token->type == HEREDOC)
+		{
+			before_command = current_command;
+			if (handle_redirection_token(data, &current_command,
+					token) == EXIT_FAILURE)
+				return (EXIT_FAILURE);
+			if (before_command == NULL && current_command != NULL)
+				command_boundary = 0;
+		}
+		token = token->next;
 	}
 	if (command_boundary && *data->line)
-		return (perror("No command after pipe\n"), EXIT_FAILURE); //? maybe int FD OUT
+		return (report_error(data, "No command after pipe", -1), EXIT_FAILURE);
 	if (build_command_argv(data))
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);

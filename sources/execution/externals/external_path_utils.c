@@ -6,11 +6,40 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 14:49:44 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/05 23:01:37 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/08 19:14:09 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
+
+// int path_is_dir(const char *path)
+// {
+// 	struct stat path_stat;
+
+// 	if (!path)
+// 		return (0);
+// 	if (stat(path, &path_stat) == -1)
+// 		return (0);
+// 	if (S_ISDIR(path_stat.st_mode))
+// 		return (1);
+// 	return (0);
+// }
+
+// int has_slash(const char *str)
+// {
+// 	size_t i;
+
+// 	if (!str)
+// 		return (0);
+// 	i = 0;
+// 	while (str[i])
+// 	{
+// 		if (str[i] == '/')
+// 			return (1);
+// 		i++;
+// 	}
+// 	return (0);
+// }
 
 static char	*normalize_path_dir(const char *dir)
 {

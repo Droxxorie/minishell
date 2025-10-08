@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 11:55:49 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/07 18:54:48 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/08 19:21:53 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ static int	exec_command(t_data *data, t_command *node, char *command_path)
 	if (err == EACCES)
 	{
 		report_error2(node->argv[0], ": Permission denied");
-		printf("exec\n");
 		exit(126);
 	}
 	report_error2(node->argv[0], ": execve error");
@@ -73,19 +72,22 @@ void	handle_external_command(t_data *data, int *fds, int index, pid_t *pid)
 		return (report_error(data, "fork", 1));
 	if (*pid == 0)
 	{
-		if (command_path_is_valid(data, node, &cmd_path) == FALSE)
+		setup_child_signals();
+		// redirs + pipes pour CETTE commande :
+		if (child_setup_io(data, node, fds, index, n_cmds) == EXIT_FAILURE)
+			_exit(1);
+		if (!command_path_is_valid(data, node, &cmd_path))
 		{
-			report_error2("command not found: ", node->argv[0]);
+			// report_error2("command not found: ", node->argv[0]);
 			cleanup_shell_state(data);
-			exit(127);
+			exit(data->exit_status);
 		}
-		// if (child_dup_fds(data, fds, index, n_cmds) == EXIT_FAILURE)
-		if (apply_redirections_in_child(data) == EXIT_FAILURE)
-			exit(1);
-		if (n_cmds > 1)
-			close_pipe_fds(fds, (n_cmds - 1) * 2);
 		exec_command(data, node, cmd_path);
+		// si exec échoue :
+		report_error(data, "execve", 1);
+		cleanup_shell_state(data);
+		exit(127);
 	}
+	// parent : fermer ce qu'il faut pour ce maillon
 	parent_close_after_fork(fds, index, n_cmds);
-	return ;
 }

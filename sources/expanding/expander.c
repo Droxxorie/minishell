@@ -5,14 +5,15 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/28 16:44:06 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/07 13:08:16 by eraad            ###   ########.fr       */
+/*   Created: 2025/10/08 16:13:40 by eraad             #+#    #+#             */
+/*   Updated: 2025/10/08 16:13:59 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static char	*append_current_char(t_data *data, char *line, size_t *i, char *accumulated_line)
+static char	*append_current_char(t_data *data, char *line, size_t *i,
+		char *accumulated_line)
 {
 	size_t	len;
 	char	*temp;
@@ -35,7 +36,8 @@ static char	*append_current_char(t_data *data, char *line, size_t *i, char *accu
 	return (temp);
 }
 
-static char *expand_variable(t_data *data, char *variable, size_t *i, char *accumulated_line)
+static char	*expand_variable(t_data *data, char *variable, size_t *i,
+		char *accumulated_line)
 {
 	char	*current_line;
 	char	*expanded_value;
@@ -63,7 +65,8 @@ static char *expand_variable(t_data *data, char *variable, size_t *i, char *accu
 	return (accumulated_line);
 }
 
-static char	*expand_segment(t_data *data, char *line, size_t *i, char *accumulated_line)
+static char	*expand_segment(t_data *data, char *line, size_t *i,
+		char *accumulated_line)
 {
 	char	*variable;
 

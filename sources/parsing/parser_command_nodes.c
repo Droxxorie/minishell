@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/26 01:31:31 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/05 19:15:09 by eraad            ###   ########.fr       */
+/*   Created: 2025/10/08 15:37:37 by eraad             #+#    #+#             */
+/*   Updated: 2025/10/08 15:38:20 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,21 +38,21 @@ static int	append_list_node(t_minilist **list, t_token *token)
 	return (EXIT_SUCCESS);
 }
 
-int	add_command_arg(t_command *current_command, t_token *current_token)
-{
-	if (!current_command || !current_token)
-		return (EXIT_FAILURE);
-	if (append_list_node(&current_command->args, current_token) == EXIT_FAILURE)
-		return (EXIT_FAILURE);
-	return (EXIT_SUCCESS);
-}
-
 int	add_command_flag(t_command *current_command, t_token *current_token)
 {
 	if (!current_command || !current_token)
 		return (EXIT_FAILURE);
 	if (append_list_node(&current_command->flags,
 			current_token) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
+}
+
+int	add_command_arg(t_command *current_command, t_token *current_token)
+{
+	if (!current_command || !current_token)
+		return (EXIT_FAILURE);
+	if (append_list_node(&current_command->args, current_token) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
