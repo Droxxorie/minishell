@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 11:55:37 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/05 23:03:50 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/09 03:26:42 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	parent_close_after_fork(int *fds, int index, int n_cmds)
 {
-	int max_index;
-	
+	int	max_index;
+
 	if (!fds || n_cmds <= 1)
 		return ;
 	max_index = (n_cmds - 1) * 2;

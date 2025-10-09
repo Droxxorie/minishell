@@ -6,7 +6,7 @@
 #    By: eraad <eraad@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/04 18:58:38 by eraad             #+#    #+#              #
-#    Updated: 2025/10/08 16:55:09 by eraad            ###   ########.fr        #
+#    Updated: 2025/10/09 03:59:34 by eraad            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,6 +48,8 @@ LIBFT_A         := $(LIBFT_DIR)/libft.a
 # ---- Core --------------------------------------------------------------------
 SRCS := \
 	$(SRC_DIR)/core/loop/main.c \
+	$(SRC_DIR)/core/loop/launch_minishell.c \
+	$(SRC_DIR)/core/loop/exit_minishell.c \
 	$(SRC_DIR)/core/init/init.c \
 	$(SRC_DIR)/core/init/env_copy.c \
 	$(SRC_DIR)/core/init/env_list.c \
@@ -116,6 +118,7 @@ SRCS += \
 # ---- Parsing -----------------------------------------------------------------
 SRCS += \
 	$(SRC_DIR)/parsing/parser.c \
+	$(SRC_DIR)/parsing/parser_utils.c \
 	$(SRC_DIR)/parsing/parser_command_list.c \
 	$(SRC_DIR)/parsing/parser_command_nodes.c \
 	$(SRC_DIR)/parsing/parser_argv_builder.c \
@@ -126,6 +129,7 @@ SRCS += \
 	$(SRC_DIR)/redirections/redirs.c \
 	$(SRC_DIR)/redirections/redirs_open.c \
 	$(SRC_DIR)/redirections/redirs_apply.c \
+	$(SRC_DIR)/redirections/redirs_apply_utils.c \
 
 # ---- Utils -------------------------------------------------------------------
 SRCS += \

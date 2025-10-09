@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:38:39 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/08 15:38:54 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/09 03:35:36 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static void	link_command_node(t_data *data, t_command *new_command)
 
 t_command	*append_command_node(t_data *data)
 {
-	t_command *new_command;
+	t_command	*new_command;
 
 	if (!data->commands)
 	{

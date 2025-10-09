@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 11:55:49 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/08 19:21:53 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/09 03:49:03 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,34 +60,28 @@ static int	fetch_command_at_index(t_data *data, t_command **node, int index)
 
 void	handle_external_command(t_data *data, int *fds, int index, pid_t *pid)
 {
-	int			n_cmds;
 	t_command	*node;
 	char		*cmd_path;
 
 	if (fetch_command_at_index(data, &node, index) == EXIT_FAILURE)
 		return ;
-	n_cmds = compute_n_cmds(data);
 	*pid = fork();
 	if (*pid < 0)
 		return (report_error(data, "fork", 1));
 	if (*pid == 0)
 	{
 		setup_child_signals();
-		// redirs + pipes pour CETTE commande :
-		if (child_setup_io(data, node, fds, index, n_cmds) == EXIT_FAILURE)
-			_exit(1);
+		if (child_setup_io(data, node, fds, index) == EXIT_FAILURE)
+			exit(1);
 		if (!command_path_is_valid(data, node, &cmd_path))
 		{
-			// report_error2("command not found: ", node->argv[0]);
 			cleanup_shell_state(data);
 			exit(data->exit_status);
 		}
 		exec_command(data, node, cmd_path);
-		// si exec échoue :
 		report_error(data, "execve", 1);
 		cleanup_shell_state(data);
 		exit(127);
 	}
-	// parent : fermer ce qu'il faut pour ce maillon
-	parent_close_after_fork(fds, index, n_cmds);
+	parent_close_after_fork(fds, index, compute_n_cmds(data));
 }

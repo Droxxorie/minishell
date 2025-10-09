@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:55:18 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/08 17:41:41 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/09 03:17:09 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ static t_bool	is_echo_n_flag(const char *arg)
 
 int	execute_builtin_echo(char **argv)
 {
-	int index;
-	t_bool has_n_flag;
+	int		index;
+	t_bool	has_n_flag;
 
 	index = 1;
 	has_n_flag = FALSE;

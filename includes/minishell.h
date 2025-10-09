@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 16:29:25 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/08 19:14:01 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/09 03:59:20 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,8 @@ typedef struct s_data
 
 //* ----------------- Functions ----------------------- */
 
+void							launch_minishell(t_data *data);
+
 //* UTILS */
 long long						ft_atoll(const char *str);
 void							close_fds_from(int start_fd);
@@ -246,13 +248,19 @@ int								add_command_flag(t_command *current_command,
 									t_token *current_token);
 
 //* EXECUTING / REDIRECTIONS */
+int								dup_apply_fd(t_data *data, int fd, int target);
+int								apply_pipe_in(t_data *data, int *fds,
+									int index);
+int								apply_pipe_out(t_data *data, int *fds,
+									int index);
 void							redir_push_back(t_redir **list, t_redir *node);
 t_redir							*new_redir(t_type type, t_quote quote,
 									const char *value);
 int								open_redirs_for_command(t_data *data,
 									t_command *node, int *in_fd, int *out_fd);
 int								child_setup_io(t_data *data, t_command *node,
-									int *fds, int index, int n);
+									int *fds, int index);
+// int *fds, int index, int n);
 int								apply_redirections_in_parent(t_data *data,
 									t_command *node, int saved[2]);
 int								wait_and_cleanup_pipeline(t_data *data,
@@ -334,5 +342,11 @@ void							handle_external_command(t_data *data, int *fds,
 									int index, pid_t *pid);
 t_bool							command_path_is_valid(t_data *data,
 									t_command *node, char **command_path);
+int								dispatch_command_tokens(t_data *data,
+									t_command **current, t_token *token,
+									int *command_boundary);
+int								handle_redirection_token(t_data *data,
+									t_command **current, t_token *token);
+int								build_command_argv(t_data *data);
 
 #endif

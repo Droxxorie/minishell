@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 14:49:16 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/08 14:49:56 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/09 03:15:28 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int	scan_line(char *line, int opened_quote, int index, t_data *data)
 			opened_quote = 1;
 		}
 		else if ((line[index] == '\'' || line[index] == '"')
-				&& line[index] == data->which_quote)
+			&& line[index] == data->which_quote)
 		{
 			opened_quote = 0;
 			data->which_quote = '\0';

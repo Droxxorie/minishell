@@ -6,33 +6,33 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:33:52 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/08 15:34:12 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/09 03:33:09 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
 static t_type	get_operator_token_type(t_data *data, char operator, int
-		* command_boundary)
+		*command_boundary)
 {
-	if (operator== '|')
+	if (operator == '|')
 	{
 		*command_boundary = 1;
 		return (PIPE);
 	}
-	else if (operator== '>' && data->line[1] == '>')
+	else if (operator == '>' && data->line[1] == '>')
 	{
 		data->line++;
 		return (REDIR_APPEND);
 	}
-	else if (operator== '<' && data->line[1] == '<')
+	else if (operator == '<' && data->line[1] == '<')
 	{
 		data->line++;
 		return (HEREDOC);
 	}
-	else if (operator== '>')
+	else if (operator == '>')
 		return (REDIR_OUT);
-	else if (operator== '<')
+	else if (operator == '<')
 		return (REDIR_IN);
 	return (-1);
 }
@@ -55,7 +55,7 @@ static char	*build_remaning_operator_token(t_data *data, t_type *type)
 }
 
 static char	*build_operator_token(t_data *data, char operator, int
-		* command_boundary, t_type *type)
+		*command_boundary, t_type *type)
 {
 	*type = get_operator_token_type(data, operator, command_boundary);
 	if (*type == REDIR_APPEND)
@@ -79,7 +79,7 @@ static char	*build_operator_token(t_data *data, char operator, int
 	return (build_remaning_operator_token(data, type));
 }
 
-int	add_operator_token(t_data *data, char operator, int * command_boundary)
+int	add_operator_token(t_data *data, char operator, int *command_boundary)
 {
 	t_type	type;
 	char	*raw_operator;

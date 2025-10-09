@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 14:52:23 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/08 14:52:43 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/09 03:29:34 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static void	sigquit_handler_child(int signum)
 
 void	setup_child_signals(void)
 {
-	struct sigaction sa;
+	struct sigaction	sa;
 
 	sigemptyset(&sa.sa_mask);
 	rl_event_hook = sig_event;

@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:34:33 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/08 18:03:28 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/09 03:30:18 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@ t_token	*classify_input_redirections(t_token *tokens)
 				&& current_token->next->type != FILE_NAME)
 				return (print_syntax_error('<', 4), NULL);
 			current_token->next->type = FILE_NAME;
-			// if (current_token->next->next && !current_token->prev)
-			// 	current_token->next->next->type = CMD;
 		}
 		current_token = current_token->next;
 	}
@@ -51,10 +49,6 @@ t_token	*classify_heredoc_delimiters(t_token *tokens)
 				&& current_token->next->type != CMD)
 				return (print_syntax_error('<', 5), NULL);
 			current_token->next->type = LIMITER;
-			// if (current_token->next->next
-			// 	&& current_token->next->next->type == ARG
-			// 	&& !current_token->prev)
-			// 	current_token->next->next->type = CMD;
 		}
 		current_token = current_token->next;
 	}
@@ -138,30 +132,3 @@ int	validate_pipe_syntax(t_data *data)
 	}
 	return (EXIT_SUCCESS);
 }
-
-// int	validate_pipe_syntax(t_data *data)
-// {
-// 	t_token	*current_token;
-
-// 	if (!data->tokens)
-// 		return (EXIT_FAILURE);
-// 	current_token = data->tokens;
-// 	while (current_token)
-// 	{
-// 		if (current_token->type == PIPE)
-// 		{
-// 			if (!current_token->next || current_token->next->type == PIPE
-// 				|| current_token->next->type == REDIR_IN
-// 				|| current_token->next->type == REDIR_OUT
-// 				|| current_token->next->type == REDIR_APPEND
-// 				|| current_token->next->type == HEREDOC)
-// 			{
-// 				data->exit_status = 2;
-// 				print_syntax_error('|', 4);
-// 				return (EXIT_FAILURE);
-// 			}
-// 		}
-// 		current_token = current_token->next;
-// 	}
-// 	return (EXIT_SUCCESS);
-// }

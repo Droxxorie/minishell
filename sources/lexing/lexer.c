@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:30:59 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/08 15:31:30 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/09 03:30:40 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,9 @@ static int	scan_line(t_data *data, t_quote *quote_state, char **token_buffer,
 
 int	lexer(t_data *data)
 {
-	t_quote quote_state;
-	char *token_buffer;
-	int command_boundary;
+	t_quote	quote_state;
+	char	*token_buffer;
+	int		command_boundary;
 
 	quote_state = NO_QUOTE;
 	token_buffer = NULL;

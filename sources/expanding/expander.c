@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 16:13:40 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/08 16:13:59 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/09 03:27:22 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ static char	*expand_variable(t_data *data, char *variable, size_t *i,
 	else if (env_var_exists(data, variable))
 		expanded_value = get_env_value(data, variable);
 	else
-		// expanded_value = ft_strdup(""); //? which one
 		expanded_value = ft_calloc(1, 1);
 	free(variable);
 	free(accumulated_line);

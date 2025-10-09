@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 14:50:41 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/08 14:52:01 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/09 03:33:58 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ static void	heredoc_sigint_handler(int signum)
 {
 	(void)signum;
 	g_waiting = 3;
-	//? rl_replace_line("", 0);
 	rl_done = 1;
 	return ;
 }

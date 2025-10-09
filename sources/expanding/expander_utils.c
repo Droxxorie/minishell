@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 16:14:14 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/08 16:14:58 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/09 03:28:14 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ t_bool	need_expansion(char *str)
 		state = quote_state(str, i);
 		if (str[i] == '$' && state != SINGLE_QUOTE)
 			if (str[i + 1] && (str[i + 1] == '$' || str[i + 1] == '?' || str[i
-					+ 1] == '_' || ft_isalnum(str[i + 1])))
+						+ 1] == '_' || ft_isalnum(str[i + 1])))
 				return (TRUE);
 		i++;
 	}
@@ -79,7 +79,6 @@ char	*get_env_value(t_data *data, char *variable)
 	temp = data->env_copy;
 	while (temp)
 	{
-		// if (ft_strcmp(temp->value, variable) == 0) //? wich one
 		if (ft_strcmp(temp->key, variable) == 0)
 		{
 			expanded_value = ft_strdup(temp->value);
@@ -105,7 +104,6 @@ char	*extract_var_name(char *str, size_t *i)
 		return (ft_strdup("$$"));
 	}
 	if (str[0] == '$' && str[1] == '?')
-		// return (ft_strdup("?"));
 		return (NULL);
 	len = 1;
 	while (str[len] && (ft_isalnum(str[len]) || str[len] == '_'))
