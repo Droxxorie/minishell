@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 03:08:27 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/09 03:10:03 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/09 04:10:22 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	cleanup_shell_state(t_data *data)
 	free_env_list(&data->export);
 	free_tokens(data);
 	free_commands(data);
-	data->line = NULL;
+	// data->line = NULL;
 	free(data->path);
 	data->path = NULL;
 	free_pipes_all(data);
