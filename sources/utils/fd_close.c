@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 16:11:01 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/08 16:12:12 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/10 22:56:31 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ void	close_pipe_fds(int *fds, int count)
 	{
 		if (fds[i] > 2)
 			close(fds[i]);
-		fds[i] = -1;
 		i++;
 	}
 	return ;

@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:52:10 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/10 19:49:33 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/10 22:57:40 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,28 +32,67 @@ static int	exec_if_single_builtin(t_data *data)
 	return (1);
 }
 
-static int	pipeline_loop(t_data *data, t_pipes *pipes, t_command *current,
-		int *count)
+static int	collect_commands(t_command *cur, t_command **arr, int max, int *out)
 {
-	int	i;
+	int	n;
 
-	i = 0;
-	while (current)
+	n = 0;
+	while (cur && n < max)
 	{
-		if (g_waiting == 3)
-			break ;
-		if (is_builtin_command(current) && pipes->nb + 1 > 1)
-			pipes->pids[i] = launch_builtin_child(data, current, pipes->fds, 2
-					* i);
-		else if (is_builtin_command(current))
-			handle_builtin_command(data, current);
-		else if (handle_external_command(data, pipes->fds, 2 * i,
-				&pipes->pids[i]) == EXIT_FAILURE)
-			return (EXIT_FAILURE);
-		i++;
-		current = current->next;
+		arr[n] = cur;
+		cur = cur->next;
+		n++;
 	}
-	*count = i;
+	*out = n;
+	return (EXIT_SUCCESS);
+}
+
+static int	dispatch_one(t_data *data, t_pipes *p, t_command *cmd, int i)
+{
+	if (g_waiting == 3)
+		return (2);
+	if (is_builtin_command(cmd) && p->nb + 1 > 1)
+	{
+		p->pids[i] = launch_builtin_child(data, cmd, p->fds, 2 * i);
+		if (p->pids[i] < 0)
+			return (EXIT_FAILURE);
+		return (EXIT_SUCCESS);
+	}
+	if (is_builtin_command(cmd))
+	{
+		if (handle_builtin_command(data, cmd) == EXIT_FAILURE)
+			return (EXIT_FAILURE);
+		return (EXIT_SUCCESS);
+	}
+	if (handle_external_command(data, p->fds, 2 * i,
+			&p->pids[i]) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
+}
+
+int	pipeline_loop(t_data *data, t_pipes *pipes, t_command *current, int *count)
+{
+	t_command	*arr[256];
+	int			n;
+	int			i;
+	int			ret;
+
+	n = 0;
+	i = 0;
+	ret = collect_commands(current, arr, 256, &n);
+	if (ret == EXIT_FAILURE)
+		return (EXIT_FAILURE);
+	i = n - 1;
+	while (i >= 0)
+	{
+		ret = dispatch_one(data, pipes, arr[i], i);
+		if (ret == EXIT_FAILURE)
+			return (EXIT_FAILURE);
+		if (ret == 2)
+			break ;
+		i--;
+	}
+	*count = n;
 	return (EXIT_SUCCESS);
 }
 

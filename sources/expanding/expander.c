@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 16:13:40 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/09 03:27:22 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/10 22:44:44 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,7 @@ static char	*expand_variable(t_data *data, char *variable, size_t *i,
 		expanded_value = ft_calloc(1, 1);
 	free(variable);
 	free(accumulated_line);
-	accumulated_line = ft_strjoin(current_line, expanded_value);
-	free(current_line);
-	free(expanded_value);
+	accumulated_line = strjoin_free_both(current_line, expanded_value);
 	if (!accumulated_line)
 		return (report_error(data, "strjoin", 1), NULL);
 	return (accumulated_line);

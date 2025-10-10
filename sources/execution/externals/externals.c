@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 11:55:49 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/10 19:26:41 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/10 22:43:29 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,33 @@ static int	fetch_command_at_index(t_data *data, t_command **node, int index)
 	return (EXIT_SUCCESS);
 }
 
+static void	child_exec_command(t_data *data, t_command *node, int *fds,
+		int index)
+{
+	char	*cmd_path;
+
+	setup_child_signals();
+	if (child_setup_io(data, node, fds, index) == EXIT_FAILURE)
+	{
+		cleanup_shell_state(data);
+		rl_clear_history();
+		exit(1);
+	}
+	if (!command_path_is_valid(data, node, &cmd_path))
+	{
+		cleanup_shell_state(data);
+		rl_clear_history();
+		exit(data->exit_status);
+	}
+	exec_command(data, node, cmd_path);
+	report_error(data, "execve", 1);
+	cleanup_shell_state(data);
+	exit(127);
+}
+
 int	handle_external_command(t_data *data, int *fds, int index, pid_t *pid)
 {
 	t_command	*node;
-	char		*cmd_path;
 
 	if (fetch_command_at_index(data, &node, index) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
@@ -69,20 +92,7 @@ int	handle_external_command(t_data *data, int *fds, int index, pid_t *pid)
 	if (*pid < 0)
 		return (report_error(data, "fork", 1), EXIT_FAILURE);
 	if (*pid == 0)
-	{
-		setup_child_signals();
-		if (child_setup_io(data, node, fds, index) == EXIT_FAILURE)
-			return (EXIT_FAILURE);
-		if (!command_path_is_valid(data, node, &cmd_path))
-		{
-			cleanup_shell_state(data);
-			exit(data->exit_status);
-		}
-		exec_command(data, node, cmd_path);
-		report_error(data, "execve", 1);
-		cleanup_shell_state(data);
-		exit(127);
-	}
+		child_exec_command(data, node, fds, index);
 	parent_close_after_fork(fds, index, compute_n_cmds(data));
 	return (EXIT_SUCCESS);
 }
