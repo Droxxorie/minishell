@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:52:10 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/08 15:52:46 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/10 19:49:33 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,9 @@ static int	pipeline_loop(t_data *data, t_pipes *pipes, t_command *current,
 					* i);
 		else if (is_builtin_command(current))
 			handle_builtin_command(data, current);
-		else
-			handle_external_command(data, pipes->fds, 2 * i, &pipes->pids[i]);
+		else if (handle_external_command(data, pipes->fds, 2 * i,
+				&pipes->pids[i]) == EXIT_FAILURE)
+			return (EXIT_FAILURE);
 		i++;
 		current = current->next;
 	}

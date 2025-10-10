@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 03:37:32 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/09 03:40:27 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/10 18:29:55 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	build_command_argv(t_data *data)
 	while (current_command)
 	{
 		argc = count_command_elements(current_command);
-		current_command->argv = malloc(sizeof(char *) * (argc + 1));
+		current_command->argv = ft_calloc(sizeof(char *), (argc + 1));
 		if (!current_command->argv)
 		{
 			perror("minishell: malloc");
@@ -69,7 +69,8 @@ int	build_command_argv(t_data *data)
 		if (append_command_to_argv(current_command, &i) == EXIT_FAILURE
 			|| append_args_to_argv(current_command, &i) == EXIT_FAILURE
 			|| append_flags_to_argv(current_command, &i) == EXIT_FAILURE)
-			return (EXIT_FAILURE);
+			return (free_char_array(current_command->argv),
+				current_command->argv = NULL, EXIT_FAILURE);
 		current_command->argv[i] = NULL;
 		current_command = current_command->next;
 	}

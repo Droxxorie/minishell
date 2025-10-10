@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 14:49:16 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/09 03:15:28 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/10 17:24:04 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,11 +72,11 @@ void	print_syntax_error(char error, int code)
 	}
 	else if (code == 4 || code == 5)
 	{
-		ft_putstr_fd("minishell: syntax error near unexpected token '", 2);
+		ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
 		ft_putchar_fd(error, 2);
 		ft_putstr_fd("'\n", 2);
 		if (code == 5)
-			ft_putstr_fd("invalid heredoc delimiter\n", 2);
+			ft_putstr_fd("invalid heredoc limiter\n", 2);
 	}
 	else if (code == 6)
 		ft_putstr_fd("minishell: syntax error: unclosed quote\n", 2);

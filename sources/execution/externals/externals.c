@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 11:55:49 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/09 03:49:03 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/10 19:26:41 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,21 +58,21 @@ static int	fetch_command_at_index(t_data *data, t_command **node, int index)
 	return (EXIT_SUCCESS);
 }
 
-void	handle_external_command(t_data *data, int *fds, int index, pid_t *pid)
+int	handle_external_command(t_data *data, int *fds, int index, pid_t *pid)
 {
 	t_command	*node;
 	char		*cmd_path;
 
 	if (fetch_command_at_index(data, &node, index) == EXIT_FAILURE)
-		return ;
+		return (EXIT_FAILURE);
 	*pid = fork();
 	if (*pid < 0)
-		return (report_error(data, "fork", 1));
+		return (report_error(data, "fork", 1), EXIT_FAILURE);
 	if (*pid == 0)
 	{
 		setup_child_signals();
 		if (child_setup_io(data, node, fds, index) == EXIT_FAILURE)
-			exit(1);
+			return (EXIT_FAILURE);
 		if (!command_path_is_valid(data, node, &cmd_path))
 		{
 			cleanup_shell_state(data);
@@ -84,4 +84,5 @@ void	handle_external_command(t_data *data, int *fds, int index, pid_t *pid)
 		exit(127);
 	}
 	parent_close_after_fork(fds, index, compute_n_cmds(data));
+	return (EXIT_SUCCESS);
 }

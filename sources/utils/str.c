@@ -6,11 +6,42 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 16:08:19 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/08 16:08:33 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/10 19:48:55 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+char	*strjoin_free_left(char *left, char *right)
+{
+	char	*joined;
+
+	if (!left && !right)
+		return (NULL);
+	if (!left)
+		return (ft_strdup(right));
+	if (!right)
+		return (left);
+	joined = ft_strjoin(left, right);
+	free(left);
+	return (joined);
+}
+
+char	*strjoin_free_both(char *left, char *right)
+{
+	char	*joined;
+
+	if (!left && !right)
+		return (NULL);
+	if (!left)
+		return (right);
+	if (!right)
+		return (left);
+	joined = ft_strjoin(left, right);
+	free(left);
+	free(right);
+	return (joined);
+}
 
 int	ft_strcmp(const char *s1, const char *s2)
 {

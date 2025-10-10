@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:59:17 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/08 15:59:27 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/10 12:41:24 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,20 +43,16 @@ static void	env_unlink_key(t_env **head, const char *key)
 int	execute_builtin_unset(t_data *data, char **argv)
 {
 	int			i;
-	int			status;
 	const char	*key;
 
 	if (!data || !argv)
 		return (EXIT_FAILURE);
-	status = EXIT_SUCCESS;
 	i = 1;
 	while (argv[i])
 	{
 		key = argv[i];
 		if (key[0] == '\0' || key_is_valid(key) == FALSE)
 		{
-			report_error3("unset: `", key, "': not a valid identifier");
-			status = EXIT_FAILURE;
 			i++;
 			continue ;
 		}
@@ -64,5 +60,5 @@ int	execute_builtin_unset(t_data *data, char **argv)
 		env_unlink_key(&data->export, key);
 		i++;
 	}
-	return (status);
+	return (EXIT_SUCCESS);
 }

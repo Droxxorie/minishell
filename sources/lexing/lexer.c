@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:30:59 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/09 03:30:40 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/10 13:33:38 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static int	lexer_postprocess(t_data *data, t_quote quote_state,
 		*token_buffer = NULL;
 	}
 	if (!classify_heredoc_delimiters(data->tokens)
-		|| !classify_input_redirections(data->tokens))
+		|| !classify_input_redirections(data, data->tokens))
 		return (free(*token_buffer), free_tokens(data), EXIT_FAILURE);
 	normalize_exit_echo_args(data->tokens);
 	normalize_redirection_args(data->tokens);

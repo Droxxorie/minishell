@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:47:08 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/08 15:48:11 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/10 19:27:28 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,12 @@ static int	open_out_append(t_data *data, t_redir *redir, int *out_fd)
 
 	if (!redir->value || redir->value[0] == '\0')
 		return (report_error(data, "ambiguous redirect", -1), EXIT_FAILURE);
+	if (check_redir_operator(data, redir) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
 	fd = open(redir->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
-		return (report_error3(redir->value, ": ", strerror(errno)),
-			EXIT_FAILURE);
+		return (report_error3(redir->value, ": ",
+				strerror(errno)), EXIT_FAILURE);
 	if (*out_fd != -1 && *out_fd > 2)
 		close(*out_fd);
 	*out_fd = fd;
@@ -51,8 +53,8 @@ static int	open_out_trunc(t_data *data, t_redir *redir, int *out_fd)
 		return (report_error(data, "ambiguous redirect", -1), EXIT_FAILURE);
 	fd = open(redir->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
-		return (report_error3(redir->value, ": ", strerror(errno)),
-			EXIT_FAILURE);
+		return (report_error3(redir->value, ": ",
+				strerror(errno)), EXIT_FAILURE);
 	if (*out_fd != -1 && *out_fd > 2)
 		close(*out_fd);
 	*out_fd = fd;
@@ -65,10 +67,12 @@ static int	open_in(t_data *data, t_redir *redir, int *in_fd)
 
 	if (!redir->value || redir->value[0] == '\0')
 		return (report_error(data, "ambiguous redirect", -1), EXIT_FAILURE);
+	if (check_redir_operator(data, redir) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
 	fd = open(redir->value, O_RDONLY);
 	if (fd == -1)
-		return (report_error3(redir->value, ": ", strerror(errno)),
-			EXIT_FAILURE);
+		return (report_error3(redir->value, ": ",
+				strerror(errno)), EXIT_FAILURE);
 	if (*in_fd != -1 && *in_fd > 2)
 		close(*in_fd);
 	*in_fd = fd;
@@ -97,7 +101,7 @@ int	open_redirs_for_command(t_data *data, t_command *node, int *in_fd,
 			status = open_heredoc(data, temp, in_fd);
 		if (status == EXIT_FAILURE)
 		{
-			data->exit_status = 1;
+			data->exit_status = 2;
 			return (-1);
 		}
 		temp = temp->next;

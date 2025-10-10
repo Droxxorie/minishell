@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 14:46:48 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/09 04:08:13 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/10 19:05:32 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ void	reset_command_context(t_data *data)
 {
 	if (!data)
 		return ;
-	free_commands(data);
 	free_tokens(data);
+	free_commands(data);
 	if (data->pipes)
 		free_pipes_all(data);
 }

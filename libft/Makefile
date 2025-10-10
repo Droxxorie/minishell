@@ -6,65 +6,180 @@
 #    By: eraad <eraad@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/15 12:06:42 by eraad             #+#    #+#              #
-#    Updated: 2025/03/15 12:17:26 by eraad            ###   ########.fr        #
+#    Updated: 2025/10/09 19:09:39 by eraad            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-#* ------------------ Variables ---------------------- *
-NAME		= libft.a
-CC			= cc
-CFLAGS		= -Wall -Wextra -Werror
-AR			= ar rcs
-INCLUDES	= -I./include
+#* ==============================================================================
+#*                                   BINARY
+#* ==============================================================================
+NAME        := libft.a
 
-#* ------------------ Colors ------------------------- *
-DEF = \033[0m
-Y = \033[0;93m
-G = \033[0;92m
-R = \033[0;91m
-ORANGE = \033[38;5;208m
-LIGHT_GREEN = \033[38;5;120m
-NEON_GREEN = \033[38;5;82m
+#* ==============================================================================
+#*                                   TOOLCHAIN
+#* ==============================================================================
+CC          := cc
+AR          := ar rcs
+CFLAGS      := -Wall -Wextra -Werror -MMD -MP
+INCLUDES    := -Iinclude
 
-#* ------------------ Sources ------------------------ *
-SRCS_DIR	=	sources/
-SRC_FILES	=	ft_is/ft_isalnum.c ft_is/ft_isalpha.c ft_is/ft_isascii.c ft_is/ft_isdigit.c ft_is/ft_isprint.c ft_is/ft_iswhitespace.c \
-				ft_lst/ft_lstadd_back.c ft_lst/ft_lstadd_front.c ft_lst/ft_lstclear.c ft_lst/ft_lstdelone.c ft_lst/ft_lstiter.c ft_lst/ft_lstlast.c ft_lst/ft_lstmap.c ft_lst/ft_lstnew.c ft_lst/ft_lstsize.c \
-				ft_mem/ft_bzero.c ft_mem/ft_calloc.c ft_mem/ft_memchr.c ft_mem/ft_memcmp.c ft_mem/ft_memcpy.c ft_mem/ft_memmove.c ft_mem/ft_memset.c ft_mem/ft_realloc.c \
-				ft_put/ft_putchar_fd.c ft_put/ft_putendl_fd.c ft_put/ft_putnbr_fd.c ft_put/ft_putstr_fd.c \
-				ft_str/ft_strchr.c ft_str/ft_strdup.c ft_str/ft_striteri.c ft_str/ft_strjoin.c ft_str/ft_strlcat.c ft_str/ft_strlcpy.c ft_str/ft_strlen.c ft_str/ft_strmapi.c ft_str/ft_strncmp.c ft_str/ft_strnstr.c ft_str/ft_strrchr.c ft_str/ft_strtrim.c ft_str/ft_substr.c \
-				gnl/get_next_line.c \
-				maths/ft_abs.c maths/ft_fabs.c maths/ft_pow.c maths/ft_argmax.c maths/ft_max.c maths/ft_min.c maths/ft_argmin.c \
-				printf/ft_printaddr_fd.c printf/ft_printchar_fd.c printf/ft_printdbl.c printf/ft_printf.c printf/ft_printhex_fd.c printf/ft_printnbr_fd.c printf/ft_printstr_fd.c printf/ft_printunbr_fd.c \
-				utils/ft_atodbl.c utils/ft_atoi.c utils/ft_count_words.c utils/ft_dbltoa.c utils/ft_intlen.c utils/ft_itoa.c utils/ft_split.c utils/ft_tolower.c utils/ft_toupper.c utils/ft_free_str_array.c utils/ft_free_2d_str_array.c \
+#* ==============================================================================
+#*                                   COLORS/SYMBOLS/STYLES
+#* ==============================================================================
 
-SRCS = $(addprefix $(SRCS_DIR), $(SRC_FILES))
+# NORMAL = 0
+# BOLD = 1
+# LOW INTENSITY = 2
+# ITALIC = 3
+# UNDERLINED = 4
+# BLINKING = 5
+# INVERTED/UNDERLINE = 7
+# HIDDEN = 8
+# CROSSED OUT = 9
 
-#* ------------------ Objects ------------------------ *
-OBJS_DIR	=	objects/
-OBJS		=	$(patsubst $(SRCS_DIR)%.c, $(OBJS_DIR)%.o, $(SRCS))
+RESET   := \033[0m
+BLACK   := \033[0;30m
+RED     := \033[0;31m
+GREEN   := \033[1;32m
+YELLOW  := \033[0;33m
+BLUE    := \033[0;34m
+PURPLE  := \033[1;35m
+CYAN    := \033[1;36m
+WHITE   := \033[0;37m
 
-#* ------------------ Rules -------------------------- *
+OK      := ✓
+KO      := ✗
+INFO    := ⓘ
+
+#* ==============================================================================
+#*                                   LAYOUT
+#* ==============================================================================
+SRC_DIR         := sources
+OBJ_DIR         := objects
+
+#* ==============================================================================
+#*                                   SOURCES
+#* ==============================================================================
+SRCS := \
+	$(SRC_DIR)/ft_is/ft_isalnum.c \
+	$(SRC_DIR)/ft_is/ft_isalpha.c \
+	$(SRC_DIR)/ft_is/ft_isascii.c \
+	$(SRC_DIR)/ft_is/ft_isdigit.c \
+	$(SRC_DIR)/ft_is/ft_isprint.c \
+	$(SRC_DIR)/ft_is/ft_iswhitespace.c \
+
+SRCS += \
+	$(SRC_DIR)/ft_lst/ft_lstadd_back.c \
+	$(SRC_DIR)/ft_lst/ft_lstadd_front.c \
+	$(SRC_DIR)/ft_lst/ft_lstclear.c \
+	$(SRC_DIR)/ft_lst/ft_lstdelone.c \
+	$(SRC_DIR)/ft_lst/ft_lstiter.c \
+	$(SRC_DIR)/ft_lst/ft_lstlast.c \
+	$(SRC_DIR)/ft_lst/ft_lstmap.c \
+	$(SRC_DIR)/ft_lst/ft_lstnew.c \
+	$(SRC_DIR)/ft_lst/ft_lstsize.c \
+
+SRCS += \
+	$(SRC_DIR)/ft_mem/ft_bzero.c \
+	$(SRC_DIR)/ft_mem/ft_calloc.c \
+	$(SRC_DIR)/ft_mem/ft_memchr.c \
+	$(SRC_DIR)/ft_mem/ft_memcmp.c \
+	$(SRC_DIR)/ft_mem/ft_memcpy.c \
+	$(SRC_DIR)/ft_mem/ft_memmove.c \
+	$(SRC_DIR)/ft_mem/ft_memset.c \
+	$(SRC_DIR)/ft_mem/ft_realloc.c \
+
+SRCS += \
+	$(SRC_DIR)/ft_put/ft_putchar_fd.c \
+	$(SRC_DIR)/ft_put/ft_putendl_fd.c \
+	$(SRC_DIR)/ft_put/ft_putnbr_fd.c \
+	$(SRC_DIR)/ft_put/ft_putstr_fd.c \
+
+SRCS += \
+	$(SRC_DIR)/ft_str/ft_strchr.c \
+	$(SRC_DIR)/ft_str/ft_strdup.c \
+	$(SRC_DIR)/ft_str/ft_striteri.c \
+	$(SRC_DIR)/ft_str/ft_strjoin.c \
+	$(SRC_DIR)/ft_str/ft_strlcat.c \
+	$(SRC_DIR)/ft_str/ft_strlcpy.c \
+	$(SRC_DIR)/ft_str/ft_strlen.c \
+	$(SRC_DIR)/ft_str/ft_strmapi.c \
+	$(SRC_DIR)/ft_str/ft_strncmp.c \
+	$(SRC_DIR)/ft_str/ft_strnstr.c \
+	$(SRC_DIR)/ft_str/ft_strrchr.c \
+	$(SRC_DIR)/ft_str/ft_strtrim.c \
+	$(SRC_DIR)/ft_str/ft_substr.c \
+	
+SRCS += \
+	$(SRC_DIR)/gnl/get_next_line.c \
+
+SRCS += \
+	$(SRC_DIR)/maths/ft_abs.c \
+	$(SRC_DIR)/maths/ft_fabs.c \
+	$(SRC_DIR)/maths/ft_pow.c \
+	$(SRC_DIR)/maths/ft_argmax.c \
+	$(SRC_DIR)/maths/ft_max.c \
+	$(SRC_DIR)/maths/ft_min.c \
+	$(SRC_DIR)/maths/ft_argmin.c \
+
+SRCS += \
+	$(SRC_DIR)/printf/ft_printaddr_fd.c \
+	$(SRC_DIR)/printf/ft_printchar_fd.c \
+	$(SRC_DIR)/printf/ft_printdbl.c \
+	$(SRC_DIR)/printf/ft_printf.c \
+	$(SRC_DIR)/printf/ft_printhex_fd.c \
+	$(SRC_DIR)/printf/ft_printnbr_fd.c \
+	$(SRC_DIR)/printf/ft_printstr_fd.c \
+	$(SRC_DIR)/printf/ft_printunbr_fd.c \
+	
+SRCS += \
+	$(SRC_DIR)/utils/ft_atodbl.c \
+	$(SRC_DIR)/utils/ft_atoi.c \
+	$(SRC_DIR)/utils/ft_count_words.c \
+	$(SRC_DIR)/utils/ft_dbltoa.c \
+	$(SRC_DIR)/utils/ft_intlen.c \
+	$(SRC_DIR)/utils/ft_itoa.c \
+	$(SRC_DIR)/utils/ft_split.c \
+	$(SRC_DIR)/utils/ft_tolower.c \
+	$(SRC_DIR)/utils/ft_toupper.c \
+	$(SRC_DIR)/utils/ft_free_str_array.c \
+	$(SRC_DIR)/utils/ft_free_2d_str_array.c \
+
+OBJS := $(SRCS:%=$(OBJ_DIR)/%.o)
+
+DEPS      := $(OBJS:.o=.d)
+SRC_COUNT := $(words $(SRCS))
+
+#* ==============================================================================
+#*                                   RULES
+#* ==============================================================================
 all: $(NAME)
 
-$(NAME):	$(OBJS)
-					@$(AR) $(NAME) $(OBJS)
-					@echo "$(NEON_GREEN)     .---------. $(DEF)"
-					@echo "$(NEON_GREEN)    (   libft   )$(DEF)"
-					@echo "$(NEON_GREEN)     '---------' $(DEF)"
+$(NAME): entry_message $(OBJS)
+	@echo "${GREEN} DONE${RESET}"
+	@$(AR) $@ $(OBJS)
+	@echo "$(PURPLE)${NAME} created\n$(RESET)"
 
-
-
-$(OBJS_DIR)%.o: $(SRCS_DIR)%.c
-				@mkdir -p $(dir $@)
-				@$(CC) $(CFLAGS) $(INCLUDES) -c -o $@ $<
+$(OBJ_DIR)/%.c.o: %.c
+	@mkdir -p $(dir $@)
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	@printf "$(GREEN)$(OK)$(RESET)"
 
 clean:
-					@rm -rf $(OBJS_DIR)
+	@rm -rf $(OBJ_DIR)
 
-fclean:		clean
-					@rm -f $(NAME)
+fclean: clean
+	@rm -f $(NAME)
 
-re:			fclean $(NAME)
+re: fclean all
 
-.PHONY:		all clean fclean re
+entry_message:
+	@echo "$(GREEN)Compiling ${NAME}$(RESET)"
+	@echo "$(YELLOW)$(INFO) ${SRC_COUNT} files$(RESET)"
+
+#* ==============================================================================
+#*                                   DEPENDENCIES
+#* ==============================================================================
+-include $(DEPS)
+
+.PHONY: all clean fclean re entry_message

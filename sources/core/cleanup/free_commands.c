@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 14:45:09 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/08 23:09:45 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/10 19:05:05 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,16 +70,16 @@ void	free_commands(t_data *data)
 	{
 		temp = data->commands;
 		data->commands = data->commands->next;
-		if (temp->redirs)
-			redir_list_clear(&temp->redirs);
-		if (temp->command)
-			free(temp->command);
 		if (temp->argv)
 			free_char_array(temp->argv);
+		if (temp->command)
+			free(temp->command);
 		if (temp->args)
 			minilist_clear(&temp->args);
 		if (temp->flags)
 			minilist_clear(&temp->flags);
+		if (temp->redirs)
+			redir_list_clear(&temp->redirs);
 		free(temp);
 	}
 }

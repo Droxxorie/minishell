@@ -22,3 +22,13 @@
   ...
   obj:/usr/lib/x86_64-linux-gnu/libtinfo.so.*
 }
+
+{
+  readline_possibly_lost
+  Memcheck:Leak
+  match-leak-kinds: possible
+  fun:malloc
+  fun:xmalloc
+  fun:readline_internal_teardown
+  fun:readline
+}

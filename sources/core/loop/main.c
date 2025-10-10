@@ -6,13 +6,11 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 14:41:05 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/09 04:01:40 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/10 19:49:56 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
-
-volatile sig_atomic_t	g_waiting = 0;
 
 int	main(int argc, char **argv, char **envp)
 {

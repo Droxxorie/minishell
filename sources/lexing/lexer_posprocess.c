@@ -6,13 +6,13 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:34:33 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/09 03:30:18 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/10 17:25:31 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-t_token	*classify_input_redirections(t_token *tokens)
+t_token	*classify_input_redirections(t_data *data, t_token *tokens)
 {
 	t_token	*current_token;
 
@@ -21,13 +21,20 @@ t_token	*classify_input_redirections(t_token *tokens)
 	current_token = tokens;
 	while (current_token)
 	{
-		if (current_token->type == REDIR_IN && current_token->next)
+		if (current_token->type == REDIR_IN)
 		{
-			if (current_token->next->type != ARG
-				&& current_token->next->type != CMD
-				&& current_token->next->type != FILE_NAME)
+			if (current_token->next == NULL)
+				return (report_error(data,
+						"syntax error near unexpected token `newline'",
+						2), NULL);
+			else if (current_token->next->type == PIPE
+				&& current_token->next->type == REDIR_IN
+				&& current_token->next->type == REDIR_OUT
+				&& current_token->next->type == REDIR_APPEND
+				&& current_token->next->type == HEREDOC)
 				return (print_syntax_error('<', 4), NULL);
-			current_token->next->type = FILE_NAME;
+			if (current_token->next)
+				current_token->next->type = FILE_NAME;
 		}
 		current_token = current_token->next;
 	}
@@ -49,6 +56,7 @@ t_token	*classify_heredoc_delimiters(t_token *tokens)
 				&& current_token->next->type != CMD)
 				return (print_syntax_error('<', 5), NULL);
 			current_token->next->type = LIMITER;
+			current_token->next->quote = current_token->quote;
 		}
 		current_token = current_token->next;
 	}

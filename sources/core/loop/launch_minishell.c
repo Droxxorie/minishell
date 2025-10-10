@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 03:08:55 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/09 03:14:29 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/10 18:34:36 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,22 @@ static int	preprocess_line(t_data *data)
 
 static int	execute_pipeline(t_data *data)
 {
-	if (expander(data) == EXIT_FAILURE || lexer(data) == EXIT_FAILURE
-		|| parser(data) == EXIT_FAILURE || executor(data) == EXIT_FAILURE)
+	if (expander(data) == EXIT_FAILURE)
+	{
+		reset_command_context(data);
+		return (0);
+	}
+	if (lexer(data) == EXIT_FAILURE)
+	{
+		reset_command_context(data);
+		return (0);
+	}
+	if (parser(data) == EXIT_FAILURE)
+	{
+		reset_command_context(data);
+		return (0);
+	}
+	if (executor(data) == EXIT_FAILURE)
 	{
 		reset_command_context(data);
 		return (0);

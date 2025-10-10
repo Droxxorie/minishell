@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:39:09 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/08 15:39:48 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/10 18:32:28 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ int	append_flags_to_argv(t_command *current, size_t *i)
 {
 	t_minilist	*flags;
 
+	if (!current || !i)
+		return (EXIT_FAILURE);
 	flags = current->flags;
 	while (flags)
 	{
@@ -33,10 +35,14 @@ int	append_flags_to_argv(t_command *current, size_t *i)
 
 int	append_command_to_argv(t_command *current, size_t *i)
 {
+	if (!current || !current->argv || !i)
+		return (EXIT_FAILURE);
+	if (!current->command)
+		return (EXIT_SUCCESS);
 	current->argv[*i] = ft_strdup(current->command);
 	if (!current->argv[*i])
 	{
-		perror("minishell: strdup");
+		report_error(NULL, "strdup", -1);
 		return (EXIT_FAILURE);
 	}
 	(*i)++;
@@ -47,6 +53,8 @@ int	append_args_to_argv(t_command *current, size_t *i)
 {
 	t_minilist	*args;
 
+	if (!current || !i)
+		return (EXIT_FAILURE);
 	args = current->args;
 	while (args)
 	{
@@ -68,7 +76,12 @@ size_t	count_command_elements(t_command *command)
 	t_minilist	*args;
 	t_minilist	*flags;
 
-	count = 1;
+	if (!command)
+		return (0);
+	if (!command->command)
+		count = 0;
+	else
+		count = 1;
 	args = command->args;
 	flags = command->flags;
 	while (args)

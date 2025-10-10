@@ -6,11 +6,25 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 16:08:47 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/08 16:09:14 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/10 19:48:46 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+int	append_join(char **out, char *chunk)
+{
+	char	*joined;
+
+	joined = NULL;
+	if (!chunk)
+		return (-1);
+	joined = strjoin_free_both(*out, chunk);
+	if (!joined)
+		return (-1);
+	*out = joined;
+	return (0);
+}
 
 int	ft_append_char(char **str, char c)
 {

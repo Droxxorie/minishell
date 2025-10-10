@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:50:26 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/08 15:50:42 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/10 19:50:16 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,7 @@ int	executor(t_data *data)
 	if (prepare_pipes(data, number_of_commands) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 	if (launch_pipeline(data) == EXIT_FAILURE)
-	{
-		free_pipes_all(data);
 		return (EXIT_FAILURE);
-	}
 	free_pipes_all(data);
 	return (EXIT_SUCCESS);
 }
