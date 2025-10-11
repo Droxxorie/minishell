@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 14:41:05 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/10 19:49:56 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/11 15:55:59 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	main(int argc, char **argv, char **envp)
 	ft_memset(&data, 0, sizeof(t_data));
 	if (init(&data, envp) == EXIT_FAILURE)
 		exit_minishell(&data, EXIT_FAILURE);
+	disable_readline_catch_signals();
 	launch_minishell(&data);
 	if (data.exit_status)
 		exit_minishell(&data, data.exit_status);

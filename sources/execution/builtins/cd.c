@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:56:07 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/09 03:16:31 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/11 16:10:07 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,11 +108,12 @@ int	execute_builtin_cd(t_data *data, t_command *node)
 	if (!path)
 		return (EXIT_FAILURE);
 	if (chdir(path) == -1)
-		return (report_error3("cd: ", node->args->content,
+		return (report_error3("cd: ", path,
 				": No such file or directory"), free(path), EXIT_FAILURE);
 	if (!getcwd(new_pwd, sizeof(new_pwd)))
 		return (report_error(data, "getcwd", -1), free(path), EXIT_FAILURE);
 	if (update_cd_env(data, old_pwd, new_pwd) == EXIT_FAILURE)
 		return (free(path), EXIT_FAILURE);
+	free(path);
 	return (EXIT_SUCCESS);
 }

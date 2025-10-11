@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 03:08:55 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/10 18:34:36 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/11 15:43:31 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,27 +18,35 @@ static int	empty_line_handler(t_data *data)
 
 	i = 0;
 	if (!data->line[0])
-		return (free(data->line), 1);
+		if (data->line_base)
+			return (free(data->line_base), data->line_base = NULL,
+				data->line = NULL, 1);
 	while (ft_iswhitespace(data->line[i]))
-		i++;
-	if (!data->line[i])
-		return (free(data->line), 1);
+		if (!data->line[++i])
+			if (data->line_base)
+				return (free(data->line_base), data->line_base = NULL,
+					data->line = NULL, 1);
 	if (data->line[0] == ':' && !data->line[1])
-		return (free(data->line), 1);
+		if (data->line_base)
+			return (free(data->line_base), data->line_base = NULL,
+				data->line = NULL, 1);
 	if (data->line[0] == '!' && !data->line[1])
 	{
 		data->exit_status = 1;
-		return (free(data->line), 1);
+		if (data->line_base)
+			return (free(data->line_base), data->line_base = NULL,
+				data->line = NULL, 1);
+		return (1);
 	}
 	return (0);
 }
 
 static int	read_and_prep_prompt(t_data *data)
 {
-	signals_handler();
 	g_waiting = 0;
 	reset_command_context(data);
-	data->line = readline("minishell$ ");
+	data->line_base = readline("minishell$ ");
+	data->line = data->line_base;
 	if (g_waiting == 1)
 		data->exit_status = 130;
 	else if (g_waiting == 3)
@@ -95,6 +103,7 @@ void	launch_minishell(t_data *data)
 {
 	while (1)
 	{
+		signals_handler();
 		if (!read_and_prep_prompt(data))
 			return ;
 		if (!preprocess_line(data))

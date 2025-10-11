@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 16:29:25 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/10 19:43:33 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/11 15:25:29 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,7 @@ typedef struct s_data
 	char		which_quote;
 	char		**env;
 	char		*line;
+	char		*line_base;
 	int			exit_status;
 	char		*path;
 	t_env		*env_copy;
@@ -197,6 +198,7 @@ int			sig_event(void);
 void		signals_handler(void);
 void		setup_child_signals(void);
 void		setup_heredoc_signals(void);
+void		disable_readline_catch_signals(void);
 
 //*------------------------------ ERRORS ------------------------------------*
 
@@ -210,6 +212,7 @@ void		report_error(t_data *data, const char *message, int exit_code);
 
 void		cleanup_shell_state(t_data *data);
 void		reset_command_context(t_data *data);
+void		cleanup_and_exit(t_data *data, int exit_status);
 
 void		free_tokens(t_data *data);
 void		free_env_list(t_env **env);
@@ -333,6 +336,7 @@ int			process_export_args(t_data *data, char *arg, t_bool do_mutate);
 void		env_update_value(t_data *data, const char *arg, int key_index);
 void		env_add_from_arg(t_data *data, t_env *env, char *key, char *arg);
 void		handle_export_arg(t_data *data, char *key, char *arg, int key_idx);
+void		export_update_value(t_data *data, const char *key, const char *arg);
 t_env		*sort_export_list(t_env *head, int (*cmp)(const char *,
 					const char *));
 

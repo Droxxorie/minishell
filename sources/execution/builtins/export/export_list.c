@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 16:00:47 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/08 16:01:52 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/11 15:03:59 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,30 +97,37 @@ static void	add_to_export_list(t_data *data, char *key, char *value,
 	last->next = node;
 }
 
+static void init_export_list_helper(t_data *data, t_env **export)
+{
+	add_to_export_list(data, ft_strdup("OLDPWD"), NULL, export);
+	add_to_export_list(data, ft_strdup("PWD"), getcwd(NULL, 0), export);
+	add_to_export_list(data, ft_strdup("SHLVL"), ft_strdup("1"), export);
+	data->export = *export;
+}
+
 void	init_export_list(t_data *data)
 {
-	t_env	*t;
+	t_env	*temp;
 	t_env	*export;
-	char	*v;
+	char	*value;
 
-	t = data->env_copy;
+	temp = data->env_copy;
 	export = NULL;
-	if (!t)
+	if (!temp)
 	{
-		add_to_export_list(data, ft_strdup("OLDPWD"), NULL, &export);
-		add_to_export_list(data, ft_strdup("PWD"), getcwd(NULL, 0), &export);
-		add_to_export_list(data, ft_strdup("SHLVL"), ft_strdup("1"), &export);
-		data->export = export;
+		init_export_list_helper(data, &export);
 		return ;
 	}
-	while (t)
+	while (temp)
 	{
-		v = NULL;
-		if (t->value)
-			v = ft_strdup(t->value);
-		if (!(t->key[0] == '_' && t->key[1] == '\0'))
-			add_to_export_list(data, ft_strdup(t->key), v, &export);
-		t = t->next;
+		value = NULL;
+		if (temp->value)
+			value = ft_strdup(temp->value);
+		if (!(temp->key[0] == '_' && temp->key[1] == '\0'))
+			add_to_export_list(data, ft_strdup(temp->key), value, &export);
+		else
+			free(value);
+		temp = temp->next;
 	}
 	increment_shlvl(data);
 	data->export = sort_export_list(export, ft_strcmp);

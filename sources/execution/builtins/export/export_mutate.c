@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 16:02:19 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/10 13:19:22 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/11 14:51:42 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ void	env_update_value(t_data *data, const char *arg, int key_index)
 		return (report_error(data, "strdup", -1));
 	free(temp->value);
 	temp->value = new_value;
+	temp->equal = '=';
 	return ;
 }
 
@@ -92,11 +93,17 @@ void	handle_export_arg(t_data *data, char *key, char *arg, int key_index)
 		return ;
 	offset = ft_strchr(arg, '=');
 	if (key_index != -1 && offset)
+	{
 		env_update_value(data, arg, key_index);
+		export_update_value(data, key, arg);
+	}
 	else if (key_index == -1 && offset)
+	{
 		env_add_from_arg(data, data->export, key, arg);
+		env_add_from_arg(data, data->env_copy, key, arg);
+	}
 	else if (key_index == -1 && !offset)
-		export_add_key(data, ft_strdup(key));
+		export_add_key(data, key);
 	data->export = sort_export_list(data->export, ft_strcmp);
 	free(key);
 }

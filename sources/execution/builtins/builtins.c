@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:53:56 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/09 03:48:43 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/11 12:52:09 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,8 @@
 pid_t	launch_builtin_child(t_data *data, t_command *node, int *fds, int index)
 {
 	pid_t	pid;
-	int		number_of_commands;
+	int		status;
 
-	number_of_commands = data->pipes->nb + 1;
 	pid = fork();
 	if (pid < 0)
 		return (report_error(data, "fork", -1), (pid_t) - 1);
@@ -25,12 +24,15 @@ pid_t	launch_builtin_child(t_data *data, t_command *node, int *fds, int index)
 	{
 		setup_child_signals();
 		if (child_setup_io(data, node, fds, index) == EXIT_FAILURE)
-			exit(1);
-		if (dispatch_builtin(data, node) == EXIT_FAILURE)
+			cleanup_and_exit(data, 1);
+		status = dispatch_builtin(data, node);
+		cleanup_shell_state(data);
+		rl_clear_history();
+		if (status == EXIT_FAILURE)
 			exit(1);
 		exit(data->exit_status);
 	}
-	parent_close_after_fork(fds, index, number_of_commands);
+	parent_close_after_fork(fds, index, compute_n_cmds(data));
 	return (pid);
 }
 

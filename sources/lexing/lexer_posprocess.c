@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:34:33 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/10 17:25:31 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/11 11:47:50 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@ t_token	*classify_input_redirections(t_data *data, t_token *tokens)
 						"syntax error near unexpected token `newline'",
 						2), NULL);
 			else if (current_token->next->type == PIPE
-				&& current_token->next->type == REDIR_IN
-				&& current_token->next->type == REDIR_OUT
-				&& current_token->next->type == REDIR_APPEND
-				&& current_token->next->type == HEREDOC)
+				|| current_token->next->type == REDIR_IN
+				|| current_token->next->type == REDIR_OUT
+				|| current_token->next->type == REDIR_APPEND
+				|| current_token->next->type == HEREDOC)
 				return (print_syntax_error('<', 4), NULL);
 			if (current_token->next)
 				current_token->next->type = FILE_NAME;

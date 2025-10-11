@@ -6,7 +6,7 @@
 #    By: eraad <eraad@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/04 18:58:38 by eraad             #+#    #+#              #
-#    Updated: 2025/10/10 19:45:48 by eraad            ###   ########.fr        #
+#    Updated: 2025/10/11 15:59:24 by eraad            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -117,6 +117,7 @@ SRCS += \
 	$(SRC_DIR)/execution/builtins/export/export_parse.c \
 	$(SRC_DIR)/execution/builtins/export/export_mutate.c \
 	$(SRC_DIR)/execution/builtins/export/export_errors.c \
+	$(SRC_DIR)/execution/builtins/export/export_mutate_utils.c \
 
 #* ---- Execution / Pipeline & Executor ----
 SRCS += \
@@ -140,6 +141,7 @@ SRCS += \
 #* ---- Input (Signals) ----
 SRCS += \
 	$(SRC_DIR)/input/signals.c \
+	$(SRC_DIR)/input/signals_utils.c \
 	$(SRC_DIR)/input/signals_child.c \
 
 #* ---- Lexing ----
@@ -232,7 +234,7 @@ valgrind: debug
 	@valgrind --leak-check=full --show-leak-kinds=all \
 		--track-origins=yes --errors-for-leak-kinds=all \
 		--suppressions=valgrind_readline.supp --run-libc-freeres=yes \
-		--num-callers=25 ./$(NAME_DEBUG) $(ARGS)
+		--num-callers=25 ./$(NAME_DEBUG) $(ARGS) || true
 
 #* ---- Cleanup ----
 clean:

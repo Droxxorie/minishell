@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:45:44 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/10 13:50:15 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/11 11:47:02 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,23 @@
 
 int	check_redir_operator(t_data *data, t_redir *redir)
 {
-	if (redir->value[0] == '|')
-		return (report_error3("syntax error near unexpected token `",
-				"|", "'"), data->exit_status = 2, EXIT_FAILURE);
-	if (redir->value[0] == '<')
-		return (report_error3("syntax error near unexpected token `",
-				"<", "'"), data->exit_status = 2, EXIT_FAILURE);
-	if (redir->value[0] == '>')
-		return (report_error3("syntax error near unexpected token `",
-				">", "'"), data->exit_status = 2, EXIT_FAILURE);
+	if (!redir || !redir->value || redir->value[0] == '\0')
+		return (report_error(data, "ambiguous redirect", -1), EXIT_FAILURE);
 	if (redir->value[0] == '<' && redir->value[1] == '<')
-		return (report_error3("syntax error near unexpected token `",
-				"<<", "'"), data->exit_status = 2, EXIT_FAILURE);
+		return (report_error3("syntax error near unexpected token `", "<<",
+				"'"), data->exit_status = 2, EXIT_FAILURE);
 	if (redir->value[0] == '>' && redir->value[1] == '>')
-		return (report_error3("syntax error near unexpected token `",
-				">>", "'"), data->exit_status = 2, EXIT_FAILURE);
+		return (report_error3("syntax error near unexpected token `", ">>",
+				"'"), data->exit_status = 2, EXIT_FAILURE);
+	if (redir->value[0] == '|')
+		return (report_error3("syntax error near unexpected token `", "|", "'"),
+			data->exit_status = 2, EXIT_FAILURE);
+	if (redir->value[0] == '<')
+		return (report_error3("syntax error near unexpected token `", "<", "'"),
+			data->exit_status = 2, EXIT_FAILURE);
+	if (redir->value[0] == '>')
+		return (report_error3("syntax error near unexpected token `", ">", "'"),
+			data->exit_status = 2, EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
 
@@ -105,8 +107,8 @@ int	push_redir(t_data *data, t_command *command, t_token *token)
 	if (!next || next->type == PIPE || next->type == REDIR_IN
 		|| next->type == REDIR_OUT || next->type == REDIR_APPEND
 		|| next->type == HEREDOC)
-		return (report_error3("syntax error near unexpected token `",
-				"newline", "'"), data->exit_status = 2, EXIT_FAILURE);
+		return (report_error3("syntax error near unexpected token `", "newline",
+				"'"), data->exit_status = 2, EXIT_FAILURE);
 	if (token->type == HEREDOC)
 	{
 		next->type = FILE_NAME;

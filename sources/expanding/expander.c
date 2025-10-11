@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 16:13:40 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/10 22:44:44 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/11 13:03:57 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,13 +116,14 @@ int	expander(t_data *data)
 	if (!data->line)
 		return (EXIT_FAILURE);
 	expanded_line = NULL;
-	if (need_expansion(data->line) == TRUE)
-	{
-		expanded_line = expand_env_variables(data);
-		if (!expanded_line)
-			return (EXIT_FAILURE);
-		free(data->line);
-		data->line = expanded_line;
-	}
+	if (need_expansion(data->line) == FALSE)
+		return (EXIT_SUCCESS);
+	expanded_line = expand_env_variables(data);
+	if (!expanded_line)
+		return (EXIT_FAILURE);
+	if (data->line_base)
+		free(data->line_base);
+	data->line_base = expanded_line;
+	data->line = expanded_line;
 	return (EXIT_SUCCESS);
 }
