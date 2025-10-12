@@ -6,14 +6,12 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 16:29:25 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/11 15:25:29 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/12 16:21:22 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-
-# define _POSIX_C_SOURCE 200809L
 
 //****************************************************************************/
 //*                                 INCLUDES                                 */
@@ -236,6 +234,10 @@ int			add_operator_token(t_data *data, char operator,
 				int *command_boundary);
 
 int			validate_pipe_syntax(t_data *data);
+t_token		*classify_input_redirections(t_data *data, t_token *tokens);
+t_token		*classify_output_redirections(t_data *data, t_token *tokens);
+int			lexer_postprocess(t_data *data, t_quote quote_state,
+				char **token_buffer, int command_boundary);
 
 void		add_back_token(t_data *data, t_token *new_token);
 t_token		*create_token(char *start, char *end, t_type type, t_quote quote);
@@ -249,7 +251,7 @@ int			handle_no_quote(t_data *data, t_quote *qs, char **tokbuf,
 
 t_token		*normalize_exit_echo_args(t_token *tokens);
 t_token		*normalize_redirection_args(t_token *tokens);
-t_token		*classify_heredoc_delimiters(t_token *tokens);
+t_token		*classify_heredoc_delimiters(t_data *data, t_token *tokens);
 t_token		*classify_input_redirections(t_data *data, t_token *tokens);
 
 //*------------------------------ PARSING -----------------------------------*
@@ -334,7 +336,6 @@ void		export_add_key(t_data *data, const char *key);
 int			execute_builtin_export(t_data *data, char **argv, int fd);
 int			process_export_args(t_data *data, char *arg, t_bool do_mutate);
 void		env_update_value(t_data *data, const char *arg, int key_index);
-void		env_add_from_arg(t_data *data, t_env *env, char *key, char *arg);
 void		handle_export_arg(t_data *data, char *key, char *arg, int key_idx);
 void		export_update_value(t_data *data, const char *key, const char *arg);
 t_env		*sort_export_list(t_env *head, int (*cmp)(const char *,

@@ -6,38 +6,11 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:30:59 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/11 12:39:33 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/12 15:50:09 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-static int	lexer_postprocess(t_data *data, t_quote quote_state,
-		char **token_buffer, int command_boundary)
-{
-	if (quote_state != NO_QUOTE)
-	{
-		print_syntax_error('\0', 6);
-		data->exit_status = 2;
-		free(*token_buffer);
-		free_tokens(data);
-		return (EXIT_FAILURE);
-	}
-	if (*token_buffer && **token_buffer)
-	{
-		if (!add_classified_token(data, *token_buffer, &command_boundary))
-			return (EXIT_FAILURE);
-		*token_buffer = NULL;
-	}
-	if (!classify_heredoc_delimiters(data->tokens)
-		|| !classify_input_redirections(data, data->tokens))
-		return (free(*token_buffer), free_tokens(data), EXIT_FAILURE);
-	normalize_exit_echo_args(data->tokens);
-	normalize_redirection_args(data->tokens);
-	if (validate_pipe_syntax(data) == EXIT_FAILURE)
-		return (free(*token_buffer), free_tokens(data), EXIT_FAILURE);
-	return (EXIT_SUCCESS);
-}
 
 static int	scan_line(t_data *data, t_quote *quote_state, char **token_buffer,
 		int *command_boundary)

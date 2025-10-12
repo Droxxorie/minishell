@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 16:02:19 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/11 14:51:42 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/12 15:55:24 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	env_update_value(t_data *data, const char *arg, int key_index)
 	return ;
 }
 
-void	env_add_from_arg(t_data *data, t_env *env, char *key, char *arg)
+static void	env_add_from_arg(t_data *data, t_env **env, char *key, char *arg)
 {
 	const char	*offset;
 	char		*value;
@@ -82,7 +82,7 @@ void	env_add_from_arg(t_data *data, t_env *env, char *key, char *arg)
 		free(value);
 		return (report_error(data, "strdup", -1));
 	}
-	add_var(data, &env, dup_key, value);
+	add_var(data, env, dup_key, value);
 }
 
 void	handle_export_arg(t_data *data, char *key, char *arg, int key_index)
@@ -98,10 +98,7 @@ void	handle_export_arg(t_data *data, char *key, char *arg, int key_index)
 		export_update_value(data, key, arg);
 	}
 	else if (key_index == -1 && offset)
-	{
-		env_add_from_arg(data, data->export, key, arg);
-		env_add_from_arg(data, data->env_copy, key, arg);
-	}
+		env_add_from_arg(data, &data->export, key, arg);
 	else if (key_index == -1 && !offset)
 		export_add_key(data, key);
 	data->export = sort_export_list(data->export, ft_strcmp);
@@ -118,18 +115,17 @@ int	process_export_args(t_data *data, char *arg, t_bool do_mutate)
 	if (check_event_expansion_arg(arg))
 		return (1);
 	key = extract_env_key(arg);
+	key_index = -1;
 	if (!key || key_is_valid(key) == FALSE)
 		return (error_key_handler(key, arg));
-	if (do_mutate == FALSE)
+	if (do_mutate)
 	{
-		free(key);
-		return (0);
+		key_index = env_index_of_key(data->env_copy, key);
+		if (key_index != -1)
+			env_update_value(data, arg, key_index);
+		else if (ft_strchr(arg, '=') != NULL)
+			env_add_from_arg(data, &data->env_copy, key, arg);
 	}
-	key_index = env_index_of_key(data->env_copy, key);
-	if (key_index != -1)
-		env_update_value(data, arg, key_index);
-	else
-		env_add_from_arg(data, data->env_copy, key, arg);
 	handle_export_arg(data, key, arg, key_index);
 	return (0);
 }

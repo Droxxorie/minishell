@@ -1,67 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_posprocess.c                                 :+:      :+:    :+:   */
+/*   lexer_postprocess.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:34:33 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/11 11:47:50 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/12 14:16:17 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-t_token	*classify_input_redirections(t_data *data, t_token *tokens)
-{
-	t_token	*current_token;
-
-	if (!tokens)
-		return (NULL);
-	current_token = tokens;
-	while (current_token)
-	{
-		if (current_token->type == REDIR_IN)
-		{
-			if (current_token->next == NULL)
-				return (report_error(data,
-						"syntax error near unexpected token `newline'",
-						2), NULL);
-			else if (current_token->next->type == PIPE
-				|| current_token->next->type == REDIR_IN
-				|| current_token->next->type == REDIR_OUT
-				|| current_token->next->type == REDIR_APPEND
-				|| current_token->next->type == HEREDOC)
-				return (print_syntax_error('<', 4), NULL);
-			if (current_token->next)
-				current_token->next->type = FILE_NAME;
-		}
-		current_token = current_token->next;
-	}
-	return (tokens);
-}
-
-t_token	*classify_heredoc_delimiters(t_token *tokens)
-{
-	t_token	*current_token;
-
-	if (!tokens)
-		return (NULL);
-	current_token = tokens;
-	while (current_token)
-	{
-		if (current_token->type == HEREDOC && current_token->next)
-		{
-			if (current_token->next->type != ARG
-				&& current_token->next->type != CMD)
-				return (print_syntax_error('<', 5), NULL);
-			current_token->next->type = LIMITER;
-			current_token->next->quote = current_token->quote;
-		}
-		current_token = current_token->next;
-	}
-	return (tokens);
-}
 
 t_token	*normalize_exit_echo_args(t_token *tokens)
 {
@@ -138,5 +87,32 @@ int	validate_pipe_syntax(t_data *data)
 		}
 		cur = cur->next;
 	}
+	return (EXIT_SUCCESS);
+}
+
+int	lexer_postprocess(t_data *data, t_quote quote_state, char **token_buffer,
+		int command_boundary)
+{
+	if (quote_state != NO_QUOTE)
+	{
+		print_syntax_error('\0', 6);
+		data->exit_status = 2;
+		free(*token_buffer);
+		free_tokens(data);
+		return (EXIT_FAILURE);
+	}
+	if (*token_buffer && **token_buffer)
+	{
+		if (!add_classified_token(data, *token_buffer, &command_boundary))
+			return (EXIT_FAILURE);
+		*token_buffer = NULL;
+	}
+	if (!classify_heredoc_delimiters(data, data->tokens)
+		|| !classify_input_redirections(data, data->tokens))
+		return (free(*token_buffer), free_tokens(data), EXIT_FAILURE);
+	normalize_exit_echo_args(data->tokens);
+	normalize_redirection_args(data->tokens);
+	if (validate_pipe_syntax(data) == EXIT_FAILURE)
+		return (free(*token_buffer), free_tokens(data), EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }

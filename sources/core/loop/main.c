@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 14:41:05 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/11 15:55:59 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/12 16:26:45 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	if (argc != 1)
 		return (1);
-	// if (!isatty(STDIN_FILENO))
-	// {
-	// 	ft_putstr_fd("minishell: no child process allowed\n", 2);
-	// 	exit(EXIT_FAILURE);
-	// }
+	if (!isatty(STDIN_FILENO))
+	{
+		ft_putstr_fd("minishell: not interactive\n", 2);
+		exit(EXIT_FAILURE);
+	}
 	ft_memset(&data, 0, sizeof(t_data));
 	if (init(&data, envp) == EXIT_FAILURE)
 		exit_minishell(&data, EXIT_FAILURE);

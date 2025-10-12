@@ -6,7 +6,7 @@
 #    By: eraad <eraad@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/04 18:58:38 by eraad             #+#    #+#              #
-#    Updated: 2025/10/11 15:59:24 by eraad            ###   ########.fr        #
+#    Updated: 2025/10/12 13:35:24 by eraad            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -150,7 +150,8 @@ SRCS += \
 	$(SRC_DIR)/lexing/lexer_quotes.c \
 	$(SRC_DIR)/lexing/lexer_tokens.c \
 	$(SRC_DIR)/lexing/lexer_operators.c \
-	$(SRC_DIR)/lexing/lexer_posprocess.c \
+	$(SRC_DIR)/lexing/lexer_postprocess.c \
+	$(SRC_DIR)/lexing/lexer_postprocess_utils.c \
 
 #* ---- Parsing ----
 SRCS += \

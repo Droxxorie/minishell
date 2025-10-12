@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:47:08 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/11 11:48:36 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/12 16:13:42 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,10 +102,7 @@ int	open_redirs_for_command(t_data *data, t_command *node, int *in_fd,
 		else if (temp->type == HEREDOC)
 			status = open_heredoc(data, temp, in_fd);
 		if (status == EXIT_FAILURE)
-		{
-			// data->exit_status = 2;
 			return (-1);
-		}
 		temp = temp->next;
 	}
 	return (0);

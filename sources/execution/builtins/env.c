@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:56:53 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/08 15:57:13 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/12 15:05:09 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	print_env(t_data *data, int fd_out)
 	current = data->env_copy;
 	while (current)
 	{
-		if (current->equal == '=')
+		if (current->equal == '=' && current->value)
 		{
 			if (safe_putstr_fd(current->key, fd_out) == EXIT_FAILURE
 				|| safe_putchar_fd('=', fd_out) == EXIT_FAILURE

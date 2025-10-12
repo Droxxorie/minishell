@@ -6,37 +6,45 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:59:17 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/10 12:41:24 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/12 16:08:24 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
+static void	env_unlink_key_helper(t_env **head, t_env **cur, t_env **prev)
+{
+	t_env	*to_free;
+
+	to_free = *cur;
+	if (*prev)
+		(*prev)->next = (*cur)->next;
+	else
+		*head = (*cur)->next;
+	*cur = (*cur)->next;
+	free(to_free->key);
+	free(to_free->value);
+	free(to_free);
+}
+
 static void	env_unlink_key(t_env **head, const char *key)
 {
-	t_env	*current;
-	t_env	*previous;
+	t_env	*cur;
+	t_env	*prev;
 
 	if (!head || !*head || !key)
 		return ;
-	previous = NULL;
-	current = *head;
-	while (current)
+	prev = NULL;
+	cur = *head;
+	while (cur)
 	{
-		if (ft_strcmp(current->key, key) == 0)
+		if (ft_strcmp(cur->key, key) == 0)
 		{
-			if (previous)
-				previous->next = current->next;
-			else
-				*head = current->next;
-			free(current->key);
-			if (current->value)
-				free(current->value);
-			free(current);
-			return ;
+			env_unlink_key_helper(head, &cur, &prev);
+			continue ;
 		}
-		previous = current;
-		current = current->next;
+		prev = cur;
+		cur = cur->next;
 	}
 }
 

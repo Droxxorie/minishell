@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:48:40 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/11 16:32:23 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/12 16:13:31 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ int	child_setup_io(t_data *data, t_command *node, int *fds, int index)
 	if (dup_apply_fd(data, in_fd, STDIN_FILENO) == EXIT_FAILURE
 		|| dup_apply_fd(data, out_fd, STDOUT_FILENO) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
-
 	if (in_fd == -1 && fds && i > 0 && apply_pipe_in(data, fds, index))
 		return (EXIT_FAILURE);
 	if (out_fd == -1 && fds && i < n - 1 && apply_pipe_out(data, fds, index))

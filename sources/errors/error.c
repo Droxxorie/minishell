@@ -6,13 +6,13 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 14:48:10 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/10 22:38:24 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/12 16:02:35 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static void put_stderr_3(const char *m1, const char *m2, const char *m3)
+static void	put_stderr_3(const char *m1, const char *m2, const char *m3)
 {
 	if (m1 && *m1)
 		ft_putstr_fd((char *)m1, 2);

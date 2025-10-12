@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 16:00:47 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/11 15:03:59 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/12 15:33:56 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ static void	add_to_export_list(t_data *data, char *key, char *value,
 	last->next = node;
 }
 
-static void init_export_list_helper(t_data *data, t_env **export)
+static void	init_export_list_helper(t_data *data, t_env **export)
 {
 	add_to_export_list(data, ft_strdup("OLDPWD"), NULL, export);
 	add_to_export_list(data, ft_strdup("PWD"), getcwd(NULL, 0), export);
@@ -111,13 +111,12 @@ void	init_export_list(t_data *data)
 	t_env	*export;
 	char	*value;
 
+	if (data->export)
+		free_env_list(&data->export);
 	temp = data->env_copy;
 	export = NULL;
 	if (!temp)
-	{
-		init_export_list_helper(data, &export);
-		return ;
-	}
+		return (init_export_list_helper(data, &export));
 	while (temp)
 	{
 		value = NULL;

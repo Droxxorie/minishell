@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:59:54 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/11 14:44:21 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/12 16:08:57 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int	execute_builtin_export(t_data *data, char **argv, int fd)
 		return (0);
 	}
 	had_error = 0;
-	do_mutate = (!data->pipes || data->pipes->nb == 0);
+	do_mutate = !(data->pipes && data->pipes->nb);
 	i = 1;
 	while (argv[i])
 	{

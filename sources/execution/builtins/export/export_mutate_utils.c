@@ -6,13 +6,13 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 14:47:33 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/11 14:49:59 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/12 16:08:46 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../../includes/minishell.h"
 
-void export_update_value(t_data *data, const char *key, const char *arg)
+void	export_update_value(t_data *data, const char *key, const char *arg)
 {
 	t_env		*temp;
 	const char	*offset;
@@ -34,7 +34,7 @@ void export_update_value(t_data *data, const char *key, const char *arg)
 			temp->equal = '=';
 			return ;
 		}
-			temp = temp->next;
+		temp = temp->next;
 	}
 	free(new_value);
 }

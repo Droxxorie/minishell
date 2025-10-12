@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:45:44 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/11 11:47:02 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/12 13:28:58 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,8 +107,7 @@ int	push_redir(t_data *data, t_command *command, t_token *token)
 	if (!next || next->type == PIPE || next->type == REDIR_IN
 		|| next->type == REDIR_OUT || next->type == REDIR_APPEND
 		|| next->type == HEREDOC)
-		return (report_error3("syntax error near unexpected token `", "newline",
-				"'"), data->exit_status = 2, EXIT_FAILURE);
+		return (data->exit_status = 2, EXIT_FAILURE);
 	if (token->type == HEREDOC)
 	{
 		next->type = FILE_NAME;
