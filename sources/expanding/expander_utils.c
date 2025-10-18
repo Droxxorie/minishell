@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 16:14:14 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/09 03:28:14 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/18 12:59:45 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,8 @@ t_bool	need_expansion(char *str)
 		state = quote_state(str, i);
 		if (str[i] == '$' && state != SINGLE_QUOTE)
 			if (str[i + 1] && (str[i + 1] == '$' || str[i + 1] == '?' || str[i
-						+ 1] == '_' || ft_isalnum(str[i + 1])))
+					+ 1] == '_' || ft_isalnum(str[i + 1]) || str[i + 1] == '"'
+					|| str[i + 1] == '\''))
 				return (TRUE);
 		i++;
 	}
@@ -110,7 +111,7 @@ char	*extract_var_name(char *str, size_t *i)
 		len++;
 	len--;
 	if (len == 0)
-		return (NULL);
+		return (ft_strdup(""));
 	variable = ft_substr(str, 1, len);
 	if (!variable)
 		return (NULL);

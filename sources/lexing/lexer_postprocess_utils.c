@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/12 13:21:55 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/12 16:12:48 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/18 18:18:46 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,10 @@ t_token	*classify_input_redirections(t_data *data, t_token *tokens)
 				return (data->exit_status = 2,
 					report_error3("syntax error near unexpected token `",
 						"newline", "'"), NULL);
-			if (next->type == PIPE || next->type == REDIR_IN
-				|| next->type == REDIR_OUT || next->type == REDIR_APPEND
-				|| next->type == HEREDOC)
+			if (next->type == REDIR_IN || next->type == REDIR_OUT
+				|| next->type == REDIR_APPEND)
+				return (report_error(data, "ambiguous redirect", -1), NULL);
+			if (next->type == PIPE || next->type == HEREDOC)
 				return (report_error_token_type(data, next->type), NULL);
 			next->type = FILE_NAME;
 		}
@@ -74,9 +75,10 @@ t_token	*classify_output_redirections(t_data *data, t_token *tokens)
 			if (!next)
 				return (data->exit_status = 2, report_error3("syntax error ",
 						"near unexpected token `newline", "'"), NULL);
-			if (next->type == PIPE || next->type == REDIR_IN
-				|| next->type == REDIR_OUT || next->type == REDIR_APPEND
-				|| next->type == HEREDOC)
+			if (next->type == REDIR_IN || next->type == REDIR_OUT
+				|| next->type == REDIR_APPEND || next->type == HEREDOC)
+				return (report_error_token_type(data, next->type), NULL);
+			if (next->type == PIPE)
 				return (report_error_token_type(data, next->type), NULL);
 			if (next->type == ARG || next->type == CMD || next->type == LIMITER
 				|| next->type == FLAG)

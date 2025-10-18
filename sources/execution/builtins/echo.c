@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:55:18 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/09 03:17:09 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/18 16:06:04 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	print_echo_args(char **argv, int index, t_bool has_n_flag)
 	first_arg = TRUE;
 	while (argv[index])
 	{
-		if (!first_arg)
+		if (first_arg == FALSE)
 			write(STDOUT_FILENO, " ", 1);
 		write(STDOUT_FILENO, argv[index], ft_strlen(argv[index]));
 		first_arg = FALSE;

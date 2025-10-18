@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 14:35:44 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/08 14:41:54 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/18 19:31:11 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,5 +52,10 @@ int	init(t_data *data, char **envp)
 	data->tokens = NULL;
 	data->pipes = NULL;
 	data->current_quote = NO_QUOTE;
+	data->saw_empty_word_as_command = FALSE;
+	data->emit_empty_word = FALSE;
+	data->tmp_in_redir_context = FALSE;
+	data->tmp_have_content_before = FALSE;
+	data->tmp_dollar_index = -1;
 	return (EXIT_SUCCESS);
 }

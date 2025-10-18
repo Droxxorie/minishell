@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 16:29:25 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/12 16:21:22 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/18 19:31:06 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,12 @@ typedef struct s_data
 	t_token		*tokens;
 	t_quote		current_quote;
 	t_pipes		*pipes;
-}				t_data;
+	t_bool		saw_empty_word_as_command;
+	t_bool		emit_empty_word;
+	t_bool		tmp_in_redir_context;
+	t_bool		tmp_have_content_before;
+	int			tmp_dollar_index;
+} t_data;
 
 //****************************************************************************
 //*                               PROTOTYPES                                 *
@@ -247,6 +252,10 @@ t_token		*add_classified_token(t_data *data, char *token_buffer,
 int			handle_single_quoted(t_data *data, t_quote *qs, char **tokbuf);
 int			handle_double_quoted(t_data *data, t_quote *qs, char **tokbuf);
 int			handle_no_quote(t_data *data, t_quote *qs, char **tokbuf,
+				int *command_boundary);
+int			process_whitespace(t_data *data, char **token_buffer,
+				int *command_boundary);
+int			process_operator(t_data *data, char **token_buffer,
 				int *command_boundary);
 
 t_token		*normalize_exit_echo_args(t_token *tokens);

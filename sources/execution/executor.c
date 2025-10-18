@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:50:26 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/12 15:47:54 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/18 12:28:56 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,19 @@ int	executor(t_data *data)
 	int	number_of_commands;
 
 	number_of_commands = count_commands(data->commands);
-	if (number_of_commands <= 0)
+	if (number_of_commands < 0)
 		return (EXIT_FAILURE);
+	if (number_of_commands == 0)
+	{
+		if (data->saw_empty_word_as_command)
+		{
+			report_error2("", "command not found");
+			data->exit_status = 127;
+		}
+		else
+			data->exit_status = 0;
+		return (EXIT_SUCCESS);
+	}
 	if (prepare_pipes(data, number_of_commands) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 	if (launch_pipeline(data) == EXIT_FAILURE)

@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:53:56 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/11 12:52:09 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/18 17:58:24 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,7 @@ pid_t	launch_builtin_child(t_data *data, t_command *node, int *fds, int index)
 		status = dispatch_builtin(data, node);
 		cleanup_shell_state(data);
 		rl_clear_history();
-		if (status == EXIT_FAILURE)
-			exit(1);
-		exit(data->exit_status);
+		exit(status);
 	}
 	parent_close_after_fork(fds, index, compute_n_cmds(data));
 	return (pid);
@@ -52,8 +50,7 @@ int	handle_builtin_command(t_data *data, t_command *node)
 	status = dispatch_builtin(data, node);
 	if (restore_saved_stdio(saved) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
-	if (status == EXIT_FAILURE)
-		return (EXIT_FAILURE);
+	data->exit_status = status;
 	return (EXIT_SUCCESS);
 }
 
@@ -74,9 +71,8 @@ int	dispatch_builtin(t_data *data, t_command *node)
 {
 	int	status;
 
-	status = EXIT_SUCCESS;
 	if (!node || !node->command)
-		return (EXIT_FAILURE);
+		return (1);
 	if (ft_strcmp(node->command, "cd") == 0)
 		status = execute_builtin_cd(data, node);
 	else if (ft_strcmp(node->command, "echo") == 0)
@@ -92,7 +88,6 @@ int	dispatch_builtin(t_data *data, t_command *node)
 	else if (ft_strcmp(node->command, "exit") == 0)
 		status = execute_builtin_exit(data, node->argv);
 	else
-		return (EXIT_FAILURE);
-	data->exit_status = status;
-	return (EXIT_SUCCESS);
+		return (127);
+	return (status);
 }

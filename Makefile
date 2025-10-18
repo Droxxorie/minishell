@@ -6,7 +6,7 @@
 #    By: eraad <eraad@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/04 18:58:38 by eraad             #+#    #+#              #
-#    Updated: 2025/10/12 13:35:24 by eraad            ###   ########.fr        #
+#    Updated: 2025/10/18 18:01:19 by eraad            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -151,6 +151,7 @@ SRCS += \
 	$(SRC_DIR)/lexing/lexer_tokens.c \
 	$(SRC_DIR)/lexing/lexer_operators.c \
 	$(SRC_DIR)/lexing/lexer_postprocess.c \
+	$(SRC_DIR)/lexing/lexer_quotes_utils.c \
 	$(SRC_DIR)/lexing/lexer_postprocess_utils.c \
 
 #* ---- Parsing ----
@@ -303,7 +304,7 @@ project_logo:
 	@echo "${WHITE}   ┃ ┣┛  ┗┫ ┃  ┃┃  ┃ ┃ ┗┫ ┃  ┃┃  ┏━━┛ ┃ ┃ ┃  ┃ ┃ ┃ ┗━━┓ ┃ ┗━━━┓ ┃ ┗━━━┓ ${RESET}"
 	@echo "${WHITE}   ┗━┛    ┗━┛  ┗┛  ┗━┛  ┗━┛  ┗┛  ┗━━━━┛ ┗━┛  ┗━┛ ┗━━━━┛ ┗━━━━━┛ ┗━━━━━┛ ${RESET}"
 	@echo        "  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-	@echo "${CYAN}${BOLD}                                        by RAAD Eloi & BOIDIN Gaspard ${RESET}"
+	@echo "${CYAN}${BOLD}                                           RAAD Eloi & BOIDIN Gaspard ${RESET}"
 	@echo ""
 
 
