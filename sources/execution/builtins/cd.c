@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:56:07 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/11 16:10:07 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/19 17:45:37 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ static t_bool	is_valid_cd_args(t_data *data, t_command *node)
 {
 	if (node->flags)
 	{
-		report_error(data, "cd: Options are not supported", -1);
+		report_error(data, "cd: option not supported", -1);
 		return (FALSE);
 	}
 	if (node->args && node->args->next)
@@ -96,8 +96,8 @@ static t_bool	is_valid_cd_args(t_data *data, t_command *node)
 
 int	execute_builtin_cd(t_data *data, t_command *node)
 {
-	char	old_pwd[PATH_MAX];
-	char	new_pwd[PATH_MAX];
+	char	old_pwd[4096];
+	char	new_pwd[4096];
 	char	*path;
 
 	if (is_valid_cd_args(data, node) == FALSE)
@@ -108,8 +108,13 @@ int	execute_builtin_cd(t_data *data, t_command *node)
 	if (!path)
 		return (EXIT_FAILURE);
 	if (chdir(path) == -1)
-		return (report_error3("cd: ", path,
-				": No such file or directory"), free(path), EXIT_FAILURE);
+	{
+		ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
+		ft_putstr_fd(path, STDERR_FILENO);
+		ft_putstr_fd(": ", STDERR_FILENO);
+		ft_putendl_fd(strerror(errno), STDERR_FILENO);
+		return (free(path), EXIT_FAILURE);
+	}
 	if (!getcwd(new_pwd, sizeof(new_pwd)))
 		return (report_error(data, "getcwd", -1), free(path), EXIT_FAILURE);
 	if (update_cd_env(data, old_pwd, new_pwd) == EXIT_FAILURE)

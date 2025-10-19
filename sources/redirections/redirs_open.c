@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:47:08 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/12 16:13:42 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/19 17:51:29 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static int	open_out_append(t_data *data, t_redir *redir, int *out_fd)
 	int	fd;
 
 	if (!redir->value || redir->value[0] == '\0')
-		return (report_error(data, "ambiguous redirect", -1), EXIT_FAILURE);
+		return (report_error(data, "ambiguous redirect", 1), EXIT_FAILURE);
 	if (check_redir_operator(data, redir) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 	fd = open(redir->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
@@ -50,7 +50,7 @@ static int	open_out_trunc(t_data *data, t_redir *redir, int *out_fd)
 	int	fd;
 
 	if (!redir->value || redir->value[0] == '\0')
-		return (report_error(data, "ambiguous redirect", -1), EXIT_FAILURE);
+		return (report_error(data, "ambiguous redirect", 1), EXIT_FAILURE);
 	if (check_redir_operator(data, redir) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 	fd = open(redir->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -68,7 +68,7 @@ static int	open_in(t_data *data, t_redir *redir, int *in_fd)
 	int	fd;
 
 	if (!redir->value || redir->value[0] == '\0')
-		return (report_error(data, "ambiguous redirect", -1), EXIT_FAILURE);
+		return (report_error(data, "ambiguous redirect", 1), EXIT_FAILURE);
 	if (check_redir_operator(data, redir) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 	fd = open(redir->value, O_RDONLY);

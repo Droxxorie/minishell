@@ -6,7 +6,7 @@
 #    By: eraad <eraad@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/04 18:58:38 by eraad             #+#    #+#              #
-#    Updated: 2025/10/18 18:01:19 by eraad            ###   ########.fr        #
+#    Updated: 2025/10/19 13:28:03 by eraad            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -137,6 +137,8 @@ SRCS += \
 SRCS += \
 	$(SRC_DIR)/expanding/expander.c \
 	$(SRC_DIR)/expanding/expander_utils.c \
+	$(SRC_DIR)/expanding/expander_segment.c \
+	$(SRC_DIR)/expanding/expander_variable.c \
 
 #* ---- Input (Signals) ----
 SRCS += \
@@ -282,18 +284,6 @@ asan_message:
 	@echo "$(YELLOW)$(INFO) ${SRC_COUNT} files$(RESET)"
 
 project_logo:
-# 	@echo ""
-# 	@echo "${CYAN}                        M  I  N  I  S  H  E  L  L                           ${RESET}"
-# 	@echo        "  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-# 	@echo "${ROSE}   ┏━┓     ┏━┓  ┏┓  ┏━┓   ┏━┓  ┏┓  ┏━━━━┓ ┏━┓  ┏━┓ ┏━━━━┓ ┏━┓     ┏━┓       ${RESET}"
-# 	@echo "${ROSE}   ┃ ┣┓   ┏┫ ┃  ┃┃  ┃ ┣┓  ┃ ┃  ┃┃  ┃ ┏━━┛ ┃ ┃  ┃ ┃ ┃ ┏━━┛ ┃ ┃     ┃ ┃       ${RESET}"
-# 	@echo "${ROSE}   ┃ ┃┣┓┃┏┫┃ ┃  ┃┃  ┃ ┃┃┃┏┫ ┃  ┃┃  ┃ ┗━━┓ ┃ ┣┓┏┫ ┃ ┃ ┗━┓  ┃ ┃     ┃ ┃       ${RESET}"
-# 	@echo "${ROSE}   ┃ ┃┣┛┃┗┫┃ ┃  ┃┃  ┃ ┣┛┃┃┃ ┃  ┃┃  ┗━━┓ ┃ ┃ ┣┛┗┫ ┃ ┃ ┏━┛  ┃ ┃     ┃ ┃       ${RESET}"
-# 	@echo "${ROSE}   ┃ ┣┛ ┃ ┗┫ ┃  ┃┃  ┃ ┃  ┗┫ ┃  ┃┃  ┏━━┛ ┃ ┃ ┃  ┃ ┃ ┃ ┗━━┓ ┃ ┗━━━┓ ┃ ┗━━━┓   ${RESET}"
-# 	@echo "${ROSE}   ┗━┛     ┗━┛  ┗┛  ┗━┛   ┗━┛  ┗┛  ┗━━━━┛ ┗━┛  ┗━┛ ┗━━━━┛ ┗━━━━━┛ ┗━━━━━┛   ${RESET}"
-# 	@echo        "  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-# 	@echo "${CYAN}                                          by RAAD Eloi & BOIDIN Gaspard ${RESET}"
-# 	@echo ""
 	@echo ""
 	@echo "${CYAN}${BOLD}                       M  I  N  I  S  H  E  L  L                        ${RESET}"
 	@echo        "  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

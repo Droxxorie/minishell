@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:50:26 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/18 12:28:56 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/19 17:12:32 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,36 @@ static int	count_commands(t_command *commands)
 	return (count);
 }
 
+static void	close_fds(int in_fd, int out_fd)
+{
+	if (in_fd != -1 && in_fd > 2)
+		close(in_fd);
+	if (out_fd != -1 && out_fd > 2)
+		close(out_fd);
+}
+
+static int	exec_redirs_only_in_parent(t_data *data)
+{
+	t_command	*node;
+	int			in_fd;
+	int			out_fd;
+
+	in_fd = -1;
+	out_fd = -1;
+	node = data->commands;
+	if (!node)
+		return (EXIT_SUCCESS);
+	if (open_redirs_for_command(data, node, &in_fd, &out_fd) == -1)
+	{
+		close_fds(in_fd, out_fd);
+		data->exit_status = 1;
+		return (EXIT_FAILURE);
+	}
+	close_fds(in_fd, out_fd);
+	data->exit_status = 0;
+	return (EXIT_SUCCESS);
+}
+
 int	executor(t_data *data)
 {
 	int	number_of_commands;
@@ -34,6 +64,9 @@ int	executor(t_data *data)
 	number_of_commands = count_commands(data->commands);
 	if (number_of_commands < 0)
 		return (EXIT_FAILURE);
+	if (number_of_commands == 1 && data->commands
+		&& data->commands->command == NULL && data->commands->redirs != NULL)
+		return (exec_redirs_only_in_parent(data));
 	if (number_of_commands == 0)
 	{
 		if (data->saw_empty_word_as_command)
@@ -41,8 +74,6 @@ int	executor(t_data *data)
 			report_error2("", "command not found");
 			data->exit_status = 127;
 		}
-		else
-			data->exit_status = 0;
 		return (EXIT_SUCCESS);
 	}
 	if (prepare_pipes(data, number_of_commands) == EXIT_FAILURE)

@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/18 17:29:43 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/18 17:33:16 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/19 17:34:30 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	process_whitespace(t_data *data, char **token_buffer, int *command_boundary)
 
 int	process_operator(t_data *data, char **token_buffer, int *command_boundary)
 {
-	char *empty;
+	char	*empty;
 
 	if (data->emit_empty_word && (!*token_buffer || !**token_buffer))
 	{

@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:57:37 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/18 18:12:04 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/19 13:49:35 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,7 @@ static t_bool	is_valid_number(const char *str)
 	return (TRUE);
 }
 
-static int	execute_builtin_exit_helper(t_data *data, char **argv,
-		t_bool in_pipeline)
+static int	parse_exit_arguments(t_data *data, char **argv, t_bool in_pipeline)
 {
 	if (is_valid_number(argv[1]) == FALSE)
 	{
@@ -87,7 +86,7 @@ int	execute_builtin_exit(t_data *data, char **argv)
 			exit_minishell(data, 0);
 		return (0);
 	}
-	status = execute_builtin_exit_helper(data, argv, in_pipeline);
+	status = parse_exit_arguments(data, argv, in_pipeline);
 	if (!in_pipeline)
 		exit_minishell(data, status);
 	return (status);

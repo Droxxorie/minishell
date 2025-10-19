@@ -6,13 +6,13 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 14:50:41 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/12 16:22:22 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/19 12:16:25 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-volatile sig_atomic_t	g_waiting = 0;
+volatile int	g_waiting = 0;
 
 static void	heredoc_sigint_handler(int signum)
 {

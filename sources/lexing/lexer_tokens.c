@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:31:48 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/18 16:18:30 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/19 15:19:44 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ t_token	*add_classified_token(t_data *data, char *token_buffer,
 	t_type	type;
 	t_token	*new_token;
 
-	// if (!token_buffer || !*token_buffer)
-	// 	return (NULL);
 	if (token_buffer[0] == '-')
 		type = FLAG;
 	else

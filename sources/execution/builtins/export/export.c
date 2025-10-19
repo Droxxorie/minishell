@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:59:54 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/12 16:08:57 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/19 17:48:40 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,8 @@ int	execute_builtin_export(t_data *data, char **argv, int fd)
 	i = 1;
 	while (argv[i])
 	{
+		if (argv[i][0] == '-' && argv[i][1])
+			return (export_invalid_option(data, argv[i]));
 		if (process_export_args(data, argv[i], do_mutate) == 1)
 			had_error = 1;
 		i++;

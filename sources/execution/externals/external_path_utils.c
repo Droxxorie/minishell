@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 14:49:44 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/09 03:23:43 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/19 15:18:54 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,4 +84,19 @@ char	**build_exec_search_paths(t_data *data, const t_env *env)
 	paths = normalize_path_split(data, (const char **)path_split);
 	free_char_array(path_split);
 	return (paths);
+}
+
+void	report_command_resolution_error(t_data *data, t_command *node)
+{
+	if (ft_strncmp(node->argv[0], "./", 2) == 0 || ft_strncmp(node->argv[0],
+			"/", 1) == 0)
+	{
+		report_error2(node->argv[0], ": Is a directory");
+		data->exit_status = 126;
+	}
+	else
+	{
+		report_error2(node->argv[0], ": command not found");
+		data->exit_status = 127;
+	}
 }

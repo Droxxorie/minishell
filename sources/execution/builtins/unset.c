@@ -6,13 +6,13 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:59:17 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/12 16:08:24 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/19 14:46:02 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
-static void	env_unlink_key_helper(t_env **head, t_env **cur, t_env **prev)
+static void	unlink_env_node(t_env **head, t_env **cur, t_env **prev)
 {
 	t_env	*to_free;
 
@@ -40,12 +40,17 @@ static void	env_unlink_key(t_env **head, const char *key)
 	{
 		if (ft_strcmp(cur->key, key) == 0)
 		{
-			env_unlink_key_helper(head, &cur, &prev);
+			unlink_env_node(head, &cur, &prev);
 			continue ;
 		}
 		prev = cur;
 		cur = cur->next;
 	}
+}
+
+static int	is_unset_option(const char *arg)
+{
+	return (arg && arg[0] == '-' && arg[1] != '\0');
 }
 
 int	execute_builtin_unset(t_data *data, char **argv)
@@ -55,6 +60,11 @@ int	execute_builtin_unset(t_data *data, char **argv)
 
 	if (!data || !argv)
 		return (EXIT_FAILURE);
+	i = 0;
+	while (argv[++i])
+		if (is_unset_option(argv[i]))
+			return (report_error(data, "unset: option not supported", 2),
+				EXIT_FAILURE);
 	i = 1;
 	while (argv[i])
 	{

@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 16:14:14 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/18 12:59:45 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/19 15:23:21 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,11 @@ t_bool	need_expansion(char *str)
 	{
 		state = quote_state(str, i);
 		if (str[i] == '$' && state != SINGLE_QUOTE)
-			if (str[i + 1] && (str[i + 1] == '$' || str[i + 1] == '?' || str[i
-					+ 1] == '_' || ft_isalnum(str[i + 1]) || str[i + 1] == '"'
+			if (str[i + 1] && (str[i + 1] == '$'
+					|| str[i + 1] == '?'
+					|| str[i + 1] == '_'
+					|| ft_isalnum(str[i + 1])
+					|| str[i + 1] == '"'
 					|| str[i + 1] == '\''))
 				return (TRUE);
 		i++;

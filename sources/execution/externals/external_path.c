@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 14:48:05 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/18 11:49:13 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/19 15:18:47 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,39 +88,29 @@ static char	*find_executable_in_paths(char **paths, char *command)
 	return (NULL);
 }
 
-static char	*resolve_command_path(t_data *data, t_command *n)
+static char	*resolve_command_path(t_data *data, t_command *node)
 {
 	char		*command_path;
 	struct stat	path_stat;
 
-	if (!n || !data->env_copy)
+	if (!node || !data->env_copy)
 		return (NULL);
-	if (!n->argv[0])
+	if (!node->argv[0])
 	{
 		safe_putstr_fd("minishell: command not found\n", 2);
 		data->exit_status = 127;
 		return (NULL);
 	}
-	if (stat(n->argv[0], &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
+	if (stat(node->argv[0], &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
 	{
-		if (ft_strncmp(n->argv[0], "./", 2) == 0 || ft_strncmp(n->argv[0], "/",
-				1) == 0)
-		{
-			report_error2(n->argv[0], ": Is a directory");
-			data->exit_status = 126;
-		}
-		else
-		{
-			report_error2(n->argv[0], ": command not found");
-			data->exit_status = 127;
-		}
+		report_command_resolution_error(data, node);
 		return (NULL);
 	}
 	command_path = find_executable_in_paths(build_exec_search_paths(data,
-				data->env_copy), n->argv[0]);
+				data->env_copy), node->argv[0]);
 	if (command_path)
 		return (command_path);
-	return (check_direct_executable(data, n->argv[0]));
+	return (check_direct_executable(data, node->argv[0]));
 }
 
 t_bool	command_path_is_valid(t_data *data, t_command *node,
@@ -128,11 +118,9 @@ t_bool	command_path_is_valid(t_data *data, t_command *node,
 {
 	if (!node || !node->command || node->command[0] == '\0')
 	{
-		/* comme bash : message générique et code 127 */
 		safe_putstr_fd("minishell: command not found\n", 2);
 		data->exit_status = 127;
 		return (FALSE);
-			/* IMPORTANT: ne pas considérer cela comme "fatal" pour tout le pipeline */
 	}
 	*command_path = resolve_command_path(data, node);
 	if (!*command_path)

@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:49:18 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/10 19:59:52 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/19 13:47:55 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static int	write_and_free_line(int fd, char *s)
 	return (EXIT_SUCCESS);
 }
 
-static int	setup_heredoc_helper(t_data *data, char **line, t_redir *redir,
+static int	process_heredoc_line(t_data *data, char **line, t_redir *redir,
 		int *pipefd)
 {
 	char	*to_write;
@@ -64,7 +64,7 @@ int	setup_heredoc_node(t_data *data, t_redir *redir)
 		return (report_error(data, "pipe", -1), EXIT_FAILURE);
 	while (1)
 	{
-		status = setup_heredoc_helper(data, &line, redir, pipefd);
+		status = process_heredoc_line(data, &line, redir, pipefd);
 		if (status == 2)
 			break ;
 		if (status == EXIT_FAILURE)

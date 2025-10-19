@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:58:34 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/08 15:58:58 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/19 14:44:45 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static t_bool	is_valid_pwd_args(t_data *data, t_command *node)
 {
 	if (node->flags != NULL)
 	{
-		report_error(data, "pwd: usage: pwd\n", -1);
+		report_error(data, "pwd: option not supported\n", -1);
 		return (FALSE);
 	}
 	return (TRUE);

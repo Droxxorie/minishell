@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:45:44 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/12 13:28:58 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/19 15:44:13 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	check_redir_operator(t_data *data, t_redir *redir)
 {
 	if (!redir || !redir->value || redir->value[0] == '\0')
-		return (report_error(data, "ambiguous redirect", -1), EXIT_FAILURE);
+		return (report_error(data, "ambiguous redirect", 1), EXIT_FAILURE);
 	if (redir->value[0] == '<' && redir->value[1] == '<')
 		return (report_error3("syntax error near unexpected token `", "<<",
 				"'"), data->exit_status = 2, EXIT_FAILURE);

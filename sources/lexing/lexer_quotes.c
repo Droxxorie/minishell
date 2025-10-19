@@ -6,7 +6,7 @@
 /*   By: eraad <eraad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 15:32:51 by eraad             #+#    #+#             */
-/*   Updated: 2025/10/18 17:33:30 by eraad            ###   ########.fr       */
+/*   Updated: 2025/10/19 17:34:52 by eraad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,18 +63,18 @@ int	handle_single_quoted(t_data *data, t_quote *quote_state,
 int	handle_no_quote(t_data *data, t_quote *quote_state, char **token_buffer,
 		int *command_boundary)
 {
+	if (data->line[0] == '"' && data->line[1] == '"' && *token_buffer
+		&& **token_buffer && (*token_buffer)[ft_strlen(*token_buffer)
+		- 1] == '=')
+		return (data->line++, EXIT_SUCCESS);
+	if (data->line[0] == '\'' && data->line[1] == '\'' && *token_buffer
+		&& **token_buffer && (*token_buffer)[ft_strlen(*token_buffer)
+		- 1] == '=')
+		return (data->line++, EXIT_SUCCESS);
 	if (data->line[0] == '\'' && data->line[1] == '\'')
-	{
-		data->emit_empty_word = TRUE;
-		data->line++;
-		return (EXIT_SUCCESS);
-	}
+		return (data->line++, data->emit_empty_word = TRUE, EXIT_SUCCESS);
 	if (data->line[0] == '\"' && data->line[1] == '\"')
-	{
-		data->emit_empty_word = TRUE;
-		data->line++;
-		return (EXIT_SUCCESS);
-	}
+		return (data->line++, data->emit_empty_word = TRUE, EXIT_SUCCESS);
 	if (*data->line == '\'')
 		*quote_state = SINGLE_QUOTE;
 	else if (*data->line == '\"')
