@@ -6,7 +6,7 @@
 #    By: eraad <eraad@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/04 18:58:38 by eraad             #+#    #+#              #
-#    Updated: 2025/10/19 13:28:03 by eraad            ###   ########.fr        #
+#    Updated: 2025/10/22 18:25:24 by eraad            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -269,7 +269,6 @@ help:
 	@echo "$(BRIGHT_MAGENTA)gdb       →  ${RESET}Compile with debug flags and launch gdb."
 	@echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-	
 #* ---- Messages ----
 entry_message:
 	@echo "$(GREEN)${BOLD}Compiling ${NAME}$(RESET)"
@@ -294,10 +293,8 @@ project_logo:
 	@echo "${WHITE}   ┃ ┣┛  ┗┫ ┃  ┃┃  ┃ ┃ ┗┫ ┃  ┃┃  ┏━━┛ ┃ ┃ ┃  ┃ ┃ ┃ ┗━━┓ ┃ ┗━━━┓ ┃ ┗━━━┓ ${RESET}"
 	@echo "${WHITE}   ┗━┛    ┗━┛  ┗┛  ┗━┛  ┗━┛  ┗┛  ┗━━━━┛ ┗━┛  ┗━┛ ┗━━━━┛ ┗━━━━━┛ ┗━━━━━┛ ${RESET}"
 	@echo        "  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-	@echo "${CYAN}${BOLD}                                           RAAD Eloi & BOIDIN Gaspard ${RESET}"
+	@echo "${CYAN}${BOLD}                                           RAAD Eloi & MONIER Alexandre ${RESET}"
 	@echo ""
-
-
 
 #* ---- Phony -------------------------------------------------------------------
 .PHONY: all clean fclean re libft run gdb valgrind debug asan
