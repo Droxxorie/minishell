@@ -1,0 +1,74 @@
+>
+<
+>>
+<<
+<>
+>>>>>
+>>>>>>>>>>>>>>>
+<<<<<
+<<<<<<<<<<<<<<<<
+> > > >
+>> >> >> >>
+>>>> >> >> >>
+|
+| hola
+| | |
+||
+|||||
+|||||||||||||
+>>|><
+&&
+&&&&&
+&&&&&&&&&&&&&&
+echo > <
+echo | |
+>echo>
+<echo<
+>>echo>>
+|echo|
+|echo -n hola
+echo hola ||| cat
+> bonjour echo hola
+cat bonjour
+> bonjour | echo hola
+cat bonjour
+> bonjour echo hola bonjour
+cat bonjour
+>bonjour echo > hola>bonjour>hola>>bonjour>hola hey >bonjour hola >hola
+cat bonjour
+cat hola
+> pwd
+ls
+< pwd
+cat >>
+cat >>>
+cat >> <<
+cat >> > >> << >>
+>>hola
+cat hola
+<a cat <b <c
+<a cat <b <c
+cat a
+cat b
+cat c
+>a ls >b >>c >d
+cat a
+cat b
+cat c
+cat d
+<a
+cat a
+>d cat <a >>e
+cat a
+cat d
+cat e
+< a > b cat > hey >> d
+cat d
+ls
+<< hola
+<<hola
+cat <<
+<< $hola
+<< $"hola"$"b"
+<< $"$hola"$$"b"
+<< ho$la$"$a"$$"b"

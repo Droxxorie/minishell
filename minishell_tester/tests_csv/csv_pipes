@@ -1,0 +1,42 @@
+cat | rev
+sleep 3 | sleep 3 | sleep 3
+pwd
+unset PWD
+env | grep PWD
+cd $PWD
+pwd
+env|"wc" -l
+env|"wc "-l
+cat | cat | cat | ls
+ls | exit
+ls | exit 42
+ifconfig | grep ":"
+ifconfig | grep hola
+whoami | grep $USER
+whoami | grep $USER > /tmp/bonjour
+cat /tmp/bonjour
+whoami | cat -e | cat -e > /tmp/bonjour
+cat /tmp/bonjour
+whereis ls | cat -e | cat -e > /tmp/bonjour
+cat /tmp/bonjour
+ls | hola
+ls | ls hola
+ls | ls | hola
+ls | hola | ls
+ls | ls | hola | rev
+ls | ls | echo hola | rev
+ls -la | grep "."
+ls -la | grep "'.'"
+ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls
+|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls
+ech|o hola | cat
+cat Makefile | cat -e | cat -e
+cat Makefile | grep srcs | cat -e
+cat Makefile | grep srcs | grep srcs | cat -e
+cat Makefile | grep pr | head -n 5 | cd file_not_exist
+cat Makefile | grep pr | head -n 5 | hello
+sleep 3 | sleep 3
+time sleep 3 | sleep 3
+sleep 3 | exit
+cat << hola | rev
+cat <<a >>>out | <<b

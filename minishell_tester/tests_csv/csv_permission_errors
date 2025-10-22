@@ -1,0 +1,6 @@
+env ./Makefile
+chmod 000 minishell
+./minishell
+./Makefile
+touch hola
+./hola

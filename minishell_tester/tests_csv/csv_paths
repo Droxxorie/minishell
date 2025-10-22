@@ -1,0 +1,11 @@
+/
+//
+/.
+/./../../../../..
+///////
+/bin/echo
+/bin/echo Hola Que Tal
+/bin/env
+/bin/cd Desktop
+./Makefile
+./minishell

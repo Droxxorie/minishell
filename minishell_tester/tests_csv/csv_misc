@@ -1,0 +1,32 @@
+   
+		
+:
+!
+-
+hola
+hola que tal
+Makefile
+echoHola
+echo-nHola
+EechoE
+.echo.
+holaCtlr-C
+cat
+hola Ctlr-D
+hola Ctlr-\
+mkdir a
+mkdir a/b
+cd a/b
+rm -r ../../a
+cd ..
+mkdir a
+mkdir a/b
+cd a/b
+rm -r ../../a
+pwd
+chmod 000 minishell
+./minishell
+ls hola
+touch hola
+./hola
+expr 1 + 1

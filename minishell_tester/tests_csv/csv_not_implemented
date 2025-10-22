@@ -1,0 +1,163 @@
+;;
+;;;;;
+;;;;;;;;;;;;;;;
+( ( ) )
+( ( ( ( ) ) ) )
+""
+'
+*
+*/*
+.
+..
+~
+ABC=hola
+4ABC=hola
+echo *
+echo '*'
+echo D*
+echo *Z
+echo *t hola
+echo *t
+echo $*
+echo hola*hola *
+echo $hola*
+echo $HOME*
+env hola
+env hola que tal
+env env
+env env env env env
+env ls
+env ./Makefile
+export HOL\~A=bonjour
+export HOL\\\$A=bonjour
+export HO\\\\LA=bonjour
+export HOLA+=bonjour
+env
+export HOLA=bonjour
+export HOLA+=bonjour
+env
+exportHOLA=bonjour
+env
+export HOLA=bon\jour
+env
+export HOLA=bon\\jour
+env
+export HOLA=bon(jour
+export HOLA=bon()jour
+export HOLA=bon&jour
+unset HOL\\\\A
+unset HOL;A
+history
+pwd -- p
+cd //
+pwd
+cd '//'
+pwd
+cd --
+cd ~/
+cd ~/ | echo $?
+pwd
+cd *
+export CDPATH=/
+cd $HOME/..
+export CDPATH=/
+cd home/vietdu91
+export CDPATH=./
+cd .
+export CDPATH=./
+cd ..
+env | grep SHLVL
+./minishell
+env | grep SHLVL
+exit
+env | grep SHLVL
+env -i ./minishell
+cd ~
+echo hola || cat
+pwd && ls
+pwd || ls
+echo hola || echo bonjour
+echo hola && echo bonjour
+echo bonjour || echo hola
+echo bonjour && echo hola
+echo -n bonjour && echo -n hola
+pwd && ls && echo hola
+pwd || ls && echo hola
+pwd && ls || echo hola
+pwd || ls || echo hola
+ls || export ""
+export "" || ls
+ls && export ""
+export "" && ls
+ls || ;
+; || ls
+ls && ;
+; && ls
+ls || <
+ls && <
+cat | echo || ls
+cat | echo && ls
+ls || cat | echo
+ls && cat | echo
+export "" && unset ""
+( ( ls ) )
+( ( ) ls )
+ls &&
+( ( ls&&pwd ) )
+( ( ls ) &&pwd )
+(ls && ( ( pwd ) ) )
+(ls && pwd) > hola
+cat hola
+> hola ls && pwd
+> hola
+(> pwd)
+ls
+(< pwd)
+ls
+( ( ( ( ( pwd) ) ) ) )
+() pwd
+> pwd
+(ls||pwd)&&
+(lss||pwd)&&
+(lss&&pwd)&&
+(ls && pwd | wc) > hola
+cat hola
+(ls && pwd | wc) > hola
+(ls && pwd | wc) > hola
+cat hola
+(ls && pwd | wc) >> hola
+echo hey&&(ls && pwd | wc) > hola
+cat hola
+(pwd | wc) < hola
+(ls && pwd | wc) < hola
+(ls -z || pwd | wc) < hola
+echo hey > hola
+(pwd | wc) < hola
+echo hey > hola
+(ls && pwd | wc) < hola
+echo hey > hola
+(ls -z || pwd | wc) < hola
+ls || (cat Makefile|grep srcs) &&
+ls -z && (ls) &&
+(ls > Docs/hey && pwd) > hola
+cat hola
+cat Docs/hey
+ls > Docs/hey && pwd > hola
+cat hola
+cat Docs/hey
+cd ../.. && pwd && pwd
+(cd ../.. && pwd) && pwd
+ls -z || cd ../../..&&pwd
+pwd
+ls -z || (cd ../../..&&pwd)
+pwd
+< Makefile .
+echo hola > bonjour\ 1
+ls
+cat bonjour\ 1
+ls *
+ls *.*
+ls *.hola
+cat M*le
+cat M*ee
+cat Make*file

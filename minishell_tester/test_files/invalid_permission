@@ -1,0 +1,4 @@
+DEBUG EXEC: process_redirections returned err = 0
+DEBUG EXEC: No redirection errors, proceeding with builtin execution
+hello
+DEBUG EXEC: After execute_builtin_cmd, exec->status = 0

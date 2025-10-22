@@ -1,0 +1,32 @@
+whereis grep > Docs/bonjour
+cat Docs/bonjour
+ls -la > Docs/bonjour
+cat Docs/bonjour
+pwd>bonjour
+cat bonjour
+prout hola > bonjour
+ls
+cat <pwd
+cat <srcs/pwd
+cat <../pwd
+cat < ls
+cat < ls > ls
+cat > ls1 < ls2
+ls
+e'c'"h"o hola > bonjour
+cat 'bo'"n"jour
+rm -f bonjour
+rm bonjour > bonjour
+ls -l bonjour
+mkdir dir
+ls -la > dir/bonjour
+cat dir/bonjour
+cat << hola
+cat << 'hola'
+cat << "hola"
+cat << ho"la"
+cat << $HOME
+cat << hola > bonjour
+cat bonjour
+cat << prout << lol << koala
+prout << lol << cat << koala

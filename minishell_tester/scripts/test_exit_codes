@@ -1,0 +1,60 @@
+#!/bin/bash
+
+# Script pour tester les codes de sortie spécifiques
+MINISHELL_PATH="../minishell"
+
+BOLD="\e[1m"
+YELLOW="\033[0;33m"
+GREY="\033[38;5;244m"
+PURPLE="\033[0;35m"
+RED="\e[0;31m"
+GREEN="\033[0;32m"
+END="\033[0m"
+
+echo "Testing exit codes..."
+
+total=0
+ok=0
+
+# Tests des codes de sortie pour exit
+exit_tests=(
+    "exit 0:0"
+    "exit 1:1"
+    "exit 42:42"
+    "exit 255:255"
+    "exit 256:0"
+    "exit -1:255"
+    "exit -42:214"
+)
+
+for test_case in "${exit_tests[@]}"; do
+    cmd=$(echo "$test_case" | cut -d: -f1)
+    expected=$(echo "$test_case" | cut -d: -f2)
+    
+    ((total++))
+    
+    # Test avec minishell
+    echo -e "$cmd" | $MINISHELL_PATH &>/dev/null
+    mini_exit=$?
+    
+    # Test avec bash
+    echo -e "$cmd" | bash &>/dev/null
+    bash_exit=$?
+    
+    printf "$YELLOW"
+    printf "Test %3s: " $total
+    
+    if [[ "$mini_exit" == "$bash_exit" ]]; then
+        printf "✅"
+        ((ok++))
+    else
+        printf "❌"
+    fi
+    
+    printf "$GREY $cmd (expected: $expected, mini: $mini_exit, bash: $bash_exit)\n$END"
+done
+
+printf "$PURPLE"
+printf "$BOLD"
+echo "Exit code tests: $ok/$total"
+printf "$END"

@@ -1,0 +1,23 @@
+echo > <
+echo | |
+>echo>
+<echo<
+>>echo>>
+|echo|
+|echo -n hola
+ls || <
+ls && <
+( ( ) ls )
+> hola (ls && pwd)
+() pwd
+> pwd (ls)
+echo hola > > bonjour
+echo hola < < bonjour
+echo hola >>> bonjour
+cat >>
+cat >>>
+cat >> <<
+cat >> > >> << >>
+cat <<
+echo hola <<<< bonjour
+echo hola <<<<< bonjour
